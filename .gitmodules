@@ -1,0 +1,3 @@
+[submodule "josm"]
+	path = josm
+	url = https://github.com/openstreetmap/josm
