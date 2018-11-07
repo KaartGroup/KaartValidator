@@ -1,0 +1,32 @@
+meta
+{
+	title: "Validation rules for Kaart Group";
+	version: "2018-11-07"
+	description: "Check surfaces on roads that are residential and above, that _link destination:ref tags exist when it has a ref"
+	author: "Taylor Smock";
+}
+/* Check that roads have surfaces */
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!surface]{
+group: tr("kaart");
+throwWarning: tr("Missing surface on road");
+}
+
+/* Check that roads have lanes */
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary)$/][!lanes][!lanes:forward][!lanes:backward]{
+group: tr("kaart");
+throwWarning: tr("Missing lanes on road");
+}
+
+/* Check *_links to make certain they have destination:ref */
+way[highway=~/^.*_link$/][ref][!destination:ref] {
+group: tr("kaart");
+throwWarning: tr("Link has ref but no destination:ref");
+fixChangeKey: "ref => destination:ref";
+}
+
+/* Mark _links without destination:ref */
+way[highway=~/^.*_link$/][!destination:ref] {
+group: tr("kaart");
+throwWarning: tr("Link has no destination:ref");
+fixChangeKey: "ref => destination:ref";
+}
