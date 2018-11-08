@@ -35,7 +35,7 @@ throwWarning: tr("Link has no destination/:street/:ref tag");
 }
 
 /* Mark gas stations without a brand but with a common brand name */
-*[amenity=fuel][name=~/(BP|Total|Sasol)$/][!brand] {
+*[amenity=fuel][name=~/(BP|Engen|Sasol|Total)$/][!brand] {
 group: tr("kaart");
 throwWarning: tr("Gas station has a name but no brand");
 fixChangeKey: "name => brand";
@@ -50,6 +50,7 @@ throwWarning: tr("Gas station has a name but no brand");
 /* Checks for roundabouts */
 way[junction=roundabout] > node {set .is_in_roundabout}
 way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout {
+group: tr("kaart");
 throwWarning: tr("Highway connecting to roundabout is NOT a oneway");
 }
 
@@ -64,4 +65,10 @@ fixAdd: concat("destination:ref:lanes=", replace(tag("destination:ref:lanes"), "
 group: tr("kaart");
 throwWarning: tr("Toll roads in destination:ref are lower case, instead of upper case");
 fixAdd: concat("destination:ref=", replace(tag("destination:ref"), "toll", "Toll"));
+}
+
+/* Check bridge tagging */
+way[bridge][!layer] {
+group: tr("kaart");
+throwWarning: tr("Bridges should have a layer");
 }
