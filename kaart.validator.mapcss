@@ -12,7 +12,7 @@ throwWarning: tr("Missing surface on road");
 }
 
 /* Check that roads have lanes */
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary)$/][!lanes][!lanes:forward][!lanes:backward]{
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$/][!lanes][!lanes:forward][!lanes:backward]{
 group: tr("kaart");
 throwWarning: tr("Missing lanes on road");
 }
@@ -24,9 +24,37 @@ throwWarning: tr("Link has ref but no destination:ref");
 fixChangeKey: "ref => destination:ref";
 }
 
+way[highway=~/^.*_link$/] > node {set .is_in_link}
+way[highway =~ /^(bus_guideway|living_street|motorway|motorway_link|pedestrian|primary|primary_link|raceway|residential|road|secondary|secondary_link|service|tertiary|tertiary_link|track|trunk|trunk_link|unclassified)$/] > node { set .is_in_major_road }
+way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
+
 /* Mark _links without destination:ref */
-way[highway=~/^.*_link$/][!destination:ref] {
+way[highway=~/^.*_link$/][!destination:ref][!destination][!destination:street] {
 group: tr("kaart");
-throwWarning: tr("Link has no destination:ref");
-fixChangeKey: "ref => destination:ref";
+throwWarning: tr("Link has no destination/:street/:ref tag");
+}
+
+/* Mark gas stations without a brand but with a common brand name */
+*[amenity=fuel][name=~/(BP|Total|Sasol)$/][!brand] {
+group: tr("kaart");
+throwWarning: tr("Gas station has a name but no brand");
+fixChangeKey: "name => brand";
+}
+
+/* Mark gas stations without a brand */
+*[amenity=fuel][name][!brand] {
+group: tr("kaart");
+throwWarning: tr("Gas station has a name but no brand");
+}
+
+/* Checks for roundabouts */
+way[junction=roundabout] > node {set .is_in_roundabout}
+way[highway][oneway!=yes] > node.is_in_roundabout {
+throwWarning: tr("Highway connecting to roundabout is NOT a oneway");
+}
+
+/* Check destination lane tagging */
+/* Check toll roads */
+*[destination:ref:lanes=~/(.*)toll(.*)$/] {
+throwWarning: tr("Toll roads in destination:ref:lanes are lower case, instead of upper case");
 }
