@@ -49,12 +49,19 @@ throwWarning: tr("Gas station has a name but no brand");
 
 /* Checks for roundabouts */
 way[junction=roundabout] > node {set .is_in_roundabout}
-way[highway][oneway!=yes] > node.is_in_roundabout {
+way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout {
 throwWarning: tr("Highway connecting to roundabout is NOT a oneway");
 }
 
 /* Check destination lane tagging */
 /* Check toll roads */
 *[destination:ref:lanes=~/(.*)toll(.*)$/] {
+group: tr("kaart");
 throwWarning: tr("Toll roads in destination:ref:lanes are lower case, instead of upper case");
+fixAdd: concat("destination:ref:lanes=", replace(tag("destination:ref:lanes"), "toll", "Toll"));
+}
+*[destination:ref=~/(.*)toll(.*)$/] {
+group: tr("kaart");
+throwWarning: tr("Toll roads in destination:ref are lower case, instead of upper case");
+fixAdd: concat("destination:ref=", replace(tag("destination:ref"), "toll", "Toll"));
 }
