@@ -24,6 +24,12 @@ throwWarning: tr("Link has ref but no destination:ref");
 fixChangeKey: "ref => destination:ref";
 }
 
+/* Check *_links to seeif they have a oneway tag */
+way[highway=~/^.*_link$/][!oneway] {
+group: tr("kaart");
+throwWarning: tr("Links are usually oneways");
+}
+
 way[highway=~/^.*_link$/] > node {set .is_in_link}
 way[highway =~ /^(bus_guideway|living_street|motorway|motorway_link|pedestrian|primary|primary_link|raceway|residential|road|secondary|secondary_link|service|tertiary|tertiary_link|track|trunk|trunk_link|unclassified)$/] > node { set .is_in_major_road }
 way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
@@ -35,7 +41,7 @@ throwWarning: tr("Link has no destination/:street/:ref tag");
 }
 
 /* Mark gas stations without a brand but with a common brand name */
-*[amenity=fuel][name=~/(BP|Engen|Sasol|Total)$/][!brand] {
+*[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
 group: tr("kaart");
 throwWarning: tr("Gas station has a name but no brand");
 fixChangeKey: "name => brand";
@@ -71,4 +77,17 @@ fixAdd: concat("destination:ref=", replace(tag("destination:ref"), "toll", "Toll
 way[bridge][!layer] {
 group: tr("kaart");
 throwWarning: tr("Bridges should have a layer");
+fixAdd: "layer=1";
+}
+
+/* Check mini-roundabouts for the correct direction */
+node[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
+group: tr("kaart");
+throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
+fixAdd: "direction=clockwise";
+}
+node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
+group: tr("kaart");
+throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
+fixAdd: "direction=anticlockwise";
 }
