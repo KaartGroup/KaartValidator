@@ -106,6 +106,18 @@ throwWarning: tr("destination:lanes:ref:to should be destination:ref:to:lanes");
 fixChangeKey: "destination:lanes:ref:to => destination:ref:to:lanes";
 }
 
+/* TODO: Fix maxspeed */
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][maxspeed] > node:connection { set .has_maxspeed }
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!maxspeed] > node:connection { set .no_maxspeed }
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/] >[index=1] node.has_maxspeed { set .start_has_maxspeed }
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/] >[index=-1] node.has_maxspeed { set .end_has_maxspeed }
+
+way[!maxspeed].start_has_maxspeed!.end_has_maxspeed,
+way[!maxspeed]!.start_has_maxspeed.end_has_maxspeed,
+way[!maxspeed].start_has_maxspeed.end_has_maxspeed {
+group: tr("kaart");
+throwOther: tr("Does the maxspeed continue here?");
+}
 /* Check bridge tagging */
 way[bridge][!layer] {
 group: tr("kaart");
