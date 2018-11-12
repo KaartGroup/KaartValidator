@@ -1,8 +1,8 @@
 meta
 {
 	title: "Validation rules for Kaart Group";
-	version: "2018-11-07"
-	description: "Check surfaces on roads that are residential and above, that _link destination:ref tags exist when it has a ref"
+	version: "2018-11-07";
+	description: "Check surfaces on roads that are residential and above, that _link destination:ref tags exist when it has a ref";
 	author: "Taylor Smock";
 }
 /* Check that roads have surfaces */
@@ -54,87 +54,101 @@ throwWarning: tr("Link has no destination/:street/:ref tag");
 }
 
 /* Copy name to name:<appropriate> */
-way[name][!name:el][inside("GR")] {
+way[highway][name][!name:el][inside("GR")] {
 group: tr("kaart");
 throwWarning: tr("There should be a name:el tag");
 fixAdd: concat("name:", "el", "=", tag(name));
 }
 
 /* Transliteration */
-way[name][!int_name] {
+way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!int_name][inside("GR")] {
 group: tr("kaart");
 throwWarning: tr("There should be an int_name");
-fixAdd: concat("int_name=", tag(name));
+fixAdd: concat("int_name=",
+replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+replace(
+tag("name"),
+"Α", "A"), "α", "a"), "ά", "a"),
+"Β", "B"), "β", "b"),
+"Γ", "G"), "γ", "g"),
+"Δ", "D"), "δ", "d"),
+"Ε", "E"), "ε", "e"), "έ", "e"),
+"Ζ", "Z"), "ζ", "z"),
+"Θ", "Th"), "θ", "th"),
+"Ι", "I"), "ι", "i"), "ί", "i"),
+"Κ", "K"), "κ", "k"),
+"Λ", "L"), "λ", "l"),
+"Μ", "M"), "μ", "m"),
+"Ν", "N"), "ν", "n"),
+"Ξ", "X"), "ξ", "x"),
+"Ο", "O"), "ο", "o"),
+"Π", "P"), "π", "p"),
+"Ρ", "R"), "ρ", "r"),
+"Σ", "S"), "σς", "s"), "σ", "s"), "ς", "s"),
+"Τ", "t"), "τ", "t"),
+"Υ", "U"), "υ", "u"),
+"Φ", "Ph"), "φ", "ph"),
+"Χ", "Ch"), "χ", "ch"),
+"Ψ", "Ps"), "ψ", "ps"),
+"Ω", "O"), "ω", "o")); /* May be \bar{o} */
+/*"Η", "TODO"),*/
+/*"η", "TODO"),*/
 }
 /* Greece transliteration */
-/**/
-way[int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|Ζ|ζ|Η|η|Θ|θ|Ι|ι|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][inside("GR")] {
+way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][inside("GR")] {
 group: tr("kaart");
 throwWarning: "int_name shouldn't be the local greece name";
-fixAdd: concat("int_name=", replace(tag("int_name"), "Α", "A"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "α", "a"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "ά", "a"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Β", "B"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "β", "b"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Γ", "G"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "γ", "g"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Δ", "D"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "δ", "d"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Ε", "E"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "ε", "e"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Ζ", "Z"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "ζ", "z"));
-/*fixAdd: concat("int_name=", replace(tag("int_name"), "Η", "TODO"));*/
-/*fixAdd: concat("int_name=", replace(tag("int_name"), "η", "TODO"));*/
-fixAdd: concat("int_name=", replace(tag("int_name"), "Θ", "Th"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "θ", "th"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Ι", "I"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "ι", "i"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Κ", "K"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "κ", "k"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Λ", "L"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "λ", "l"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Μ", "M"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "μ", "m"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Ν", "N"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "ν", "n"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Ξ", "X"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "ξ", "x"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Ο", "O"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "ο", "o"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Π", "P"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "π", "p"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Ρ", "R"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "ρ", "r"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Σ", "S"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "σς", "s"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "σ", "s"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "ς", "s"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Τ", "t"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "τ", "t"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Υ", "U"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "υ", "u"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Φ", "Ph"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "φ", "ph"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Χ", "Ch"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "χ", "ch"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "Ψ", "Ps"));
-fixAdd: concat("int_name=", replace(tag("int_name"), "ψ", "ps"));
-/*fixAdd: concat("int_name=", replace(tag("int_name"), "Ω", "TODO"));*/
-/*fixAdd: concat("int_name=", replace(tag("int_name"), "ω", "TODO"));*/
+fixAdd: concat("int_name=",
+replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+replace(
+tag("int_name"),
+"Α", "A"), "α", "a"), "ά", "a"),
+"Β", "B"), "β", "b"),
+"Γ", "G"), "γ", "g"),
+"Δ", "D"), "δ", "d"),
+"Ε", "E"), "ε", "e"), "έ", "e"),
+"Ζ", "Z"), "ζ", "z"),
+"Θ", "Th"), "θ", "th"),
+"Ι", "I"), "ι", "i"), "ί", "i"),
+"Κ", "K"), "κ", "k"),
+"Λ", "L"), "λ", "l"),
+"Μ", "M"), "μ", "m"),
+"Ν", "N"), "ν", "n"),
+"Ξ", "X"), "ξ", "x"),
+"Ο", "O"), "ο", "o"),
+"Π", "P"), "π", "p"),
+"Ρ", "R"), "ρ", "r"),
+"Σ", "S"), "σς", "s"), "σ", "s"), "ς", "s"),
+"Τ", "t"), "τ", "t"),
+"Υ", "U"), "υ", "u"),
+"Φ", "Ph"), "φ", "ph"),
+"Χ", "Ch"), "χ", "ch"),
+"Ψ", "Ps"), "ψ", "ps"),
+"Ω", "O"), "ω", "o")); /* May be \bar{o} */
+/*"Η", "TODO"),*/
+/*"η", "TODO"),*/
 }
 
 /* OSM Greece does NOT want street/road TODO fix */
-way[highway][name=~/^(.*)(Οδός|Odos|Λεωφόρος|avenue|street|road)$/][inside("GR")],
-way[highway][name:en=~/^(.*)(avenue|street|road)$/][inside("GR")],
+way[highway][name=~/^(.*)(Οδός|Odos|Λεωφόρος|avenue|street|road|str\.)$/][inside("GR")],
+way[highway][name:en=~/^(.*)(avenue|street|road|str\.)$/][inside("GR")],
 way[highway][name:el=~/^(.*)(Οδός|Odos|Λεωφόρος)$/][inside("GR")] {
 group: tr("kaart");
 throwWarning: "OSM Greece does not want street/road/other prefixes";
 assertMatch: "way highway=primary name=\"Fessa street\"";
 assertMatch: "way highway=primary name:en=\"Fessa street\"";
-fixAdd: concat("name:en=", replace(tag("name:en"), "street", ""));
-fixAdd: concat("name:en=", replace(tag("name:en"), "avenue", ""));
-fixAdd: concat("name:en=", replace(tag("name:en"), "road", ""));
+fixAdd: concat("name:en=", replace(tag("name:en"), " street", ""));
+fixAdd: concat("name:en=", replace(tag("name:en"), " str.", ""));
+fixAdd: concat("name:en=", replace(tag("name:en"), " avenue", ""));
+fixAdd: concat("name:en=", replace(tag("name:en"), " road", ""));
 }
 /* Mark gas stations without a brand but with a common brand name */
 *[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
