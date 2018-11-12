@@ -6,9 +6,17 @@ meta
 	author: "Taylor Smock";
 }
 /* Check that roads have surfaces */
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!surface]{
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][name][!surface]{
 group: tr("kaart");
-throwWarning: tr("Missing surface on road");
+throwWarning: tr("Missing surface on road with name");
+}
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][name][surface=paved]{
+group: tr("kaart");
+throwWarning: tr("Generic paved surface on road with name");
+}
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][ref][!surface]{
+group: tr("kaart");
+throwWarning: tr("Missing surface on road with ref");
 }
 
 /* Check that roads have lanes */
@@ -55,10 +63,18 @@ throwWarning: tr("Gas station has a name but no brand");
 
 /* Checks for roundabouts */
 way[junction=roundabout] > node {set .is_in_roundabout}
-way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout {
+node[traffic_calming=island] { set .is_traffic_calming_island}
+way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout!.is_traffic_calming_island {
 group: tr("kaart");
-throwWarning: tr("Highway connecting to roundabout is NOT a oneway");
+throwWarning: tr("Highway connecting to roundabout is NOT a oneway and the node is not a traffic calming island");
 }
+
+/*
+area[highway][junction!=circular][junction!=roundabout] {
+group: tr("kaart");
+throwWarning: tr("Possible roundabout or circular junction");
+}
+*/
 
 /* Check destination lane tagging */
 /* Check toll roads */
@@ -67,10 +83,23 @@ group: tr("kaart");
 throwWarning: tr("Toll roads in destination:ref:lanes are lower case, instead of upper case");
 fixAdd: concat("destination:ref:lanes=", replace(tag("destination:ref:lanes"), "toll", "Toll"));
 }
+
 *[destination:ref=~/(.*)toll(.*)$/] {
 group: tr("kaart");
 throwWarning: tr("Toll roads in destination:ref are lower case, instead of upper case");
 fixAdd: concat("destination:ref=", replace(tag("destination:ref"), "toll", "Toll"));
+}
+
+*[destination:lanes:ref] {
+group: tr("kaart");
+throwWarning: tr("destination:lanes:ref should be destination:ref:lanes");
+fixChangeKey: "destination:lanes:ref => destination:ref:lanes";
+}
+
+*[destination:lanes:ref:to] {
+group: tr("kaart");
+throwWarning: tr("destination:lanes:ref:to should be destination:ref:to:lanes");
+fixChangeKey: "destination:lanes:ref:to => destination:ref:to:lanes";
 }
 
 /* Check bridge tagging */
