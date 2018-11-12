@@ -67,14 +67,13 @@ node[traffic_calming=island] { set .is_traffic_calming_island}
 way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout!.is_traffic_calming_island {
 group: tr("kaart");
 throwWarning: tr("Highway connecting to roundabout is NOT a oneway and the node is not a traffic calming island");
+suggestAlternative: "Split ways to have roundabout flares or add traffic_calming=island to the node"
 }
 
-/*
-area[highway][junction!=circular][junction!=roundabout] {
+way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|service|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
 group: tr("kaart");
 throwWarning: tr("Possible roundabout or circular junction");
 }
-*/
 
 /* Check destination lane tagging */
 /* Check toll roads */
