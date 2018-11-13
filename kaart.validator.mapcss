@@ -20,7 +20,7 @@ throwWarning: tr("Missing surface on road with ref");
 }
 
 /* Check that roads have lanes */
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$/][!lanes][!lanes:forward][!lanes:backward]{
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$/][!lanes][!lanes:forward][!lanes:backward][surface!~/^(gravel|ground)$/] {
 group: tr("kaart");
 throwWarning: tr("Missing lanes on road");
 }
@@ -54,52 +54,26 @@ throwWarning: tr("Link has no destination/:street/:ref tag");
 }
 
 /* Copy name to name:<appropriate> */
-way[highway][name][!name:el][inside("GR")] {
+way[highway][name][name:en][!name:el][inside("GR")] {
 group: tr("kaart");
 throwWarning: tr("There should be a name:el tag");
 fixAdd: concat("name:", "el", "=", tag(name));
 }
+way[highway][!name][name:el][inside("GR")] {
+group: tr("kaart");
+throwWarning: tr("There should be a name tag");
+fixAdd: concat("name", "=", tag(name:el));
+}
 
 /* Transliteration */
-way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!int_name][inside("GR")] {
+way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!int_name][inside("GR")]:selected {
 group: tr("kaart");
 throwWarning: tr("There should be an int_name");
-fixAdd: concat("int_name=",
-replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-replace(
-tag("name"),
-"Α", "A"), "α", "a"), "ά", "a"),
-"Β", "B"), "β", "b"),
-"Γ", "G"), "γ", "g"),
-"Δ", "D"), "δ", "d"),
-"Ε", "E"), "ε", "e"), "έ", "e"),
-"Ζ", "Z"), "ζ", "z"),
-"Θ", "Th"), "θ", "th"),
-"Ι", "I"), "ι", "i"), "ί", "i"),
-"Κ", "K"), "κ", "k"),
-"Λ", "L"), "λ", "l"),
-"Μ", "M"), "μ", "m"),
-"Ν", "N"), "ν", "n"),
-"Ξ", "X"), "ξ", "x"),
-"Ο", "O"), "ο", "o"),
-"Π", "P"), "π", "p"),
-"Ρ", "R"), "ρ", "r"),
-"Σ", "S"), "σς", "s"), "σ", "s"), "ς", "s"),
-"Τ", "t"), "τ", "t"),
-"Υ", "U"), "υ", "u"),
-"Φ", "Ph"), "φ", "ph"),
-"Χ", "Ch"), "χ", "ch"),
-"Ψ", "Ps"), "ψ", "ps"),
-"Ω", "O"), "ω", "o")); /* May be \bar{o} */
-/*"Η", "TODO"),*/
-/*"η", "TODO"),*/
+/* Transliteration is a different step */
+fixAdd: concat("int_name=", tag("name"));
 }
 /* Greece transliteration */
-way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][inside("GR")] {
+way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][inside("GR")]:selected {
 group: tr("kaart");
 throwWarning: "int_name shouldn't be the local greece name";
 fixAdd: concat("int_name=",
@@ -138,9 +112,9 @@ tag("int_name"),
 }
 
 /* OSM Greece does NOT want street/road TODO fix */
-way[highway][name=~/^(.*)(Οδός|Odos|Λεωφόρος|avenue|street|road|str\.)$/][inside("GR")],
-way[highway][name:en=~/^(.*)(avenue|street|road|str\.)$/][inside("GR")],
-way[highway][name:el=~/^(.*)(Οδός|Odos|Λεωφόρος)$/][inside("GR")] {
+way[highway][name=~/^(.*)(Οδός|Odos|Λεωφόρος|avenue|street|road|str\.)$/][inside("GR")]:modified,
+way[highway][name:en=~/^(.*)(avenue|street|road|str\.)$/][inside("GR")]:modified,
+way[highway][name:el=~/^(.*)(Οδός|Odos|Λεωφόρος)$/][inside("GR")]:modified {
 group: tr("kaart");
 throwWarning: "OSM Greece does not want street/road/other prefixes";
 assertMatch: "way highway=primary name=\"Fessa street\"";
