@@ -38,6 +38,13 @@ group: tr("kaart");
 throwWarning: tr("Links are usually oneways");
 }
 
+/* Check *_links to seeif they have a name/noname tag */
+way[highway=~/^.*_link$/][name],
+way[highway=~/^.*_link$/][noname] {
+group: tr("kaart");
+throwWarning: tr("Links shouldn''t have name/noname tags");
+}
+
 /* Check for oneway=-1 */
 way[oneway=-1] {
 throwWarning: tr("Oneways should not use -1. Reverse and use "yes");
@@ -51,6 +58,10 @@ way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
 way[highway=~/^.*_link$/][!destination][!destination:ref][!destination:street][!destination:reg_ref] {
 group: tr("kaart");
 throwWarning: tr("Link has no destination/:street/:ref tag");
+}
+way[highway=~/^.*_link$/][!destination:ref][!destination:street][!destination:reg_ref] >[index=-1] node {
+group: tr("kaart");
+throwOther: tr("No destination");
 }
 
 /* Copy name to name:<appropriate> */
