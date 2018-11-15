@@ -49,10 +49,10 @@ group: tr("kaart");
 throwWarning: tr("Links shouldn''t have name/noname tags");
 }
 /* Check that way that is ONLY connecting crossings is a footway TODO */
-way[highway!=footway][!name] >[index=-1] node[highway=crossing] && >[index=1] node[highway=crossing] {
+/*way[highway!=footway][!name] >[index=-1] node[highway=crossing] >[index=1] node[highway=crossing] {
 group: tr("kaart");
 throwWarning: tr("This should probably be a footway");
-}
+}*/
 /* Check *_links and streets to find ways that split-end into _links TODO */
 way[highway!~/^.*_link$/][name] >[index=-1] node,
 way[highway!~/^.*_link$/][name] >[index=1] node {
@@ -96,7 +96,7 @@ throwOther: tr("No destination");
 /* Copy name to name:<appropriate> */
 *[name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!name:el][inside("GR")] { set .needsgreekname }
 /* TODO check end of names for σ instead of ς */
-*[name=~/^(.*)(σ)(.*)$/],
+*[name=~/^(.*)(σ) (.*)$/],
 *[name=~/^(.*)(σ)$/],
 *[name=~/^(σ)$/] {
 group: tr("kaart");
@@ -200,6 +200,14 @@ way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout!.is_traf
 group: tr("kaart");
 throwWarning: tr("Highway connecting to roundabout is NOT a oneway and the node is not a traffic calming island");
 suggestAlternative: "Split ways to have roundabout flares or add traffic_calming=island to the node"
+}
+
+/* Check for roundabouts with MORE than 1 road entering at the same location */
+way[junction=roundabout][name] > node {set .is_in_named_roundabout}
+node.is_in_roundabout!.is_in_named_roundabout[count(parent_tags("name")) > 1],
+node.is_in_roundabout.is_in_named_roundabout[count(parent_tags("name")) > 2] {
+	group: tr("kaart");
+	throwWarning: tr("Roundabouts should not have more than two additional ways at any node ({0})", parent_tags("name"));
 }
 
 way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|service|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
