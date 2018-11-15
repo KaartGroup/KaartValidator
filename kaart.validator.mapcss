@@ -219,17 +219,15 @@ tag("int_name"),
 }
 
 /* OSM Greece does NOT want street/road TODO fix */
-way[highway][name=~/^(.*)(Οδός|Odos|Λεωφόρος|avenue|street|road|str\.)$/][inside("GR")]:modified,
-way[highway][name:en=~/^(.*)(avenue|street|road|str\.)$/][inside("GR")]:modified,
-way[highway][name:el=~/^(.*)(Οδός|Odos|Λεωφόρος)$/][inside("GR")]:modified {
-group: tr("kaart");
-throwWarning: "OSM Greece does not want street/road/other prefixes";
-assertMatch: "way highway=primary name=\"Fessa street\"";
-assertMatch: "way highway=primary name:en=\"Fessa street\"";
-fixAdd: concat("name:en=", trim(replace(tag("name:en"), "street", "")));
-fixAdd: concat("name:en=", trim(replace(tag("name:en"), "str.", "")));
-fixAdd: concat("name:en=", trim(replace(tag("name:en"), "avenue", "")));
-fixAdd: concat("name:en=", trim(replace(tag("name:en"), "road", "")));
+way[highway][name=~/(?i)(.*)(Οδός|Odos|Λεωφόρος|avenue|street|road|str\.)$/][inside("GR")]:modified,
+way[highway][name:en=~/(?i)(.*)(avenue|street|road|str\.)$/][inside("GR")]:modified,
+way[highway][name:el=~/(?i)(.*)(Οδός|Odos|Λεωφόρος)$/][inside("GR")]:modified {
+	group: tr("kaart");
+	throwWarning: "OSM Greece does not want street/road/other prefixes";
+	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "street", "")));
+	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "str.", "")));
+	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "avenue", "")));
+	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "road", "")));
 }
 /* Mark gas stations without a brand but with a common brand name */
 *[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
