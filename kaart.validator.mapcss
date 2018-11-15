@@ -298,16 +298,21 @@ way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residentia
 }
 
 /* TODO: Fix maxspeed maybe parent_tags(key_name) with has_tag_key? */
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][maxspeed] > node:connection { set .has_maxspeed }
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!maxspeed] > node:connection { set .no_maxspeed }
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/] >[index=1] node.has_maxspeed { set .start_has_maxspeed }
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/] >[index=-1] node.has_maxspeed { set .end_has_maxspeed }
+way[highway][maxspeed] > node:connection { set .has_maxspeed }
+way[highway][!maxspeed] > node:connection { set .no_maxspeed }
+way[highway] <[index=1] node.has_maxspeed { set .start_has_maxspeed }
+way[highway] <[index=-1] node.has_maxspeed { set .end_has_maxspeed }
+
+node.no_maxspeed.has_maxspeed {
+	group: tr("kaart");
+	throwWarning: tr("We go from maxspeed to no maxspeed");
+}
 
 way[!maxspeed].start_has_maxspeed!.end_has_maxspeed,
 way[!maxspeed]!.start_has_maxspeed.end_has_maxspeed,
 way[!maxspeed].start_has_maxspeed.end_has_maxspeed {
 	group: tr("kaart");
-	throwOther: tr("Does the maxspeed continue here?");
+	throwWarning: tr("Does the maxspeed continue here?");
 }
 /* Check bridge tagging */
 way[bridge][!layer] {
