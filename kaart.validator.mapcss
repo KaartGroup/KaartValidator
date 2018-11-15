@@ -9,6 +9,7 @@ meta
  * https://josm.openstreetmap.de/wiki/Help/Validator/MapCSSTagChecker
  * https://josm.openstreetmap.de/wiki/Help/Styles/MapCSSImplementation
  */
+
 /* Check that roads have surfaces */
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][name][!surface]{
 group: tr("kaart");
@@ -42,6 +43,68 @@ group: tr("kaart");
 throwWarning: tr("Links are usually oneways");
 }
 
+/* Check links to make certain they match the road they are going to TODO */
+way[highway=~/^.*_link$/] >[index=-1] node { set .end_of_link }
+way[highway=~/^.*_link$/] >[index=1] node { set .start_of_link }
+node.end_of_link, node.start_of_link { set .link }
+way[highway=motorway] > node.link { set .motorway }
+way[highway=motorway_link] > node.link { set .motorway_link }
+way[highway=trunk] > node.link { set .trunk }
+way[highway=trunk_link] > node.link { set .trunk_link }
+way[highway=primary] > node.link { set .primary }
+way[highway=primary_link] > node.link { set .primary_link }
+way[highway=secondary] > node.link { set .secondary }
+way[highway=secondary_link] > node.link { set .secondary_link }
+way[highway=tertiary] > node.link { set .tertiary }
+way[highway=tertiary_link] > node.link { set .tertiary_link }
+
+node.motorway!.motorway_link,
+node.trunk!.motorway_link!.trunk_link,
+node.primary!.motorway_link!.trunk_link!.primary_link,
+node.secondary!.motorway_link!.trunk_link!.primary_link!.secondary_link,
+node.tertiary!.motorway_link!.trunk_link!.primary_link!.secondary_link!.tertiary_link {
+	group: tr("kaart");
+	throwWarning: tr("Check the link and the highest road it goes to/comes from");
+}
+
+/* Check if *_links are appropriately ref'd */
+way[highway!~/^.*_link$/][ref] > node.end_of_link { set .has_ref }
+way[highway=~/^.*_link$/][destination:ref] > node.end_of_link { set .has_destination_ref }
+
+/* TODO figure out way to select the _link */
+/*node.end_of_link.has_ref < way[highway] {*/
+/*fixAdd: concat("destination:ref=", parent_tag("ref"));*/
+
+node.end_of_link.has_ref[parent_tag("ref") != parent_tag("destination:ref")] {
+	group: tr("kaart");
+	throwWarning: tr("The destination:ref tag ({0}) does not match the ref tag ({1})", parent_tag("destination:ref"), parent_tag("ref"));
+}
+node.end_of_link.has_destination_ref[get(parent_tags("destination:ref"),0) != get(parent_tags("destination:ref"),1)] {
+	group: tr("kaart");
+	throwWarning: tr("The destination:ref tag ({0}) does not match the ref tag ({1})", get(parent_tags("destination:ref"),0), get(parent_tags("destination:ref"),1));
+}
+
+way >[index=-1] node {
+	set .end_of_way
+}
+way >[index=1] node {
+	set .start_of_way
+}
+
+/* Check ref consistency */
+way[highway][ref] > node.end_of_way.start_of_way[count(parent_tags("ref")) != 1] { set .highway_break_ref }
+node.highway_break_ref {
+	group: tr("kaart");
+	throwWarning: tr("Does the ref really change from {0} to {1}", get(parent_tags("ref"),0), get(parent_tags("ref"),1));
+}
+
+/* Check name consistency */
+way[highway][name] > node.end_of_way.start_of_way[count(parent_tags("name")) != 1] { set .highway_break_name }
+node.highway_break_name {
+	group: tr("kaart");
+	throwWarning: tr("Does the name really change from {0} to {1}", get(parent_tags("name"),0), get(parent_tags("name"),1));
+}
+
 /* Check *_links to see if they have a name/noname tag */
 way[highway=~/^.*_link$/][name],
 way[highway=~/^.*_link$/][noname] {
@@ -54,22 +117,15 @@ group: tr("kaart");
 throwWarning: tr("This should probably be a footway");
 }*/
 /* Check *_links and streets to find ways that split-end into _links TODO */
-way[highway!~/^.*_link$/][name] >[index=-1] node,
-way[highway!~/^.*_link$/][name] >[index=1] node {
-set .end_of_road
-}
 way[highway=~/^.*_link$/] >[index=-1] node,
 way[highway=~/^.*_link$/] >[index=1] node{
 set .end_of_link
 }
-node.end_of_road {
-group: tr("debug");
-throwOther: tr("End of road node");
+way[highway!~/^.*_link$/][name] >[index=-1] node,
+way[highway!~/^.*_link$/][name] >[index=1] node {
+set .end_of_road
 }
-node.end_of_link {
-group: tr("debug");
-throwOther: tr("End of road node");
-}
+
 node.end_of_road.end_of_link {
 group: tr("kaart");
 throwWarning: tr("Should there be split _links at the end of a highway?");
