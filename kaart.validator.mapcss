@@ -12,29 +12,29 @@ meta
 
 /* Check that roads have surfaces */
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][name][!surface]{
-group: tr("kaart");
-throwWarning: tr("Missing surface on road with name");
+	group: tr("kaart");
+	throwWarning: tr("Missing surface on road with name");
 }
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential|pedestrian)$/][name][surface=paved]{
-group: tr("kaart");
-throwWarning: tr("Generic paved surface on road with name");
+	group: tr("kaart");
+	throwWarning: tr("Generic paved surface on road with name");
 }
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][ref][!surface]{
-group: tr("kaart");
-throwWarning: tr("Missing surface on road with ref");
+	group: tr("kaart");
+	throwWarning: tr("Missing surface on road with ref");
 }
 
 /* Check that roads have lanes */
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$/][!lanes][!lanes:forward][!lanes:backward][surface!~/^(gravel|ground)$/] {
-group: tr("kaart");
-throwWarning: tr("Missing lanes on road");
+	group: tr("kaart");
+	throwWarning: tr("Missing lanes on road");
 }
 
 /* Check *_links to make certain they have destination:ref */
 way[highway=~/^.*_link$/][ref][!destination:ref] {
-group: tr("kaart");
-throwWarning: tr("Link has ref but no destination:ref");
-fixChangeKey: "ref => destination:ref";
+	group: tr("kaart");
+	throwWarning: tr("Link has ref but no destination:ref");
+	fixChangeKey: "ref => destination:ref";
 }
 
 /* Check *_links to see if they have a oneway tag */
@@ -108,31 +108,31 @@ node.highway_break_name {
 /* Check *_links to see if they have a name/noname tag */
 way[highway=~/^.*_link$/][name],
 way[highway=~/^.*_link$/][noname] {
-group: tr("kaart");
-throwWarning: tr("Links shouldn''t have name/noname tags");
+	group: tr("kaart");
+	throwWarning: tr("Links shouldn''t have name/noname tags");
 }
 /* Check that way that is ONLY connecting crossings is a footway TODO */
 /*way[highway!=footway][!name] >[index=-1] node[highway=crossing] >[index=1] node[highway=crossing] {
-group: tr("kaart");
-throwWarning: tr("This should probably be a footway");
+	group: tr("kaart");
+	throwWarning: tr("This should probably be a footway");
 }*/
 /* Check *_links and streets to find ways that split-end into _links TODO */
 way[highway=~/^.*_link$/] >[index=-1] node,
 way[highway=~/^.*_link$/] >[index=1] node{
-set .end_of_link
+	set .end_of_link
 }
 way[highway!~/^.*_link$/][name] >[index=-1] node,
 way[highway!~/^.*_link$/][name] >[index=1] node {
-set .end_of_road
+	set .end_of_road
 }
 
 node.end_of_road.end_of_link {
-group: tr("kaart");
-throwWarning: tr("Should there be split _links at the end of a highway?");
+	group: tr("kaart");
+	throwWarning: tr("Should there be split _links at the end of a highway?");
 }
 /* Check for oneway=-1 */
 way[oneway=-1] {
-throwWarning: tr("Oneways should not use -1. Reverse and use "yes");
+	throwWarning: tr("Oneways should not use -1. Reverse and use "yes");
 }
 
 way[highway=~/^.*_link$/] > node {set .is_in_link}
@@ -141,12 +141,12 @@ way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
 
 /* Mark _links without destination/:ref/:street/:reg_ref */
 way[highway=~/^.*_link$/][!destination][!destination:ref][!destination:street][!destination:reg_ref] {
-group: tr("kaart");
-throwWarning: tr("Link has no destination/:street/:ref tag");
+	group: tr("kaart");
+	throwWarning: tr("Link has no destination/:street/:ref tag");
 }
 way[highway=~/^.*_link$/][!destination:ref][!destination:street][!destination:reg_ref] >[index=-1] node {
-group: tr("kaart");
-throwOther: tr("No destination");
+	group: tr("kaart");
+	throwOther: tr("No destination");
 }
 
 /* Copy name to name:<appropriate> */
@@ -155,67 +155,67 @@ throwOther: tr("No destination");
 *[name=~/^(.*)(σ) (.*)$/],
 *[name=~/^(.*)(σ)$/],
 *[name=~/^(σ)$/] {
-group: tr("kaart");
-throwError: tr("σ should be ς at the end of words");
-assertMatch: "way highway=primary name=\"Φεσσασ\"";
+	group: tr("kaart");
+	throwError: tr("σ should be ς at the end of words");
+	assertMatch: "way highway=primary name=\"Φεσσασ\"";
 }
 way[highway].needsgreekname,
 *[name].needsgreekname:modified,
 *[name].needsgreekname:selected {
-group: tr("kaart");
-throwWarning: tr("There should be a name:el tag");
-fixAdd: concat("name:", "el", "=", tag(name));
+	group: tr("kaart");
+	throwWarning: tr("There should be a name:el tag");
+	fixAdd: concat("name:", "el", "=", tag(name));
 }
 
 way[highway][!name][name:el][inside("GR")] {
-group: tr("kaart");
-throwWarning: tr("There should be a name tag");
-fixAdd: concat("name", "=", tag(name:el));
+	group: tr("kaart");
+	throwWarning: tr("There should be a name tag");
+	fixAdd: concat("name", "=", tag(name:el));
 }
 
 /* Transliteration */
 way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!int_name][inside("GR")]:selected {
-group: tr("kaart");
-throwWarning: tr("There should be an int_name");
-/* Transliteration is a different step */
-fixAdd: concat("int_name=", tag("name"));
+	group: tr("kaart");
+	throwWarning: tr("There should be an int_name");
+	/* Transliteration is a different step */
+	fixAdd: concat("int_name=", tag("name"));
 }
 /* Greece transliteration */
 way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][inside("GR")]:selected {
-group: tr("kaart");
-throwWarning: "int_name shouldn't be the local greece name";
-fixAdd: concat("int_name=",
-replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-tag("int_name"),
-"Α", "A"), "α", "a"), "ά", "a"),
-"Β", "B"), "β", "b"),
-"Γ", "G"), "γ", "g"),
-"Δ", "D"), "δ", "d"),
-"Ε", "E"), "ε", "e"), "έ", "e"),
-"Ζ", "Z"), "ζ", "z"),
-"Θ", "Th"), "θ", "th"),
-"Ι", "I"), "ι", "i"), "ί", "i"),
-"Κ", "K"), "κ", "k"),
-"Λ", "L"), "λ", "l"),
-"Μ", "M"), "μ", "m"),
-"Ν", "N"), "ν", "n"),
-"Ξ", "X"), "ξ", "x"),
-"Ο", "O"), "ο", "o"),
-"Π", "P"), "π", "p"),
-"Ρ", "R"), "ρ", "r"),
-"Σ", "S"), "σ", "s"), "ς", "s"), /*"σς", "s"), not necessary -- each is an s */
-"Τ", "t"), "τ", "t"),
-"Υ", "U"), "υ", "u"),
-"Φ", "Ph"), "φ", "ph"),
-"Χ", "Ch"), "χ", "ch"),
-"Ψ", "Ps"), "ψ", "ps"),
-"Ω", "O"), "ω", "o")); /* May be \bar{o} */
-/*"Η", "TODO"),*/
-/*"η", "TODO"),*/
+	group: tr("kaart");
+	throwWarning: "int_name shouldn't be the local greece name";
+	fixAdd: concat("int_name=",
+	replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+	replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+	replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+	replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+	replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+	tag("int_name"),
+	"Α", "A"), "α", "a"), "ά", "a"),
+	"Β", "B"), "β", "b"),
+	"Γ", "G"), "γ", "g"),
+	"Δ", "D"), "δ", "d"),
+	"Ε", "E"), "ε", "e"), "έ", "e"),
+	"Ζ", "Z"), "ζ", "z"),
+	"Θ", "Th"), "θ", "th"),
+	"Ι", "I"), "ι", "i"), "ί", "i"),
+	"Κ", "K"), "κ", "k"),
+	"Λ", "L"), "λ", "l"),
+	"Μ", "M"), "μ", "m"),
+	"Ν", "N"), "ν", "n"),
+	"Ξ", "X"), "ξ", "x"),
+	"Ο", "O"), "ο", "o"),
+	"Π", "P"), "π", "p"),
+	"Ρ", "R"), "ρ", "r"),
+	"Σ", "S"), "σ", "s"), "ς", "s"), /*"σς", "s"),
+	"Τ", "t"), "τ", "t"),
+	"Υ", "U"), "υ", "u"),
+	"Φ", "Ph"), "φ", "ph"),
+	"Χ", "Ch"), "χ", "ch"),
+	"Ψ", "Ps"), "ψ", "ps"),
+	"Ω", "O"), "ω", "o")); /* May be \bar{o} */
+	/*"Η", "TODO"),*/
+	/*"η", "TODO"),*/
 }
 
 /* OSM Greece does NOT want street/road TODO fix */
@@ -231,29 +231,29 @@ way[highway][name:el=~/(?i)(.*)(Οδός|Odos|Λεωφόρος)$/][inside("GR")]
 }
 /* Mark gas stations without a brand but with a common brand name */
 *[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
-group: tr("kaart");
-throwWarning: tr("Gas station has a name but no brand");
-fixAdd: concat(tag("name"));
+	group: tr("kaart");
+	throwWarning: tr("Gas station has a name but no brand");
+	fixAdd: concat(tag("name"));
 }
 
 node[amenity=fuel]:modified {
-group: tr("kaart");
-throwWarning: tr("Gas stations should be an area, not a node");
+	group: tr("kaart");
+	throwWarning: tr("Gas stations should be an area, not a node");
 }
 
 /* Mark gas stations without a brand */
 *[amenity=fuel][name][!brand] {
-group: tr("kaart");
-throwWarning: tr("Gas station has a name but no brand");
+	group: tr("kaart");
+	throwWarning: tr("Gas station has a name but no brand");
 }
 
 /* Checks for roundabouts */
 way[junction=roundabout] > node {set .is_in_roundabout}
 node[traffic_calming=island] { set .is_traffic_calming_island}
 way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout!.is_traffic_calming_island {
-group: tr("kaart");
-throwWarning: tr("Highway connecting to roundabout is NOT a oneway and the node is not a traffic calming island");
-suggestAlternative: "Split ways to have roundabout flares or add traffic_calming=island to the node"
+	group: tr("kaart");
+	throwWarning: tr("Highway connecting to roundabout is NOT a oneway and the node is not a traffic calming island");
+	suggestAlternative: "Split ways to have roundabout flares or add traffic_calming=island to the node"
 }
 
 /* Check for roundabouts with MORE than 1 road entering at the same location */
@@ -265,34 +265,34 @@ node.is_in_roundabout.is_in_named_roundabout[count(parent_tags("name")) > 2] {
 }
 
 way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|service|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
-group: tr("kaart");
-throwWarning: tr("Possible roundabout or circular junction");
+	group: tr("kaart");
+	throwWarning: tr("Possible roundabout or circular junction");
 }
 
 /* Check destination lane tagging */
 /* Check toll roads */
 *[destination:ref:lanes=~/(.*)toll(.*)$/] {
-group: tr("kaart");
-throwWarning: tr("Toll roads in destination:ref:lanes are lower case, instead of upper case");
-fixAdd: concat("destination:ref:lanes=", replace(tag("destination:ref:lanes"), "toll", "Toll"));
+	group: tr("kaart");
+	throwWarning: tr("Toll roads in destination:ref:lanes are lower case, instead of upper case");
+	fixAdd: concat("destination:ref:lanes=", replace(tag("destination:ref:lanes"), "toll", "Toll"));
 }
 
 *[destination:ref=~/(.*)toll(.*)$/] {
-group: tr("kaart");
-throwWarning: tr("Toll roads in destination:ref are lower case, instead of upper case");
-fixAdd: concat("destination:ref=", replace(tag("destination:ref"), "toll", "Toll"));
+	group: tr("kaart");
+	throwWarning: tr("Toll roads in destination:ref are lower case, instead of upper case");
+	fixAdd: concat("destination:ref=", replace(tag("destination:ref"), "toll", "Toll"));
 }
 
 *[destination:lanes:ref] {
-group: tr("kaart");
-throwWarning: tr("destination:lanes:ref should be destination:ref:lanes");
-fixChangeKey: "destination:lanes:ref => destination:ref:lanes";
+	group: tr("kaart");
+	throwWarning: tr("destination:lanes:ref should be destination:ref:lanes");
+	fixChangeKey: "destination:lanes:ref => destination:ref:lanes";
 }
 
 *[destination:lanes:ref:to] {
-group: tr("kaart");
-throwWarning: tr("destination:lanes:ref:to should be destination:ref:to:lanes");
-fixChangeKey: "destination:lanes:ref:to => destination:ref:to:lanes";
+	group: tr("kaart");
+	throwWarning: tr("destination:lanes:ref:to should be destination:ref:to:lanes");
+	fixChangeKey: "destination:lanes:ref:to => destination:ref:to:lanes";
 }
 
 /* TODO: Fix maxspeed maybe parent_tags(key_name) with has_tag_key? */
@@ -304,24 +304,24 @@ way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/] >[inde
 way[!maxspeed].start_has_maxspeed!.end_has_maxspeed,
 way[!maxspeed]!.start_has_maxspeed.end_has_maxspeed,
 way[!maxspeed].start_has_maxspeed.end_has_maxspeed {
-group: tr("kaart");
-throwOther: tr("Does the maxspeed continue here?");
+	group: tr("kaart");
+	throwOther: tr("Does the maxspeed continue here?");
 }
 /* Check bridge tagging */
 way[bridge][!layer] {
-group: tr("kaart");
-throwWarning: tr("Bridges should have a layer");
-fixAdd: "layer=1";
+	group: tr("kaart");
+	throwWarning: tr("Bridges should have a layer");
+	fixAdd: "layer=1";
 }
 
 /* Check mini-roundabouts for the correct direction */
 node[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
-group: tr("kaart");
-throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
-fixAdd: "direction=clockwise";
+	group: tr("kaart");
+	throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
+	fixAdd: "direction=clockwise";
 }
 node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
-group: tr("kaart");
-throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
-fixAdd: "direction=anticlockwise";
+	group: tr("kaart");
+	throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
+	fixAdd: "direction=anticlockwise";
 }
