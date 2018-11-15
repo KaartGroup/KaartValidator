@@ -259,6 +259,13 @@ node.is_in_roundabout.is_in_named_roundabout[count(parent_tags("name")) > 2] {
 	throwWarning: tr("Roundabouts should not have more than two additional ways at any node ({0})", parent_tags("name"));
 }
 
+/* Ways entering the roundabout should start/end there */
+way[name][!junction] > node.is_in_roundabout!.end_of_way!.start_of_way { set .roundabout_way_ends }
+node.roundabout_way_ends {
+	group: tr("kaart");
+	throwWarning: tr("Way {0} does not end at roundabout", parent_tags("name"));
+}
+
 way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|service|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
 	group: tr("kaart");
 	throwWarning: tr("Possible roundabout or circular junction");
