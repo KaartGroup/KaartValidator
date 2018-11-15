@@ -5,6 +5,10 @@ meta
 	description: "Check surfaces on roads that are residential and above, that _link destination:ref tags exist when it has a ref";
 	author: "Taylor Smock";
 }
+/* Documentation
+ * https://josm.openstreetmap.de/wiki/Help/Validator/MapCSSTagChecker
+ * https://josm.openstreetmap.de/wiki/Help/Styles/MapCSSImplementation
+ */
 /* Check that roads have surfaces */
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][name][!surface]{
 group: tr("kaart");
@@ -32,19 +36,40 @@ throwWarning: tr("Link has ref but no destination:ref");
 fixChangeKey: "ref => destination:ref";
 }
 
-/* Check *_links to seeif they have a oneway tag */
+/* Check *_links to see if they have a oneway tag */
 way[highway=~/^.*_link$/][!oneway] {
 group: tr("kaart");
 throwWarning: tr("Links are usually oneways");
 }
 
-/* Check *_links to seeif they have a name/noname tag */
+/* Check *_links to see if they have a name/noname tag */
 way[highway=~/^.*_link$/][name],
 way[highway=~/^.*_link$/][noname] {
 group: tr("kaart");
 throwWarning: tr("Links shouldn''t have name/noname tags");
 }
 
+/* Check *_links and streets to find ways that split-end into _links TODO */
+way[highway!~/^.*_link$/][name] >[index=-1] node,
+way[highway!~/^.*_link$/][name] >[index=1] node {
+set .end_of_road
+}
+way[highway=~/^.*_link$/] >[index=-1] node,
+way[highway=~/^.*_link$/] >[index=1] node{
+set .end_of_link
+}
+node.end_of_road {
+group: tr("debug");
+throwOther: tr("End of road node");
+}
+node.end_of_link {
+group: tr("debug");
+throwOther: tr("End of road node");
+}
+node.end_of_road.end_of_link {
+group: tr("kaart");
+throwWarning: tr("Should there be split _links at the end of a highway?");
+}
 /* Check for oneway=-1 */
 way[oneway=-1] {
 throwWarning: tr("Oneways should not use -1. Reverse and use "yes");
@@ -134,10 +159,10 @@ group: tr("kaart");
 throwWarning: "OSM Greece does not want street/road/other prefixes";
 assertMatch: "way highway=primary name=\"Fessa street\"";
 assertMatch: "way highway=primary name:en=\"Fessa street\"";
-fixAdd: concat("name:en=", replace(tag("name:en"), " street", ""));
-fixAdd: concat("name:en=", replace(tag("name:en"), " str.", ""));
-fixAdd: concat("name:en=", replace(tag("name:en"), " avenue", ""));
-fixAdd: concat("name:en=", replace(tag("name:en"), " road", ""));
+fixAdd: concat("name:en=", trim(replace(tag("name:en"), "street", "")));
+fixAdd: concat("name:en=", trim(replace(tag("name:en"), "str.", "")));
+fixAdd: concat("name:en=", trim(replace(tag("name:en"), "avenue", "")));
+fixAdd: concat("name:en=", trim(replace(tag("name:en"), "road", "")));
 }
 /* Mark gas stations without a brand but with a common brand name */
 *[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
