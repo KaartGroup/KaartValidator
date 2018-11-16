@@ -302,12 +302,15 @@ way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residentia
 }
 
 /* TODO: Fix maxspeed maybe parent_tags(key_name) with has_tag_key? */
-way[highway][maxspeed] > node:connection { set .has_maxspeed }
-way[highway][!maxspeed] > node:connection { set .no_maxspeed }
+way[highway][maxspeed] >[index=1] node,
+way[highway][maxspeed] >[index=-1] node { set .has_maxspeed }
+way[highway][!maxspeed] >[index=1] node,
+way[highway][!maxspeed] >[index=-1] node { set .no_maxspeed }
 way[highway] <[index=1] node.has_maxspeed { set .start_has_maxspeed }
 way[highway] <[index=-1] node.has_maxspeed { set .end_has_maxspeed }
 
-node.no_maxspeed.has_maxspeed {
+node.no_maxspeed.has_maxspeed[count(parent_tags("name")) = 1],
+node.no_maxspeed.has_maxspeed[count(parent_tags("ref")) = 1] {
 	group: tr("kaart");
 	throwWarning: tr("We go from maxspeed to no maxspeed");
 }
