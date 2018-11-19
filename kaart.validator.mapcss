@@ -33,17 +33,17 @@ way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_li
 }
 
 /* Check implied motorway tags */
-way[highway=motorway][!oneway] {
+way[highway=~/^(motorway|motorway_link)$/][!oneway] {
 	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
-	fixAdd: "oneway=yes";
+	suggestAlternative: "oneway=yes";
 }
-way[highway=motorway][!access] {
+way[highway=~/^(motorway|motorway_link)$/][!access] {
 	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
-	fixAdd: "access=no";
+	suggestAlternative: "access=no";
 }
-way[highway=motorway][!motor_vehicle] {
+way[highway=~/^(motorway|motorway_link)$/][!motor_vehicle] {
 	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
-	fixAdd: "motor_vehicle=yes";
+	suggestAlternative: "motor_vehicle=yes";
 }
 
 /* Check lanes from way to way (ONLY TWO WAYS) TODO check patches */
