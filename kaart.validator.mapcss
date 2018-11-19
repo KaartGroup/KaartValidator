@@ -1,7 +1,7 @@
 meta
 {
 	title: "Validation rules for Kaart Group";
-	version: "2018-11-15";
+	version: "2018-11-19";
 	description: "Check surfaces on roads that are residential and above, that _link destination:ref tags exist when it has a ref";
 	author: "Taylor Smock";
 }
@@ -81,8 +81,9 @@ way[highway=~/^.*_link$/][ref][!destination:ref] {
 
 /* Check *_links to see if they have a oneway tag */
 way[highway=~/^.*_link$/][!oneway] {
-group: tr("kaart");
-throwWarning: tr("Links are usually oneways");
+	group: tr("kaart");
+	throwWarning: tr("Links are usually oneways, but there are some that are occasionally two-ways.");
+	suggestAlternative: tr("Add oneway=yes/no, whichever is appropriate.");
 }
 
 /* Check links to make certain they match the road they are going to TODO */
