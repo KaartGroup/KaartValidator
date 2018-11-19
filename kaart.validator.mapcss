@@ -17,7 +17,7 @@ meta
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!surface],
 way[highway=~/^.*_link$/][!surface] {
 	group: tr("kaart");
-	throwWarning: tr("Missing surface on road with name or ref");
+	throwWarning: tr("Missing surface on road that is a {0}", tag("highway"));
 }
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][surface=paved],
 way[highway=~/^(pedestrian)$/][name][surface=paved],
@@ -34,14 +34,17 @@ way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_li
 
 /* Check implied motorway tags */
 way[highway=~/^(motorway|motorway_link)$/][!oneway] {
+	group: tr("kaart");
 	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
 	suggestAlternative: "oneway=yes";
 }
 way[highway=~/^(motorway|motorway_link)$/][!access] {
+	group: tr("kaart");
 	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
 	suggestAlternative: "access=no";
 }
 way[highway=~/^(motorway|motorway_link)$/][!motor_vehicle] {
+	group: tr("kaart");
 	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
 	suggestAlternative: "motor_vehicle=yes";
 }
@@ -133,12 +136,20 @@ node.highway_break_ref:in-downloaded-area {
 	group: tr("kaart");
 	throwWarning: tr("Does the ref really change here?");
 }
+way[highway=~/^(motorway|trunk|primary|secondary)$/][!ref] {
+	group: tr("kaart");
+	throwWarning: tr("A {0} road is missing a ref", tag("highway"));
+}
 
 /* Check name consistency */
 way[highway][name] > node.end_of_way.start_of_way[count(parent_tags("name")) != 1] { set .highway_break_name }
 node.highway_break_name:in-downloaded-area {
 	group: tr("kaart");
 	throwWarning: tr("Does the name really change here?");
+}
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!name] {
+	group: tr("kaart");
+	throwWarning: tr("A {0} road is missing a ref", tag("highway"));
 }
 
 /* Check *_links to see if they have a name/noname tag */
@@ -268,6 +279,11 @@ node.roundabout_way_ends {
 way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|service|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
 	group: tr("kaart");
 	throwWarning: tr("Possible roundabout or circular junction");
+}
+
+way[highway=~/^.*_link$/][junction] {
+	group: tr("kaart");
+	throwWarning: tr("{0} should not be a {1}", tag("junction"), tag("highway"));
 }
 
 
