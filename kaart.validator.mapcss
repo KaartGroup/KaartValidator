@@ -32,12 +32,26 @@ way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_li
 	throwWarning: tr("Missing lanes on road");
 }
 
+/* Check implied motorway tags */
+way[highway=motorway][!oneway] {
+	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
+	fixAdd: "oneway=yes";
+}
+way[highway=motorway][!access] {
+	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
+	fixAdd: "access=no";
+}
+way[highway=motorway][!motor_vehicle] {
+	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
+	fixAdd: "motor_vehicle=yes";
+}
+
 /* Check lanes from way to way (ONLY TWO WAYS) TODO check patches */
 /* node[count(parent_osm_ids()) = 2 && count(parent_osm_ids("lanes")) != 0 && get(parent_osm_ids("lanes"),0) != get(parent_osm_ids("lanes"),1) && (regexp_match("(slight_right|slight_left|right|left)", get(parent_osm_ids("turn:lanes"))) != null )] {
  } */
 
 /* Check that turn:lanes/:forward/:backward */
-way[highway!=motorway][turn:lanes][!oneway] {
+way[highway][turn:lanes][!oneway] {
 	group: tr("kaart");
 	throwWarning: tr("turn:lanes without oneway -- are turn lanes the same in both directions?");
 }
