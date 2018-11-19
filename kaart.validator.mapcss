@@ -34,7 +34,7 @@ way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_li
  } */
 
 /* Check that turn:lanes/:forward/:backward */
-way[highway][turn:lanes][!oneway] {
+way[highway!=motorway][turn:lanes][!oneway] {
 	group: tr("kaart");
 	throwWarning: tr("turn:lanes without oneway -- are turn lanes the same in both directions?");
 }
@@ -68,8 +68,8 @@ way[highway][turn:forward],
 way[highway][turn:backward],
 way[highway][turn:both_ways] {
 	group: tr("kaart");
-	throwWarning: tr("We shoulding be using turn:<direction>.");
-	suggestAlternative: tr("Try using turn:lanes:<direction> instead.");
+	throwWarning: tr("We shoulding be using turn:<direction>");
+	suggestAlternative: tr("turn:lanes:<direction>");
 }
 
 /* Check *_links to make certain they have destination:ref */
@@ -82,8 +82,8 @@ way[highway=~/^.*_link$/][ref][!destination:ref] {
 /* Check *_links to see if they have a oneway tag */
 way[highway=~/^.*_link$/][!oneway] {
 	group: tr("kaart");
-	throwWarning: tr("Links are usually oneways, but there are some that are occasionally two-ways.");
-	suggestAlternative: tr("Add oneway=yes/no, whichever is appropriate.");
+	throwWarning: tr("Links are usually oneways, but there are some that are occasionally two-ways");
+	suggestAlternative: tr("oneway=yes/no");
 }
 
 /* Check links to make certain they match the road they are going to TODO */
@@ -169,7 +169,8 @@ way[highway!~/^.*_link$/][name] >[index=1] node {
 	set .end_of_road
 }
 
-node.end_of_road.end_of_link {
+/*node.end_of_road.end_of_link,*/
+node[count(parent_osm_ids("highway")) == 1 && count(parent_osm_ids("highway", "^.*_link$")) == 2] {
 	group: tr("kaart");
 	throwWarning: tr("Should there be split _links at the end of a highway?");
 }
@@ -292,7 +293,7 @@ node[traffic_calming=island] { set .is_traffic_calming_island}
 way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout!.is_traffic_calming_island {
 	group: tr("kaart");
 	throwWarning: tr("Highway connecting to roundabout is NOT a oneway -- check if there is a traffic_calming=island nearby");
-	suggestAlternative: "Split ways to have roundabout flares or add traffic_calming=island to a node using imagery"
+	suggestAlternative: "split ways to have roundabout flares or add traffic_calming=island to a node using imagery"
 }
 way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout.is_traffic_calming_island {
 	group: tr("kaart");
@@ -385,7 +386,7 @@ way[highway][bridge][!maxweight] {
 /* TODO fix */
 way[highway][bridge] ⧉ way[highway][!bridge][!maxheight] {
 	group: tr("kaart");
-	throwOther: tr("Bridges occassionally have a maxheight attribute. Check on ground for the information (or OpenStreetCam/Mapillary).");
+	throwOther: tr("Bridges occassionally have a maxheight attribute. Check on ground for the information (or OpenStreetCam/Mapillary)");
 }
 /* Check mini-roundabouts for the correct direction */
 node[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
