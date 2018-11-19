@@ -169,7 +169,8 @@ way[highway!~/^.*_link$/][name] >[index=1] node {
 	set .end_of_road
 }
 
-/*node.end_of_road.end_of_link,*/
+/* TODO When #16998 is closed, remove node.end_of_road.end_of_link */
+node.end_of_road.end_of_link,
 node[count(parent_osm_ids("highway")) == 1 && count(parent_osm_ids("highway", "^.*_link$")) == 2] {
 	group: tr("kaart");
 	throwWarning: tr("Should there be split _links at the end of a highway?");
