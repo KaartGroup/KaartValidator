@@ -112,16 +112,16 @@ way >[index=1] node {
 
 /* Check ref consistency */
 way[highway][ref] > node.end_of_way.start_of_way[count(parent_tags("ref")) != 1] { set .highway_break_ref }
-node.highway_break_ref {
+node.highway_break_ref:in-downloaded-area {
 	group: tr("kaart");
-	throwWarning: tr("Does the ref really change from {0} to {1}", get(parent_tags("ref"),0), get(parent_tags("ref"),1));
+	throwWarning: tr("Does the ref really change here?");
 }
 
 /* Check name consistency */
 way[highway][name] > node.end_of_way.start_of_way[count(parent_tags("name")) != 1] { set .highway_break_name }
-node.highway_break_name {
+node.highway_break_name:in-downloaded-area {
 	group: tr("kaart");
-	throwWarning: tr("Does the name really change from {0} to {1}", get(parent_tags("name"),0), get(parent_tags("name"),1));
+	throwWarning: tr("Does the name really change here?");
 }
 
 /* Check *_links to see if they have a name/noname tag */
@@ -158,13 +158,16 @@ way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
 
 /* Copy name to name:<appropriate> */
 *[name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!name:el][inside("GR")] { set .needsgreekname }
-/* TODO check end of names for σ instead of ς */
+/* Check end of names for σ instead of ς */
 *[name=~/^(.*)(σ) (.*)$/],
 *[name=~/^(.*)(σ)$/],
 *[name=~/^(σ)$/] {
 	group: tr("kaart");
 	throwError: tr("σ should be ς at the end of words");
 	assertMatch: "way highway=primary name=\"Φεσσασ\"";
+	assertMatch: "way highway=primary name=\"Φεσσασ Φεσσας\"";
+	assertNoMatch: "way highway=primary name=\"Φεσσας\"";
+	assertNoMatch: "way highway=primary name=\"Φεσσας Φεσσας\"";
 }
 way[highway].needsgreekname,
 *[name].needsgreekname:modified,
@@ -230,15 +233,26 @@ way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ
 }
 
 /* OSM Greece does NOT want street/road TODO fix */
-way[highway][name=~/(?i)(.*)(Οδός|Odos|Λεωφόρος|avenue|street|road|str\.)$/][inside("GR")]:modified,
-way[highway][name:en=~/(?i)(.*)(avenue|street|road|str\.)$/][inside("GR")]:modified,
-way[highway][name:el=~/(?i)(.*)(Οδός|Odos|Λεωφόρος)$/][inside("GR")]:modified {
+way[highway][name=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος|avenue|street|road|str\.).*/][inside("GR")],
+way[highway][name:en=~/(?i).*(avenue|street|road|str\.)$/],
+way[highway][name:el=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*$/] {
 	group: tr("kaart");
-	throwWarning: "OSM Greece does not want street/road/other prefixes";
+	throwWarning: "OSM Greece does not want street/road/other prefixes -- try removing the prefix (fix won't work with different cases)";
+	fixAdd: concat("name=", trim(replace(tag("name"), "Οδός", "")));
+	fixAdd: concat("name=", trim(replace(tag("name"), "Odos", "")));
+	fixAdd: concat("name=", trim(replace(tag("name"), "Λεωφόρος", "")));
+	fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Οδός", "")));
+	fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Odos", "")));
+	fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Λεωφόρος", "")));
+	fixAdd: concat("name=", trim(replace(tag("name"), "street", "")));
+	fixAdd: concat("name=", trim(replace(tag("name"), "str.", "")));
+	fixAdd: concat("name=", trim(replace(tag("name"), "avenue", "")));
+	fixAdd: concat("name=", trim(replace(tag("name"), "road", "")));
 	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "street", "")));
 	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "str.", "")));
 	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "avenue", "")));
 	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "road", "")));
+	/*assertMatch: "way highway=primary name=\"Φεσσασ Οδός\"";*/
 }
 
 /* Checks for roundabouts */
@@ -385,6 +399,15 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 *[tourism=~/^(hotel)$/][!name]:modified {
 	group: tr("kaart");
 	throwWarning: tr("{0} should have a name or a fixme=name", tag("tourism"));
+}
+
+*[fixme=~/^.*[ A-Z]+.*$/] {
+	group: tr("kaart");
+	throwError: tr("fixme should ONLY be a tag");
+	suggestAlternative: tr("note");
+	assertMatch: "way fixme=\"bad name\"";
+	assertNoMatch: "way fixme=\"name\"";
+	assertMatch: "way fixme=\"Name\"";
 }
 
 /**************************************
