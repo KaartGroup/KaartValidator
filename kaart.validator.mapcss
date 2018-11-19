@@ -29,6 +29,49 @@ way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_li
 	throwWarning: tr("Missing lanes on road");
 }
 
+/* Check lanes from way to way (ONLY TWO WAYS) TODO check patches */
+/* node[count(parent_osm_ids()) = 2 && count(parent_osm_ids("lanes")) != 0 && get(parent_osm_ids("lanes"),0) != get(parent_osm_ids("lanes"),1) && (regexp_match("(slight_right|slight_left|right|left)", get(parent_osm_ids("turn:lanes"))) != null )] {
+ } */
+
+/* Check that turn:lanes/:forward/:backward */
+way[highway][turn:lanes][!oneway] {
+	group: tr("kaart");
+	throwWarning: tr("turn:lanes without oneway -- are turn lanes the same in both directions?");
+}
+way[highway][turn:lanes][turn:lanes:forward],
+way[highway][turn:lanes][turn:lanes:backward] {
+	group: tr("kaart");
+	throwError: tr("turn:lanes and a directional turn:lanes");
+}
+way[highway][turn:lanes][oneway][count(split("|", tag("turn:lanes"))) != tag("lanes")],
+way[highway][turn:lanes][!oneway][2 * count(split("|", tag("turn:lanes"))) != tag("lanes")],
+way[highway][turn:lanes][!lanes] {
+	group: tr("kaart");
+	throwWarning: tr("turn:lanes do not match lanes");
+	/*fixAdd: concat("lanes=", count(split("|", tag("turn.lanes")));*/
+}
+way[highway][turn:lanes:forward][lanes:forward][count(split("|", tag("turn:lanes:forward"))) != tag("lanes:forward")],
+way[highway][turn:lanes:forward][!lanes:forward][count(split("|", tag("turn:lanes:forward"))) != tag("lanes") / 2] {
+	group: tr("kaart");
+	throwWarning: tr("turn:lanes:forward do not match lanes:forward");
+	/*fixAdd: concat("lanes:forward=", count(split("|", tag("turn.lanes:forward")));*/
+}
+way[highway][turn:lanes:backward][lanes:backward][count(split("|", tag("turn:lanes:backward"))) != tag("lanes:backward")],
+way[highway][turn:lanes:backward][!lanes:backward][count(split("|", tag("turn:lanes:backward"))) != tag("lanes") / 2] {
+	group: tr("kaart");
+	throwWarning: tr("turn:lanes:backward do not match lanes:backward");
+	/*fixAdd: concat("lanes:backward=", count(split("|", tag("turn.lanes:backward")));*/
+}
+
+way[highway][turn],
+way[highway][turn:forward],
+way[highway][turn:backward],
+way[highway][turn:both_ways] {
+	group: tr("kaart");
+	throwWarning: tr("We shoulding be using turn:<direction>.");
+	suggestAlternative: tr("Try using turn:lanes:<direction> instead.");
+}
+
 /* Check *_links to make certain they have destination:ref */
 way[highway=~/^.*_link$/][ref][!destination:ref] {
 	group: tr("kaart");
@@ -257,10 +300,15 @@ way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout.is_traff
 
 /* Check for roundabouts with MORE than 1 road entering at the same location */
 way[junction=roundabout][name] > node {set .is_in_named_roundabout}
+/* TODO remove the one with parent_tags as soon as parent_osm_ids is in josm-tested */
 node.is_in_roundabout!.is_in_named_roundabout[count(parent_tags("name")) > 1],
 node.is_in_roundabout.is_in_named_roundabout[count(parent_tags("name")) > 2] {
 	group: tr("kaart");
-	throwWarning: tr("Roundabouts should not have more than two additional ways at any node ({0})", parent_tags("name"));
+	throwWarning: tr("Roundabouts should not have more than two additional ways at any node");
+}
+node.is_in_roundabout[count(parent_osm_ids("highway")) - count(parent_osm_ids("junction")) > 1] {
+	group: tr("kaart");
+	throwError: tr("Roundabouts should not have more than two additional ways at any node");
 }
 
 /* Ways entering the roundabout should start/end there */
