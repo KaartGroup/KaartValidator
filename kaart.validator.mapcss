@@ -149,7 +149,7 @@ node.highway_break_name:in-downloaded-area {
 }
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!name] {
 	group: tr("kaart");
-	throwWarning: tr("A {0} road is missing a ref", tag("highway"));
+	throwWarning: tr("A {0} road is missing a name", tag("highway"));
 }
 
 /* Check *_links to see if they have a name/noname tag */
