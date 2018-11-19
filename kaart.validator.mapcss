@@ -402,7 +402,7 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 }
 
 *[fixme=~/^.*[ A-Z]+.*$/],
-*[fixme!~/^[a-z]*$/] {
+*[fixme][fixme!~/^[a-z]*$/] {
 	group: tr("kaart");
 	throwError: tr("fixme should ONLY be a tag");
 	suggestAlternative: tr("note");
