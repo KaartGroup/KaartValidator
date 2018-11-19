@@ -72,13 +72,6 @@ way[highway][turn:both_ways] {
 	suggestAlternative: tr("turn:lanes:<direction>");
 }
 
-/* Check *_links to make certain they have destination:ref */
-way[highway=~/^.*_link$/][ref][!destination:ref] {
-	group: tr("kaart");
-	throwWarning: tr("Link has ref but no destination:ref");
-	fixChangeKey: "ref => destination:ref";
-}
-
 /* Check *_links to see if they have a oneway tag */
 way[highway=~/^.*_link$/][!oneway] {
 	group: tr("kaart");
@@ -108,23 +101,6 @@ node.secondary!.motorway_link!.trunk_link!.primary_link!.secondary_link,
 node.tertiary!.motorway_link!.trunk_link!.primary_link!.secondary_link!.tertiary_link {
 	group: tr("kaart");
 	throwWarning: tr("Check the link and the highest road it goes to/comes from");
-}
-
-/* Check if *_links are appropriately ref'd */
-way[highway!~/^.*_link$/][ref] > node.end_of_link { set .has_ref }
-way[highway=~/^.*_link$/][destination:ref] > node.end_of_link { set .has_destination_ref }
-
-/* TODO figure out way to select the _link */
-/*node.end_of_link.has_ref < way[highway] {*/
-/*fixAdd: concat("destination:ref=", parent_tag("ref"));*/
-
-node.end_of_link.has_ref[parent_tag("ref") != parent_tag("destination:ref")] {
-	group: tr("kaart");
-	throwWarning: tr("The destination:ref tag ({0}) does not match the ref tag ({1})", parent_tag("destination:ref"), parent_tag("ref"));
-}
-node.end_of_link.has_destination_ref[get(parent_tags("destination:ref"),0) != get(parent_tags("destination:ref"),1)] {
-	group: tr("kaart");
-	throwWarning: tr("The destination:ref tag ({0}) does not match the ref tag ({1})", get(parent_tags("destination:ref"),0), get(parent_tags("destination:ref"),1));
 }
 
 way >[index=-1] node {
@@ -183,12 +159,6 @@ way[oneway=-1] {
 way[highway=~/^.*_link$/] > node {set .is_in_link}
 way[highway =~ /^(bus_guideway|living_street|motorway|motorway_link|pedestrian|primary|primary_link|raceway|residential|road|secondary|secondary_link|service|tertiary|tertiary_link|track|trunk|trunk_link|unclassified)$/] > node { set .is_in_major_road }
 way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
-
-/* Mark _links without destination/:ref/:street/:reg_ref */
-way[highway=~/^.*_link$/][!destination][!destination:ref][!destination:street][!destination:reg_ref] {
-	group: tr("kaart");
-	throwWarning: tr("Link has no destination/:street/:ref tag");
-}
 
 /* Copy name to name:<appropriate> */
 *[name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!name:el][inside("GR")] { set .needsgreekname }
@@ -309,32 +279,6 @@ way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residentia
 	throwWarning: tr("Possible roundabout or circular junction");
 }
 
-/* Check destination lane tagging */
-/* Check toll roads */
-*[destination:ref:lanes=~/(.*)toll(.*)$/] {
-	group: tr("kaart");
-	throwWarning: tr("Toll roads in destination:ref:lanes are lower case, instead of upper case");
-	fixAdd: concat("destination:ref:lanes=", replace(tag("destination:ref:lanes"), "toll", "Toll"));
-}
-
-*[destination:ref=~/(.*)toll(.*)$/] {
-	group: tr("kaart");
-	throwWarning: tr("Toll roads in destination:ref are lower case, instead of upper case");
-	fixAdd: concat("destination:ref=", replace(tag("destination:ref"), "toll", "Toll"));
-}
-
-*[destination:lanes:ref] {
-	group: tr("kaart");
-	throwWarning: tr("destination:lanes:ref should be destination:ref:lanes");
-	fixChangeKey: "destination:lanes:ref => destination:ref:lanes";
-}
-
-*[destination:lanes:ref:to] {
-	group: tr("kaart");
-	throwWarning: tr("destination:lanes:ref:to should be destination:ref:to:lanes");
-	fixChangeKey: "destination:lanes:ref:to => destination:ref:to:lanes";
-}
-
 /* TODO: Fix maxspeed maybe parent_tags(key_name) with has_tag_key? */
 way[highway][maxspeed] >[index=1] node,
 way[highway][maxspeed] >[index=-1] node { set .has_maxspeed }
@@ -432,13 +376,108 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 	group: tr("kaart");
 	throwWarning: tr("{0} should have a name or a fixme=name", tag("amenity"));
 }
-*[office=~/^(government)][!name][fixme!=name],
-*[office=~/^(government)][!name]:modified {
+*[office=~/^(government)$/][!name][fixme!=name],
+*[office=~/^(government)$/][!name]:modified {
 	group: tr("kaart");
 	throwWarning: tr("{0} should have a name or a fixme=name", tag("office"));
 }
-*[tourism=~/^(hotel)][!name][fixme!=name],
-*[tourism=~/^(hotel)][!name]:modified {
+*[tourism=~/^(hotel)$/][!name][fixme!=name],
+*[tourism=~/^(hotel)$/][!name]:modified {
 	group: tr("kaart");
 	throwWarning: tr("{0} should have a name or a fixme=name", tag("tourism"));
+}
+
+/**************************************
+ ***** Destination Tagging ************
+ **************************************/
+/* Check destination lane tagging */
+/* Check toll roads */
+*[destination:ref:lanes=~/(.*)toll(.*)$/] {
+	group: tr("kaart");
+	throwWarning: tr("Toll roads in destination:ref:lanes are lower case, instead of upper case");
+	fixAdd: concat("destination:ref:lanes=", replace(tag("destination:ref:lanes"), "toll", "Toll"));
+}
+
+*[destination:ref=~/(.*)toll(.*)$/] {
+	group: tr("kaart");
+	throwWarning: tr("Toll roads in destination:ref are lower case, instead of upper case");
+	fixAdd: concat("destination:ref=", replace(tag("destination:ref"), "toll", "Toll"));
+}
+
+*[destination:lanes:ref] {
+	group: tr("kaart");
+	throwWarning: tr("destination:lanes:ref should be destination:ref:lanes");
+	fixChangeKey: "destination:lanes:ref => destination:ref:lanes";
+}
+
+*[destination:lanes:ref:to] {
+	group: tr("kaart");
+	throwWarning: tr("destination:lanes:ref:to should be destination:ref:to:lanes");
+	fixChangeKey: "destination:lanes:ref:to => destination:ref:to:lanes";
+}
+/* Check *_links to make certain they have destination:ref */
+way[highway=~/^.*_link$/][ref][!destination:ref] {
+	group: tr("kaart");
+	throwWarning: tr("Link has ref but no destination:ref");
+	fixChangeKey: "ref => destination:ref";
+}
+/* Check if *_links are appropriately ref'd */
+way[highway!~/^.*_link$/][ref] > node.end_of_link { set .has_ref }
+way[highway=~/^.*_link$/][destination:ref] > node.end_of_link { set .has_destination_ref }
+
+/* TODO figure out way to select the _link */
+/*node.end_of_link.has_ref < way[highway] {*/
+/*fixAdd: concat("destination:ref=", parent_tag("ref"));*/
+
+node.end_of_link.has_ref[parent_tag("ref") != parent_tag("destination:ref")] {
+	group: tr("kaart");
+	throwWarning: tr("The destination:ref tag ({0}) does not match the ref tag ({1})", parent_tag("destination:ref"), parent_tag("ref"));
+}
+node.end_of_link.has_destination_ref[get(parent_tags("destination:ref"),0) != get(parent_tags("destination:ref"),1)] {
+	group: tr("kaart");
+	throwWarning: tr("The destination:ref tag ({0}) does not match the ref tag ({1})", get(parent_tags("destination:ref"),0), get(parent_tags("destination:ref"),1));
+}
+
+/* Mark _links without destination/:ref/:street/:reg_ref */
+way[highway=~/^.*_link$/][!destination][!destination:ref][!destination:street][!destination:reg_ref] {
+	group: tr("kaart");
+	throwWarning: tr("Link has no destination/:street/:ref tag");
+}
+
+/* Ensure that the destination:lanes/:forward/:backward match the number of lanes on the road */
+way[highway][!lanes][destination:lanes] {
+	group: tr("kaart");
+	throwWarning: tr("There should be a lanes tag when there is a destination:lanes tag");
+}
+way[highway][lanes][destination:lanes][oneway][count(split("|", tag("destination:lanes"))) != tag("lanes")],
+way[highway][lanes:forward][destination:lanes:forward][oneway][count(split("|", tag("destination:lanes:forward"))) != tag("lanes:forward")],
+way[highway][!lanes:forward][destination:lanes:forward][count(split("|", tag("destination:lanes:forward"))) != tag("lanes") / 2],
+way[highway][lanes:backward][destination:lanes:backward][oneway][count(split("|", tag("destination:lanes:backward"))) != tag("lanes:backward")],
+way[highway][!lanes:backward][destination:lanes:backward][count(split("|", tag("destination:lanes:backward"))) != tag("lanes") / 2],
+way[highway][lanes][destination:ref:lanes][oneway][count(split("|", tag("destination:ref:lanes"))) != tag("lanes")],
+way[highway][lanes:forward][destination:ref:lanes:forward][oneway][count(split("|", tag("destination:ref:lanes:forward"))) != tag("lanes:forward")],
+way[highway][!lanes:forward][destination:ref:lanes:forward][count(split("|", tag("destination:ref:lanes:forward"))) != tag("lanes") / 2],
+way[highway][lanes:backward][destination:ref:lanes:backward][oneway][count(split("|", tag("destination:ref:lanes:backward"))) != tag("lanes:backward")],
+way[highway][!lanes:backward][destination:ref:lanes:backward][count(split("|", tag("destination:ref:lanes:backward"))) != tag("lanes") / 2] {
+	group: tr("kaart");
+	throwWarning: tr("{0} does not match {1}", "{2.tag}", "{1.tag}");
+}
+*[destination=~/^.*(?i)(ave|blvd|str).*$/],
+*[destination:to=~/^.*(?i)(ave|blvd|str).*$/],
+*[destination:street=~/^.*(?i)(ave|blvd|str).*$/],
+*[destination:lanes=~/^.*(?i)(ave|blvd|str).*$/] {
+	group: tr("kaart");
+	throwWarning: tr("{0} shouldn''t have a street abbreviation in {1}", tag("name"), "{0.key}");
+	/*fixAdd: concat("{0.key}=",
+replace(replace(replace(replace(replace(replace(replace(replace(
+tr("{0}", "{0.key}"),
+"ave", "Avenue"),
+"ave.", "Avenue"),
+"Ave", "Avenue"),
+"Ave.", "Avenue"),
+"blvd", "Boulevard"),
+"blvd.", "Boulevard"),
+"Blvd", "Boulevard"),
+"Blvd.", "Boulevard")
+);*/
 }
