@@ -401,7 +401,8 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 	throwWarning: tr("{0} should have a name or a fixme=name", tag("tourism"));
 }
 
-*[fixme=~/^.*[ A-Z]+.*$/] {
+*[fixme=~/^.*[ A-Z]+.*$/],
+*[fixme!~/^[a-z]*$/] {
 	group: tr("kaart");
 	throwError: tr("fixme should ONLY be a tag");
 	suggestAlternative: tr("note");
