@@ -400,3 +400,10 @@ node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
 	throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
 	fixAdd: "direction=anticlockwise";
 }
+
+/* Check for address tagging */
+*[addr:housenumber][!addr:street]:modified {
+	group: tr("kaart");
+	throwError: tr("Addresses should have a street");
+	suggestAlternative: tr("addr:street");
+}
