@@ -2,7 +2,7 @@ meta
 {
 	title: "Validation rules for Kaart Group";
 	version: "2018-11-19";
-	description: "Check surfaces on roads that are residential and above, that _link destination:ref tags exist when it has a ref";
+	description: "Various checks that are useful to Kaart";
 	author: "Taylor Smock";
 }
 /* Documentation
@@ -178,6 +178,10 @@ way[highway][!name][name:el][inside("GR")] {
 	group: tr("kaart");
 	throwWarning: tr("There should be a name tag");
 	fixAdd: concat("name", "=", tag(name:el));
+}
+way[highway][name=~/^.*((ΑΕΙ|ΑΤ|ΑΤΕΙ|Αγ|Αλ|Αφοι|Αφών|Β|Βασ|Γρ|Δ|ΔΣ|Δημ|ΕΛΤΑ|Εθν|Ελ|Θεσ|Ι[. ]?Μ|Ι[. ]?Ν|Κτ|Κων|Λ|Ν|Ορ|Π|Παν|Πλ|Ποτ|Στρ|Σχ|ΤΕΙ|νικης|ωου)[.]?)$/][inside("GR")] {
+	group: tr("kaart");
+	throwWarning: tr("We don''t want to use abbreviations for streets");
 }
 
 /* Transliteration */
