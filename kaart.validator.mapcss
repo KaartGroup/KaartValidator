@@ -270,23 +270,6 @@ way[highway][name:el=~/(?i)(.*)(Οδός|Odos|Λεωφόρος)$/][inside("GR")]
 	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "avenue", "")));
 	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "road", "")));
 }
-/* Mark gas stations without a brand but with a common brand name */
-*[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
-	group: tr("kaart");
-	throwWarning: tr("Gas station has a name but no brand");
-	fixAdd: concat("brand=", tag("name"));
-}
-
-node[amenity=fuel]:modified {
-	group: tr("kaart");
-	throwWarning: tr("Gas stations should be an area, not a node");
-}
-
-/* Mark gas stations without a brand */
-*[amenity=fuel][name][!brand] {
-	group: tr("kaart");
-	throwWarning: tr("Gas station has a name but no brand");
-}
 
 /* Checks for roundabouts */
 way[junction=roundabout] > node {set .is_in_roundabout}
@@ -383,11 +366,18 @@ way[highway][bridge][!layer] {
 way[highway][bridge][!maxweight] {
 	group: tr("kaart");
 	throwOther: tr("Bridges may have a maxweight");
+	suggestAlternative: "maxweight";
 }
 /* TODO fix */
 way[highway][bridge] ⧉ way[highway][!bridge][!maxheight] {
 	group: tr("kaart");
-	throwOther: tr("Bridges occassionally have a maxheight attribute. Check on ground for the information (or OpenStreetCam/Mapillary)");
+	throwOther: tr("Ways under bridges occassionally have a maxheight attribute. Check on ground for the information (or OpenStreetCam/Mapillary)");
+	suggestAlternative: "maxheight";
+}
+way[highway][tunnel] {
+	group: tr("kaart");
+	throwOther: tr("Tunnels may have a maxheight");
+	suggestAlternative: "maxheight";
 }
 /* Check mini-roundabouts for the correct direction */
 node[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
@@ -406,4 +396,49 @@ node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
 	group: tr("kaart");
 	throwError: tr("Addresses should have a street");
 	suggestAlternative: tr("addr:street");
+}
+
+
+/***********
+ ** POI ****
+ ***********/
+/* Gas stations */
+/* Mark gas stations without a brand but with a common brand name */
+*[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
+	group: tr("kaart");
+	throwWarning: tr("Gas station has a name but no brand");
+	fixAdd: concat("brand=", tag("name"));
+}
+
+node[amenity=fuel]:modified {
+	group: tr("kaart");
+	throwWarning: tr("Gas stations should be an area, not a node");
+}
+
+/* Mark gas stations without a brand */
+*[amenity=fuel][name][!brand] {
+	group: tr("kaart");
+	throwWarning: tr("Gas station has a name but no brand");
+}
+
+node[amenity=fuel][!name][!brand][fixme!=name] {
+	group: tr("kaart");
+	throwWarning: tr("Gas station should have either a brand or a name");
+}
+
+/* Check for names on POI's */
+*[amenity=~/^(school|kindergarten|university|college|hospital|clinic|doctors|dentist|bank|courthouse|police|fire_station|place_of_worship)$/][!name][fixme!=name],
+*[amenity=~/^(school|kindergarten|university|college|hospital|clinic|doctors|dentist|bank|courthouse|police|fire_station|place_of_worship)$/][!name]:modified {
+	group: tr("kaart");
+	throwWarning: tr("{0} should have a name or a fixme=name", tag("amenity"));
+}
+*[office=~/^(government)][!name][fixme!=name],
+*[office=~/^(government)][!name]:modified {
+	group: tr("kaart");
+	throwWarning: tr("{0} should have a name or a fixme=name", tag("office"));
+}
+*[tourism=~/^(hotel)][!name][fixme!=name],
+*[tourism=~/^(hotel)][!name]:modified {
+	group: tr("kaart");
+	throwWarning: tr("{0} should have a name or a fixme=name", tag("tourism"));
 }
