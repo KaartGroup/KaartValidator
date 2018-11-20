@@ -13,6 +13,12 @@ meta
 /****************
  ** Roads *******
  ****************/
+/* throw error on oneway=-1 */
+way[oneway=-1] {
+	group: tr("kaart");
+	throwError: tr("oneway should not be -1");
+	suggestAlternative: tr("oneway=yes and reverse the way");
+}
 /* Check that roads have surfaces */
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!surface],
 way[highway=~/^.*_link$/][!surface] {
