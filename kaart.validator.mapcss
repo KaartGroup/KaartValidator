@@ -395,7 +395,7 @@ way[highway][name:el=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*$/] {
 
 /* Check for pedestrian ways */
 node[crossing] { set .crossing_node }
-way[highway=~/^(cycleway|footway|path|pedestrian)$/][footway=crossing] > node { set .footway_crossing }
+way[highway=~/^(cycleway|footway|pedestrian)$/][footway=crossing] > node { set .footway_crossing }
 way[highway][oneway=yes] > node { set .possible_divided_highway }
 way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35] > node.crossing_node.possible_divided_highway!.footway_crossing,
 way[!highway][waylength() < 30] > node.crossing_node.possible_divided_highway!.footway_crossing {
