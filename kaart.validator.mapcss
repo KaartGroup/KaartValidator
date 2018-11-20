@@ -403,7 +403,11 @@ way[!highway][waylength() < 30] > node.crossing_node.possible_divided_highway!.f
 	throwWarning: tr("Possible pedestrian crossing");
 	suggestAlternative: tr("highway=footway, footway=crossing");
 }
-
+node.crossing_node.possible_divided_highway!.footway_crossing {
+	group: tr("kaart");
+	throwWarning: tr("Maybe add a pedestrian crossing here");
+	suggestAlternative: tr("highway=footway, footway=crossing");
+}
 /* Check for address tagging */
 *[addr:housenumber][!addr:street]:modified {
 	group: tr("kaart");
