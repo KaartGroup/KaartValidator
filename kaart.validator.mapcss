@@ -1,7 +1,7 @@
 meta
 {
 	title: "Validation rules for Kaart Group";
-	version: "2018-11-20";
+	version: "2018-11-21";
 	description: "Various checks that are useful to Kaart";
 	author: "Taylor Smock";
 }
@@ -551,10 +551,14 @@ way[highway][!lanes:backward][destination:ref:lanes:backward][count(split("|", t
 	group: tr("kaart");
 	throwWarning: tr("{0} does not match {1}", "{2.tag}", "{1.tag}");
 }
-*[destination=~/^.*(?i)(ave|blvd|str).*$/],
-*[destination:to=~/^.*(?i)(ave|blvd|str).*$/],
-*[destination:street=~/^.*(?i)(ave|blvd|str).*$/],
-*[destination:lanes=~/^.*(?i)(ave|blvd|str).*$/] {
+*[destination=~/^(?i)(ave|blvd|str) .*$/],
+*[destination=~/^.* (?i)(ave|blvd|str)$/],
+*[destination:to=~/^(?i)(ave|blvd|str) .*$/],
+*[destination:to=~/^.* (?i)(ave|blvd|str)$/],
+*[destination:street=~/^(?i)(ave|blvd|str) .*$/],
+*[destination:street=~/^.* (?i)(ave|blvd|str)$/],
+*[destination:lanes=~/^.* (?i)(ave|blvd|str)$/],
+*[destination:lanes=~/^(?i)(ave|blvd|str) .*$/] {
 	group: tr("kaart");
 	throwWarning: tr("{0} shouldn''t have a street abbreviation in {1}", tag("name"), "{0.key}");
 	/*fixAdd: concat("{0.key}=",
