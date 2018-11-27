@@ -1,7 +1,7 @@
 meta
 {
 	title: "Validation rules for Kaart Group";
-	version: "2018-11-21";
+	version: "2018-11-22";
 	description: "Various checks that are useful to Kaart";
 	author: "Taylor Smock";
 }
@@ -46,12 +46,12 @@ way[highway=~/^(motorway|motorway_link)$/][!oneway] {
 }
 way[highway=~/^(motorway|motorway_link)$/][!access] {
 	group: tr("kaart");
-	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
-	suggestAlternative: "access=no";
+	throwOther: tr("{0} is typically reserved for motor_vehicles", "{0.tag}");
+	suggestAlternative: "access=no with motor_vehicle=yes";
 }
-way[highway=~/^(motorway|motorway_link)$/][!motor_vehicle] {
+way[highway=~/^(motorway|motorway_link)$/][access=no][!motor_vehicle] {
 	group: tr("kaart");
-	throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
+	throwOther: tr("{0} is typically accessible to motor_vehicles", "{0.tag}");
 	suggestAlternative: "motor_vehicle=yes";
 }
 
