@@ -554,7 +554,7 @@ way[highway][!lanes:forward][destination:ref:lanes:forward][count(split("|", tag
 way[highway][lanes:backward][destination:ref:lanes:backward][oneway][count(split("|", tag("destination:ref:lanes:backward"))) != tag("lanes:backward")],
 way[highway][!lanes:backward][destination:ref:lanes:backward][count(split("|", tag("destination:ref:lanes:backward"))) != tag("lanes") / 2] {
 	group: tr("kaart");
-	throwWarning: tr("{0} does not match {1}", "{2.tag}", "{1.tag}");
+	throwWarning: tr("The implied lanes in {0} do not match the lanes in {1}", "{2.tag}", "{1.key}");
 }
 *[destination=~/^(?i)(ave|blvd|str) .*$/],
 *[destination=~/^.* (?i)(ave|blvd|str)$/],
