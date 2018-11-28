@@ -229,6 +229,11 @@ way[highway][bridge] ⧉ way[highway][!bridge][!maxheight] {
 	throwOther: tr("Ways under bridges occassionally have a maxheight attribute. Check on ground for the information (or OpenStreetCam/Mapillary)");
 	suggestAlternative: "maxheight";
 }
+way[highway][maxheight=~/^\d+'\s\d+"$/] {
+	group: tr("kaart");
+	throwWarning: tr("maxheight is not properly formatted for feet and inches");
+	fixAdd: tr("maxheight={0}", replace(tag("maxheight"), " ", ""));
+}
 way[highway][tunnel] {
 	group: tr("kaart");
 	throwOther: tr("Tunnels may have a maxheight");
