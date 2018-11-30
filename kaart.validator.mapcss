@@ -20,10 +20,10 @@ way[oneway=-1] {
 	suggestAlternative: tr("oneway=yes and reverse the way");
 }
 /* Check that roads have surfaces */
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!surface],
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential|unclassified|service|living_street)$/][!surface],
 way[highway=~/^.*_link$/][!surface] {
 	group: tr("kaart");
-	throwWarning: tr("Missing surface on road that is a {0}", tag("highway"));
+	throwWarning: tr("Missing surface on a road");
 }
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][surface=paved],
 way[highway=~/^(pedestrian)$/][name][surface=paved],
@@ -136,26 +136,15 @@ way >[index=1] node {
 	set .start_of_way
 }
 
-/* Check ref consistency */
-way[highway][ref] > node.end_of_way.start_of_way[count(parent_tags("ref")) != 1] { set .highway_break_ref }
-node.highway_break_ref:in-downloaded-area {
-	group: tr("kaart");
-	throwWarning: tr("Does the ref really change here?");
-}
+/* Check that specific types of roads have refs and names */
 way[highway=~/^(motorway|trunk|primary|secondary)$/][!ref] {
 	group: tr("kaart");
-	throwWarning: tr("A {0} road is missing a ref", tag("highway"));
+	throwWarning: tr("A road is missing a ref");
 }
 
-/* Check name consistency */
-way[highway][name] > node.end_of_way.start_of_way[count(parent_tags("name")) != 1] { set .highway_break_name }
-node.highway_break_name:in-downloaded-area {
-	group: tr("kaart");
-	throwWarning: tr("Does the name really change here?");
-}
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!name] {
 	group: tr("kaart");
-	throwWarning: tr("A {0} road is missing a name", tag("highway"));
+	throwWarning: tr("A road is missing a name");
 }
 
 /* Check *_links to see if they have a name/noname tag */
@@ -179,37 +168,10 @@ way[highway!~/^.*_link$/][name] >[index=1] node {
 	set .end_of_road
 }
 
-/* TODO When #16998 is closed, remove node.end_of_road.end_of_link */
-node.end_of_road.end_of_link,
-node[count(parent_osm_ids("highway")) == 1 && count(parent_osm_ids("highway", "^.*_link$")) == 2] {
-	group: tr("kaart");
-	throwWarning: tr("Should there be split _links at the end of a highway?");
-}
-
 way[highway=~/^.*_link$/] > node {set .is_in_link}
 way[highway =~ /^(bus_guideway|living_street|motorway|motorway_link|pedestrian|primary|primary_link|raceway|residential|road|secondary|secondary_link|service|tertiary|tertiary_link|track|trunk|trunk_link|unclassified)$/] > node { set .is_in_major_road }
 way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
 
-/* TODO: Fix maxspeed maybe parent_tags(key_name) with has_tag_key? */
-way[highway][maxspeed] >[index=1] node,
-way[highway][maxspeed] >[index=-1] node { set .has_maxspeed }
-way[highway][!maxspeed] >[index=1] node,
-way[highway][!maxspeed] >[index=-1] node { set .no_maxspeed }
-way[highway] <[index=1] node.has_maxspeed { set .start_has_maxspeed }
-way[highway] <[index=-1] node.has_maxspeed { set .end_has_maxspeed }
-
-node.no_maxspeed.has_maxspeed[count(parent_tags("name")) = 1]:in-downloaded-area,
-node.no_maxspeed.has_maxspeed[count(parent_tags("ref")) = 1]:in-downloaded-area {
-	group: tr("kaart");
-	throwWarning: tr("We go from maxspeed to no maxspeed");
-}
-
-way[!maxspeed].start_has_maxspeed!.end_has_maxspeed,
-way[!maxspeed]!.start_has_maxspeed.end_has_maxspeed,
-way[!maxspeed].start_has_maxspeed.end_has_maxspeed {
-	group: tr("kaart");
-	throwWarning: tr("Does the maxspeed continue here?");
-}
 /* Check bridge tagging */
 way[highway][bridge][!layer] {
 	group: tr("kaart");
@@ -414,7 +376,7 @@ way[!highway][waylength() < 30] > node.crossing_node.possible_divided_highway!.f
 	throwWarning: tr("Possible pedestrian crossing");
 	suggestAlternative: tr("highway=footway, footway=crossing");
 }
-node.crossing_node.possible_divided_highway!.footway_crossing {
+node.crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
 	group: tr("kaart");
 	throwWarning: tr("Maybe add a pedestrian crossing here");
 	suggestAlternative: tr("highway=footway, footway=crossing");
@@ -533,9 +495,9 @@ node.end_of_link.has_destination_ref[get(parent_tags("destination:ref"),0) != ge
 }
 
 /* Mark _links without destination/:ref/:street/:reg_ref */
-way[highway=~/^.*_link$/][!destination][!destination:ref][!destination:street][!destination:reg_ref] {
+way[highway=~/^.*_link$/][!destination][!destination:ref][!destination:street][!destination:reg_ref]:in-downloaded-area {
 	group: tr("kaart");
-	throwWarning: tr("Link has no destination/:street/:ref tag");
+	throwWarning: tr("Link has no destination/:street/:ref tag (kaartplugin may have autofix)");
 }
 
 /* Ensure that the destination:lanes/:forward/:backward match the number of lanes on the road */
