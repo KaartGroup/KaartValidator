@@ -20,10 +20,14 @@ way[oneway=-1] {
 	suggestAlternative: tr("oneway=yes and reverse the way");
 }
 /* Check that roads have surfaces */
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential|unclassified|service|living_street)$/][!surface],
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$/][!surface],
 way[highway=~/^.*_link$/][!surface] {
 	group: tr("kaart");
 	throwWarning: tr("Missing surface on a road");
+}
+way[highway=~/^(service|living_street)$/][!surface] {
+	group: tr("kaart");
+	throwOther: tr("Missing surface on a minor road");
 }
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][surface=paved],
 way[highway=~/^(pedestrian)$/][name][surface=paved],
@@ -142,7 +146,7 @@ way[highway=~/^(motorway|trunk|primary|secondary)$/][!ref] {
 	throwWarning: tr("A road is missing a ref");
 }
 
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!name] {
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!name][!junction] {
 	group: tr("kaart");
 	throwWarning: tr("A road is missing a name");
 }
@@ -152,6 +156,11 @@ way[highway=~/^.*_link$/][name],
 way[highway=~/^.*_link$/][noname] {
 	group: tr("kaart");
 	throwWarning: tr("Links shouldn''t have name/noname tags");
+}
+/* Bring pedestrian crossings forward */
+node[highway=crossing][!crossing] {
+	group: tr("kaart");
+	throwWarning: tr("A highway crossing does not have a crossing type");
 }
 /* Check that way that is ONLY connecting crossings is a footway TODO */
 /*way[highway!=footway][!name] >[index=-1] node[highway=crossing] >[index=1] node[highway=crossing] {
@@ -264,7 +273,7 @@ way[highway=~/^.*_link$/][junction] {
  ** Country Specific ***
  ***********************/
 /* Copy name to name:<appropriate> */
-*[name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!name:el][inside("GR")] { set .needsgreekname }
+*[name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!name:el][/^name:.*$/][inside("GR")] { set .needsgreekname }
 /* Check end of names for σ instead of ς */
 *[name=~/^(.*)(σ) (.*)$/],
 *[name=~/^(.*)(σ)$/],
@@ -300,6 +309,11 @@ way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|
 	throwWarning: tr("There should be an int_name");
 	/* Transliteration is a different step */
 	fixAdd: concat("int_name=", tag("name"));
+}
+/* Check int_names */
+way[highway][int_name][int_name!~/^[a-zA-Z0-9 .&\-]*$/] {
+	group: tr("kaart");
+	throwWarning: tr("Check the int_name for non-latin characters");
 }
 /* Greece transliteration */
 way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][inside("GR")]:selected {
@@ -339,6 +353,19 @@ way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ
 	/*"η", "TODO"),*/
 }
 
+/* A lot of name:en tags are just transliterations. They should be int_name. */
+*[highway][name:en][!int_name][name][inside("GR")] {
+	group: tr("kaart");
+	throwOther: tr("Check that the name:en tag is not a transliteration of the name/name:el tag");
+}
+*[highway][tag("name:en")=tag("int_name")] {
+	group: tr("kaart");
+	throwOther: tr("int_name is the same as the name:en, name:en may be a transliteration");
+	/*fixRemove: "name:en";*/
+	assertMatch: "way highway=residential name:en=Rop int_name=Rop name=Ροπ";
+	assertNoMatch: "way highway=residential name:en=Rope int_name=Rop name=Ροπ";
+}
+
 /* OSM Greece does NOT want street/road */
 way[highway][name=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος|avenue|street|road|str\.).*/][inside("GR")],
 way[highway][name:en=~/(?i).*(avenue|street|road|str\.)$/],
@@ -370,6 +397,7 @@ way[highway][name:el=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*$/] {
 node[crossing] { set .crossing_node }
 way[highway=~/^(cycleway|footway|pedestrian)$/][footway=crossing] > node { set .footway_crossing }
 way[highway][oneway=yes] > node { set .possible_divided_highway }
+
 way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35] > node.crossing_node.possible_divided_highway!.footway_crossing,
 way[!highway][waylength() < 30] > node.crossing_node.possible_divided_highway!.footway_crossing {
 	group: tr("kaart");
@@ -432,6 +460,13 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 	group: tr("kaart");
 	throwWarning: tr("{0} should have a name or a fixme=name", tag("tourism"));
 }
+/* Ensure modified poi's have an addr:street */
+*[tourism=~/^(hotel)$/][!addr:street]:modified,
+*[office=~/^(government)$/][!addr:street]:modified,
+*[amenity=~/^(school|kindergarten|university|college|hospital|clinic|doctors|dentist|bank|courthouse|police|fire_station|place_of_worship|fuel)$/][!addr:street]:modified {
+	group: tr("kaart");
+	throwError: tr("Try to add addr:street to new or modified POI's");
+}
 
 *[fixme=~/^.*[ A-Z]+.*$/]:modified,
 *[fixme][fixme!~/^[a-z]*$/]:modified {
@@ -442,6 +477,7 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 	assertNoMatch: "way fixme=\"name\"";
 	assertMatch: "way fixme=\"Name\"";
 }
+
 
 /**************************************
  ***** Destination Tagging ************
@@ -492,12 +528,6 @@ node.end_of_link.has_ref[parent_tag("ref") != parent_tag("destination:ref")] {
 node.end_of_link.has_destination_ref[get(parent_tags("destination:ref"),0) != get(parent_tags("destination:ref"),1)] {
 	group: tr("kaart");
 	throwWarning: tr("The destination:ref tag ({0}) does not match the ref tag ({1})", get(parent_tags("destination:ref"),0), get(parent_tags("destination:ref"),1));
-}
-
-/* Mark _links without destination/:ref/:street/:reg_ref */
-way[highway=~/^.*_link$/][!destination][!destination:ref][!destination:street][!destination:reg_ref]:in-downloaded-area {
-	group: tr("kaart");
-	throwWarning: tr("Link has no destination/:street/:ref tag (kaartplugin may have autofix)");
 }
 
 /* Ensure that the destination:lanes/:forward/:backward match the number of lanes on the road */
