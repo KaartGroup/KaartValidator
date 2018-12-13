@@ -146,6 +146,12 @@ way[highway=~/^(motorway|trunk|primary|secondary)$/][!ref] {
 	throwWarning: tr("A road is missing a ref");
 }
 
+/* Check for erroneous maxspeed */
+way[highway][/^(?!maxspeed:type)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5]( mph| knots)?)|none|walk|signals)$/] {
+	group: tr("kaart");
+	throwError: tr("Unknown maxspeed -- check the maxspeeds");
+}
+
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!name][!junction] {
 	group: tr("kaart");
 	throwWarning: tr("A road is missing a name");
@@ -158,7 +164,7 @@ way[highway=~/^.*_link$/][noname] {
 	throwWarning: tr("Links shouldn''t have name/noname tags");
 }
 /* Bring pedestrian crossings forward */
-node[highway=crossing][!crossing] {
+node[highway=crossing][!crossing]:in-downloaded-area {
 	group: tr("kaart");
 	throwWarning: tr("A highway crossing does not have a crossing type");
 }
@@ -311,7 +317,7 @@ way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|
 	fixAdd: concat("int_name=", tag("name"));
 }
 /* Check int_names */
-way[highway][int_name][int_name!~/^[a-zA-Z0-9 .&\-]*$/] {
+way[highway][int_name][int_name!~/^[a-zA-Z0-9 .&-]*$/] {
 	group: tr("kaart");
 	throwWarning: tr("Check the int_name for non-latin characters");
 }
@@ -367,7 +373,7 @@ way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ
 }
 
 /* OSM Greece does NOT want street/road */
-way[highway][name=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος|avenue|street|road|str\.).*/][inside("GR")],
+way[highway][name=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος|alley|avenue|street|road|str\.).*/][inside("GR")],
 way[highway][name:en=~/(?i).*(avenue|street|road|str\.)$/],
 way[highway][name:el=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*$/] {
 	group: tr("kaart");
@@ -404,7 +410,7 @@ way[!highway][waylength() < 30] > node.crossing_node.possible_divided_highway!.f
 	throwWarning: tr("Possible pedestrian crossing");
 	suggestAlternative: tr("highway=footway, footway=crossing");
 }
-node.crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
+node[!inside("GR")].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
 	group: tr("kaart");
 	throwWarning: tr("Maybe add a pedestrian crossing here");
 	suggestAlternative: tr("highway=footway, footway=crossing");
@@ -445,8 +451,8 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 }
 
 /* Check for names on POI's */
-*[amenity=~/^(school|kindergarten|university|college|hospital|clinic|doctors|dentist|bank|courthouse|police|fire_station|place_of_worship)$/][!name][fixme!=name],
-*[amenity=~/^(school|kindergarten|university|college|hospital|clinic|doctors|dentist|bank|courthouse|police|fire_station|place_of_worship)$/][!name]:modified {
+*[amenity=~/^(bank|clinic|college|courthouse|dentist|doctors|fire_station|fuel|hospital|kindergarten|pharmacy|place_of_worship|police|school|university)$/][!name][fixme!=name],
+*[amenity=~/^(bank|clinic|college|courthouse|dentist|doctors|fire_station|fuel|hospital|kindergarten|pharmacy|place_of_worship|police|school|university)$/][!name]:modified!:new {
 	group: tr("kaart");
 	throwWarning: tr("{0} should have a name or a fixme=name", tag("amenity"));
 }
@@ -463,7 +469,7 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 /* Ensure modified poi's have an addr:street */
 *[tourism=~/^(hotel)$/][!addr:street]:modified,
 *[office=~/^(government)$/][!addr:street]:modified,
-*[amenity=~/^(school|kindergarten|university|college|hospital|clinic|doctors|dentist|bank|courthouse|police|fire_station|place_of_worship|fuel)$/][!addr:street]:modified {
+*[amenity=~/^(bank|clinic|college|courthouse|dentist|doctors|fire_station|fuel|hospital|kindergarten|pharmacy|place_of_worship|police|school|university)$/][!addr:street]:modified {
 	group: tr("kaart");
 	throwError: tr("Try to add addr:street to new or modified POI's");
 }
@@ -512,22 +518,6 @@ way[highway=~/^.*_link$/][ref][!destination:ref] {
 	group: tr("kaart");
 	throwWarning: tr("Link has ref but no destination:ref");
 	fixChangeKey: "ref => destination:ref";
-}
-/* Check if *_links are appropriately ref'd */
-way[highway!~/^.*_link$/][ref] > node.end_of_link { set .has_ref }
-way[highway=~/^.*_link$/][destination:ref] > node.end_of_link { set .has_destination_ref }
-
-/* TODO figure out way to select the _link */
-/*node.end_of_link.has_ref < way[highway] {*/
-/*fixAdd: concat("destination:ref=", parent_tag("ref"));*/
-
-node.end_of_link.has_ref[parent_tag("ref") != parent_tag("destination:ref")] {
-	group: tr("kaart");
-	throwWarning: tr("The destination:ref tag ({0}) does not match the ref tag ({1})", parent_tag("destination:ref"), parent_tag("ref"));
-}
-node.end_of_link.has_destination_ref[get(parent_tags("destination:ref"),0) != get(parent_tags("destination:ref"),1)] {
-	group: tr("kaart");
-	throwWarning: tr("The destination:ref tag ({0}) does not match the ref tag ({1})", get(parent_tags("destination:ref"),0), get(parent_tags("destination:ref"),1));
 }
 
 /* Ensure that the destination:lanes/:forward/:backward match the number of lanes on the road */
