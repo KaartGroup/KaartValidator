@@ -147,7 +147,7 @@ way[highway=~/^(motorway|trunk|primary|secondary)$/][!ref] {
 }
 
 /* Check for erroneous maxspeed */
-way[highway][/^(?!maxspeed:type)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5]( mph| knots)?)|none|walk|signals)$/] {
+way[highway][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5]( mph| knots)?)|none|walk|signals)$/] {
 	group: tr("kaart");
 	throwError: tr("Unknown maxspeed -- check the maxspeeds");
 }
@@ -232,14 +232,14 @@ node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
  * Roundabouts ***
  *****************/
 /* Checks for roundabouts */
-way[junction=roundabout] > node {set .is_in_roundabout}
-node[traffic_calming=island] { set .is_traffic_calming_island}
-way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout!.is_traffic_calming_island {
+way[junction=roundabout]:in-downloaded-area > node {set .is_in_roundabout}
+node[traffic_calming=island]:in-downloaded-area { set .is_traffic_calming_island}
+way[highway][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout!.is_traffic_calming_island {
 	group: tr("kaart");
 	throwWarning: tr("Highway connecting to roundabout is NOT a oneway -- check if there is a traffic_calming=island nearby");
 	suggestAlternative: "split ways to have roundabout flares or add traffic_calming=island to a node using imagery"
 }
-way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout.is_traffic_calming_island {
+way[highway][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout.is_traffic_calming_island {
 	group: tr("kaart");
 	throwWarning: tr("The node where a roundabout and a way connect should NOT be a traffic_calming=island (the island should be on the approach, not in the roundabout)");
 }
@@ -247,8 +247,8 @@ way[highway][oneway!=yes][junction!=roundabout] > node.is_in_roundabout.is_traff
 /* Check for roundabouts with MORE than 1 road entering at the same location */
 way[junction=roundabout][name] > node {set .is_in_named_roundabout}
 /* TODO remove the one with parent_tags as soon as parent_osm_ids is in josm-tested */
-node.is_in_roundabout!.is_in_named_roundabout[count(parent_tags("name")) > 1],
-node.is_in_roundabout.is_in_named_roundabout[count(parent_tags("name")) > 2] {
+node.is_in_roundabout!.is_in_named_roundabout[count(parent_tags("name")) > 1]:in-downloaded-area,
+node.is_in_roundabout.is_in_named_roundabout[count(parent_tags("name")) > 2]:in-downloaded-area {
 	group: tr("kaart");
 	throwWarning: tr("Roundabouts should not have more than two additional ways at any node");
 }
@@ -274,7 +274,13 @@ way[highway=~/^.*_link$/][junction] {
 	throwWarning: tr("{0} should not be a {1}", tag("junction"), tag("highway"));
 }
 
-
+relation[type=restriction][!/^restriction/] {
+	group: tr("kaart");
+	throwError: tr("Restriction relations should have the type of restriction");
+	assertMatch: "relation type=restriction";
+	assertNoMatch: "relation type=restriction restriction=no_u_turn";
+	assertNoMatch: "relation type=restriction restriction:hgv=no_u_turn";
+}
 /***********************
  ** Country Specific ***
  ***********************/
@@ -317,9 +323,12 @@ way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|
 	fixAdd: concat("int_name=", tag("name"));
 }
 /* Check int_names */
-way[highway][int_name][int_name!~/^[a-zA-Z0-9 .&-]*$/] {
+way[highway][int_name][int_name!~/^[a-zA-Z0-9 .&'-]*$/] {
 	group: tr("kaart");
 	throwWarning: tr("Check the int_name for non-latin characters");
+	assertNoMatch: "way highway=primary int_name=\"Akti Xaveriou\"";
+	assertMatch: "way highway=primary int_name=\"Ακτι Χαωεριου\"";
+	assertNoMatch: "way highway=primary int_name=\"Neofytou Vamva A' Parodos\"";
 }
 /* Greece transliteration */
 way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][inside("GR")]:selected {
@@ -373,9 +382,7 @@ way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ
 }
 
 /* OSM Greece does NOT want street/road */
-way[highway][name=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος|alley|avenue|street|road|str\.).*/][inside("GR")],
-way[highway][name:en=~/(?i).*(avenue|street|road|str\.)$/],
-way[highway][name:el=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*$/] {
+way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/][inside("GR")] {
 	group: tr("kaart");
 	throwWarning: "OSM Greece does not want street/road/other prefixes -- try removing the prefix (fix won't work with different cases)";
 	fixAdd: concat("name=", trim(replace(tag("name"), "Οδός", "")));
@@ -384,15 +391,8 @@ way[highway][name:el=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*$/] {
 	fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Οδός", "")));
 	fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Odos", "")));
 	fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Λεωφόρος", "")));
-	fixAdd: concat("name=", trim(replace(tag("name"), "street", "")));
-	fixAdd: concat("name=", trim(replace(tag("name"), "str.", "")));
-	fixAdd: concat("name=", trim(replace(tag("name"), "avenue", "")));
-	fixAdd: concat("name=", trim(replace(tag("name"), "road", "")));
-	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "street", "")));
-	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "str.", "")));
-	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "avenue", "")));
-	fixAdd: concat("name:en=", trim(replace(tag("name:en"), "road", "")));
-	/*assertMatch: "way highway=primary name=\"Φεσσασ Οδός\"";*/
+	assertMatch: "way highway=primary name=\"Φεσσασ Οδός\"";
+	assertNoMatch: "way highway=primary name=\"Φεσσασ\"";
 }
 
 /***************
@@ -421,7 +421,11 @@ node[!inside("GR")].crossing_node.possible_divided_highway!.footway_crossing:in-
 	throwError: tr("Addresses should have a street");
 	suggestAlternative: tr("addr:street");
 }
-
+*[addr:housenumber][!addr:street] {
+	group: tr("kaart");
+	throwWarning: tr("Addresses should have a street");
+	suggestAlternative: tr("addr:street");
+}
 
 /***********
  ** POI ****
