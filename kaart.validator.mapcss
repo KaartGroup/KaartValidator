@@ -234,7 +234,7 @@ node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
 /* Checks for roundabouts */
 way[junction=roundabout]:in-downloaded-area > node {set .is_in_roundabout}
 node[traffic_calming=island]:in-downloaded-area { set .is_traffic_calming_island}
-way[highway][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout!.is_traffic_calming_island {
+way[highway][highway!~/^(pedestrian|footway)$/][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout!.is_traffic_calming_island {
 	group: tr("kaart");
 	throwWarning: tr("Highway connecting to roundabout is NOT a oneway -- check if there is a traffic_calming=island nearby");
 	suggestAlternative: "split ways to have roundabout flares or add traffic_calming=island to a node using imagery"
@@ -264,7 +264,7 @@ node.roundabout_way_ends {
 	throwWarning: tr("Way {0} does not end at roundabout", parent_tags("name"));
 }
 
-way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|service|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
+way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
 	group: tr("kaart");
 	throwWarning: tr("Possible roundabout or circular junction");
 }
@@ -425,6 +425,10 @@ node[!inside("GR")].crossing_node.possible_divided_highway!.footway_crossing:in-
 	group: tr("kaart");
 	throwWarning: tr("Addresses should have a street");
 	suggestAlternative: tr("addr:street");
+}
+way[addr:interpolation][addr:street] {
+	group: tr("kaart");
+	throwWarning: tr("Interpolation lines should not have addr:street on it");
 }
 
 /***********
