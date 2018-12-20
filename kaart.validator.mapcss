@@ -1,7 +1,7 @@
 meta
 {
 	title: "Validation rules for Kaart Group";
-	version: "2018-11-25";
+	version: "2018-11-26";
 	description: "Various checks that are useful to Kaart";
 	author: "Taylor Smock";
 }
@@ -78,7 +78,15 @@ way[highway][turn:lanes][!oneway][2 * count(split("|", tag("turn:lanes"))) != ta
 way[highway][turn:lanes][!lanes] {
 	group: tr("kaart");
 	throwWarning: tr("turn:lanes do not match lanes");
-	/*fixAdd: concat("lanes=", count(split("|", tag("turn.lanes")));*/
+	assertMatch: "way highway=primary lanes=4 turn:lanes=left|through|through;right";
+	assertNoMatch: "way highway=primary lanes=4 turn:lanes=left;through|through;right";
+}
+way|z21-[JOSM_search("inview")][highway][turn:lanes][oneway][count(split("|", tag("turn:lanes"))) != tag("lanes")],
+way|z21-[JOSM_search("inview")][highway][turn:lanes][!oneway][2 * count(split("|", tag("turn:lanes"))) != tag("lanes")],
+way|z21-[JOSM_search("inview")][highway][turn:lanes][!lanes] {
+	group: tr("kaart");
+	throwWarning: tr("turn:lanes do not match lanes");
+	fixAdd: concat("lanes=", count(split("|", tag("turn.lanes")));
 }
 way[highway][turn:lanes:forward][lanes:forward][count(split("|", tag("turn:lanes:forward"))) != tag("lanes:forward")],
 way[highway][turn:lanes:forward][!lanes:forward][count(split("|", tag("turn:lanes:forward"))) != tag("lanes") / 2] {
@@ -188,11 +196,11 @@ way[highway =~ /^(bus_guideway|living_street|motorway|motorway_link|pedestrian|p
 way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
 
 /* Check bridge tagging */
-way[highway][bridge][!layer]:selected {
+way[highway][bridge][!layer] {
 	group: tr("kaart");
 	throwWarning: tr("Bridges should have a layer");
 }
-way[highway][bridge][!layer] {
+way|z21-[JOSM_search("inview")][highway][bridge][!layer] {
 	group: tr("kaart");
 	throwWarning: tr("Bridges should have a layer");
 	fixAdd: "layer=1";
@@ -214,7 +222,7 @@ way[highway][maxheight=~/^\d+'\s\d+"$/] {
 	group: tr("kaart");
 	throwWarning: tr("maxheight is not properly formatted for feet and inches");
 }
-way[highway][maxheight=~/^\d+'\s\d+"$/]:selected {
+way|z21-[JOSM_search("inview")][highway][maxheight=~/^\d+'\s\d+"$/] {
 	group: tr("kaart");
 	throwWarning: tr("maxheight is not properly formatted for feet and inches");
 	fixAdd: tr("maxheight={0}", replace(tag("maxheight"), " ", ""));
@@ -229,7 +237,7 @@ node[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
 	group: tr("kaart");
 	throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
 }
-node[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:selected {
+node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
 	group: tr("kaart");
 	throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
 	fixAdd: "direction=clockwise";
@@ -238,7 +246,7 @@ node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
 	group: tr("kaart");
 	throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
 }
-node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:selected {
+node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
 	group: tr("kaart");
 	throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
 	fixAdd: "direction=anticlockwise";
@@ -315,7 +323,7 @@ relation[type=restriction][!/^restriction/] {
 }
 way[highway].needsgreekname,
 *[name].needsgreekname:modified,
-*[name].needsgreekname:selected {
+*|z21-[JOSM_search("inview")][name].needsgreekname {
 	group: tr("kaart");
 	throwWarning: tr("There should be a name:el tag");
 	fixAdd: concat("name:", "el", "=", tag(name));
@@ -401,6 +409,8 @@ way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ
 way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/][inside("GR")] {
 	group: tr("kaart");
 	throwWarning: "OSM Greece does not want street/road/other prefixes -- try removing the prefix (fix won't work with different cases)";
+	assertMatch: "way highway=primary name=\"Φεσσασ Οδός\"";
+	assertNoMatch: "way highway=primary name=\"Φεσσασ\"";
 }
 way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/][inside("GR")]:selected {
 	group: tr("kaart");
@@ -411,8 +421,6 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
 	fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Οδός", "")));
 	fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Odos", "")));
 	fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Λεωφόρος", "")));
-	assertMatch: "way highway=primary name=\"Φεσσασ Οδός\"";
-	assertNoMatch: "way highway=primary name=\"Φεσσασ\"";
 }
 
 /***************
@@ -460,7 +468,7 @@ way[addr:interpolation][addr:street] {
 	group: tr("kaart");
 	throwWarning: tr("Gas station has a name but no brand");
 }
-*[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand]:selected {
+*|z21-[JOSM_search("inview")][amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
 	group: tr("kaart");
 	throwWarning: tr("Gas station has a name but no brand");
 	fixAdd: concat("brand=", tag("name"));
@@ -550,7 +558,7 @@ way[highway=~/^.*_link$/][ref][!destination:ref] {
 	group: tr("kaart");
 	throwWarning: tr("Link has ref but no destination:ref");
 }
-way[highway=~/^.*_link$/][ref][!destination:ref]:selected {
+way|z21-[JOSM_search("inview")][highway=~/^.*_link$/][ref][!destination:ref] {
 	group: tr("kaart");
 	throwWarning: tr("Link has ref but no destination:ref");
 	fixChangeKey: "ref => destination:ref";
