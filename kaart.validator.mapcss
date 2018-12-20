@@ -1,7 +1,7 @@
 meta
 {
 	title: "Validation rules for Kaart Group";
-	version: "2018-11-24";
+	version: "2018-11-25";
 	description: "Various checks that are useful to Kaart";
 	author: "Taylor Smock";
 }
@@ -188,6 +188,10 @@ way[highway =~ /^(bus_guideway|living_street|motorway|motorway_link|pedestrian|p
 way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
 
 /* Check bridge tagging */
+way[highway][bridge][!layer]:selected {
+	group: tr("kaart");
+	throwWarning: tr("Bridges should have a layer");
+}
 way[highway][bridge][!layer] {
 	group: tr("kaart");
 	throwWarning: tr("Bridges should have a layer");
@@ -209,6 +213,10 @@ way[highway][bridge] ⧉ way[highway][!bridge][!maxheight] {
 way[highway][maxheight=~/^\d+'\s\d+"$/] {
 	group: tr("kaart");
 	throwWarning: tr("maxheight is not properly formatted for feet and inches");
+}
+way[highway][maxheight=~/^\d+'\s\d+"$/]:selected {
+	group: tr("kaart");
+	throwWarning: tr("maxheight is not properly formatted for feet and inches");
 	fixAdd: tr("maxheight={0}", replace(tag("maxheight"), " ", ""));
 }
 way[highway][tunnel] {
@@ -220,9 +228,17 @@ way[highway][tunnel] {
 node[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
 	group: tr("kaart");
 	throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
+}
+node[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:selected {
+	group: tr("kaart");
+	throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
 	fixAdd: "direction=clockwise";
 }
 node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
+	group: tr("kaart");
+	throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
+}
+node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:selected {
 	group: tr("kaart");
 	throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
 	fixAdd: "direction=anticlockwise";
@@ -385,6 +401,10 @@ way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ
 way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/][inside("GR")] {
 	group: tr("kaart");
 	throwWarning: "OSM Greece does not want street/road/other prefixes -- try removing the prefix (fix won't work with different cases)";
+}
+way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/][inside("GR")]:selected {
+	group: tr("kaart");
+	throwWarning: "OSM Greece does not want street/road/other prefixes -- try removing the prefix (fix won't work with different cases)";
 	fixAdd: concat("name=", trim(replace(tag("name"), "Οδός", "")));
 	fixAdd: concat("name=", trim(replace(tag("name"), "Odos", "")));
 	fixAdd: concat("name=", trim(replace(tag("name"), "Λεωφόρος", "")));
@@ -437,6 +457,10 @@ way[addr:interpolation][addr:street] {
 /* Gas stations */
 /* Mark gas stations without a brand but with a common brand name */
 *[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
+	group: tr("kaart");
+	throwWarning: tr("Gas station has a name but no brand");
+}
+*[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand]:selected {
 	group: tr("kaart");
 	throwWarning: tr("Gas station has a name but no brand");
 	fixAdd: concat("brand=", tag("name"));
@@ -523,6 +547,10 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 }
 /* Check *_links to make certain they have destination:ref */
 way[highway=~/^.*_link$/][ref][!destination:ref] {
+	group: tr("kaart");
+	throwWarning: tr("Link has ref but no destination:ref");
+}
+way[highway=~/^.*_link$/][ref][!destination:ref]:selected {
 	group: tr("kaart");
 	throwWarning: tr("Link has ref but no destination:ref");
 	fixChangeKey: "ref => destination:ref";
