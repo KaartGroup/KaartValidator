@@ -86,19 +86,29 @@ way|z21-[JOSM_search("inview")][highway][turn:lanes][!oneway][2 * count(split("|
 way|z21-[JOSM_search("inview")][highway][turn:lanes][!lanes] {
 	group: tr("kaart");
 	throwWarning: tr("turn:lanes do not match lanes");
-	fixAdd: concat("lanes=", count(split("|", tag("turn.lanes")));
+	fixAdd: concat("lanes", "=", count(split("|", tag("turn:lanes"))));
 }
 way[highway][turn:lanes:forward][lanes:forward][count(split("|", tag("turn:lanes:forward"))) != tag("lanes:forward")],
 way[highway][turn:lanes:forward][!lanes:forward][count(split("|", tag("turn:lanes:forward"))) != tag("lanes") / 2] {
 	group: tr("kaart");
 	throwWarning: tr("turn:lanes:forward do not match lanes:forward");
-	/*fixAdd: concat("lanes:forward=", count(split("|", tag("turn.lanes:forward")));*/
+}
+way|z21-[JOSM_search("inview")][highway][turn:lanes:forward][lanes:forward][count(split("|", tag("turn:lanes:forward"))) != tag("lanes:forward")],
+way|z21-[JOSM_search("inview")][highway][turn:lanes:forward][!lanes:forward][count(split("|", tag("turn:lanes:forward"))) != tag("lanes") / 2] {
+	group: tr("kaart");
+	throwWarning: tr("turn:lanes:forward do not match lanes:forward");
+	fixAdd: concat("lanes:forward=", count(split("|", tag("turn.lanes:forward"))));
 }
 way[highway][turn:lanes:backward][lanes:backward][count(split("|", tag("turn:lanes:backward"))) != tag("lanes:backward")],
 way[highway][turn:lanes:backward][!lanes:backward][count(split("|", tag("turn:lanes:backward"))) != tag("lanes") / 2] {
 	group: tr("kaart");
-	throwWarning: tr("turn:lanes:backward do not match lanes:backward");
-	/*fixAdd: concat("lanes:backward=", count(split("|", tag("turn.lanes:backward")));*/
+	throwwarning: tr("turn:lanes:backward do not match lanes:backward");
+}
+way|z21-[JOSM_search("inview")][highway][turn:lanes:backward][lanes:backward][count(split("|", tag("turn:lanes:backward"))) != tag("lanes:backward")],
+way|z21-[JOSM_search("inview")][highway][turn:lanes:backward][!lanes:backward][count(split("|", tag("turn:lanes:backward"))) != tag("lanes") / 2] {
+	group: tr("kaart");
+	throwwarning: tr("turn:lanes:backward do not match lanes:backward");
+	fixadd: concat("lanes:backward=", count(split("|", tag("turn.lanes:backward"))));
 }
 
 way[highway][turn],
