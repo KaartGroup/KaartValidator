@@ -108,7 +108,7 @@ way|z21-[JOSM_search("inview")][highway][turn:lanes:backward][lanes:backward][co
 way|z21-[JOSM_search("inview")][highway][turn:lanes:backward][!lanes:backward][count(split("|", tag("turn:lanes:backward"))) != tag("lanes") / 2] {
 	group: tr("kaart");
 	throwwarning: tr("turn:lanes:backward do not match lanes:backward");
-	fixadd: concat("lanes:backward=", count(split("|", tag("turn:lanes:backward"))));
+	fixAdd: concat("lanes:backward=", count(split("|", tag("turn:lanes:backward"))));
 }
 
 way[highway][turn],
