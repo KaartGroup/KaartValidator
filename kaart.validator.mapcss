@@ -453,6 +453,12 @@ node[!inside("GR")].crossing_node.possible_divided_highway!.footway_crossing:in-
 	throwWarning: tr("Maybe add a pedestrian crossing here");
 	suggestAlternative: tr("highway=footway, footway=crossing");
 }
+
+/* Check for traffic signals with directions */
+node[highway=traffic_signals][traffic_signals:direction][count(parent_tags("name")) >= 2] {
+	group: tr("kaart");
+	throwError: tr("{0} should not be used on nodes connecting two different roads", "{1.key}");
+}
 /* Check for address tagging */
 *[addr:housenumber][!addr:street]:modified {
 	group: tr("kaart");
@@ -572,6 +578,13 @@ way|z21-[JOSM_search("inview")][highway=~/^.*_link$/][ref][!destination:ref] {
 	group: tr("kaart");
 	throwWarning: tr("Link has ref but no destination:ref");
 	fixChangeKey: "ref => destination:ref";
+}
+
+/* Check for destination:street that is the same as the name of the street */
+way[highway][name][destination:street][tag("name") == tag("destination:street")] {
+	group: tr("kaart");
+	throwError: tr("The name of the road is the same as the name of the destination:street");
+	fixRemove: "destination:street";
 }
 
 /* Ensure that the destination:lanes/:forward/:backward match the number of lanes on the road */
