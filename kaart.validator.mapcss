@@ -1,7 +1,7 @@
 meta
 {
   title: "Validation rules for Kaart Group";
-  version: "2018-11-26";
+  version: "2018-11-27";
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
 }
@@ -320,6 +320,7 @@ relation[type=restriction][!/^restriction/] {
 /***********************
  ** Country Specific ***
  ***********************/
+/* Greece */
 /* Copy name to name:<appropriate> */
 *[name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!name:el][/^name:.*$/][inside("GR")] { set .needsgreekname }
 /* Check end of names for σ instead of ς */
@@ -367,43 +368,6 @@ way[highway][int_name][int_name!~/^[a-zA-Z0-9 .&'-]*$/] {
   assertMatch: "way highway=primary int_name=\"Ακτι Χαωεριου\"";
   assertNoMatch: "way highway=primary int_name=\"Neofytou Vamva A' Parodos\"";
 }
-/* Greece transliteration */
-way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][inside("GR")]:selected {
-  group: tr("kaart");
-  throwWarning: tr("int_name should not be the local greece name");
-  fixAdd: concat("int_name=",
-  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  tag("int_name"),
-  "Α", "A"), "α", "a"), "ά", "a"),
-  "Β", "B"), "β", "b"),
-  "Γ", "G"), "γ", "g"),
-  "Δ", "D"), "δ", "d"),
-  "Ε", "E"), "ε", "e"), "έ", "e"),
-  "Ζ", "Z"), "ζ", "z"),
-  "Θ", "Th"), "θ", "th"),
-  "Ι", "I"), "ι", "i"), "ί", "i"),
-  "Κ", "K"), "κ", "k"),
-  "Λ", "L"), "λ", "l"),
-  "Μ", "M"), "μ", "m"),
-  "Ν", "N"), "ν", "n"),
-  "Ξ", "X"), "ξ", "x"),
-  "Ο", "O"), "ο", "o"),
-  "Π", "P"), "π", "p"),
-  "Ρ", "R"), "ρ", "r"),
-  "Σ", "S"), "σ", "s"), "ς", "s"),
-  "Τ", "t"), "τ", "t"),
-  "Υ", "U"), "υ", "u"),
-  "Φ", "Ph"), "φ", "ph"),
-  "Χ", "Ch"), "χ", "ch"),
-  "Ψ", "Ps"), "ψ", "ps"),
-  "Ω", "O"), "ω", "o")); /* May be \bar{o} */
-  /*"Η", "TODO"),*/
-  /*"η", "TODO"),*/
-}
 
 /* A lot of name:en tags are just transliterations. They should be int_name. */
 /*
@@ -438,6 +402,20 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
   fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Λεωφόρος", "")));
 }
 
+/* Bosnia/Serbia/Croatia */
+/* The first letter of sentences AND the first letter of quotes are capitalized */
+*[name=~/^\p{Ll}.*$/][inside("BA,HR,SR")],
+*[name=~/^.*\.\s*\p{Ll}.*$/][inside("BA,HR,SR")],
+*[name=~/^.*"\p{Ll}.*$/][inside("BA,HR,SR")] {
+  group: tr("kaart");
+  throwWarning: tr("Bosnian/Croatian/Serbian have capital letters at the beginning of sentences or quotes");
+  assertNoMatch: "node name=\"Čovek je šetao gradom\"";
+  assertMatch: "node name=\"čovek je šetao gradom\"";
+  /*assertNoMatch: "node name=\"\"Sutra ću kupiti automobil\"\"";*/
+  /*assertMatch: "node name=\"\"sutra ću kupiti automobil\"\"";*/
+  assertMatch: "node name=\"Čovek je šetao gradom. čovek je šetao gradom.\"";
+  assertMatch: "node name=\"sutra ću kupiti automobil\"";
+}
 /***************
  * Misc ********
  ***************/
