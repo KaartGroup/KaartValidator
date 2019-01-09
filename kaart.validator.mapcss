@@ -328,6 +328,7 @@ relation[type=restriction][!/^restriction/] {
 *[name=~/^(σ)$/] {
   group: tr("kaart");
   throwError: tr("σ should be ς at the end of words");
+  fixAdd: concat("name", "=", replace(tag("name"), "σ ", "ς ");
   assertMatch: "way highway=primary name=\"Φεσσασ\"";
   assertMatch: "way highway=primary name=\"Φεσσασ Φεσσας\"";
   assertNoMatch: "way highway=primary name=\"Φεσσας\"";
@@ -405,10 +406,12 @@ way[highway][int_name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ
 }
 
 /* A lot of name:en tags are just transliterations. They should be int_name. */
+/*
 *[highway][name:en][!int_name][name][inside("GR")] {
   group: tr("kaart");
   throwOther: tr("Check that the name:en tag is not a transliteration of the name/name:el tag");
 }
+*/
 *[highway][tag("name:en")=tag("int_name")] {
   group: tr("kaart");
   throwOther: tr("int_name is the same as the name:en, name:en may be a transliteration");
@@ -439,6 +442,13 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
  * Misc ********
  ***************/
 
+/* Check for duplicated words in names */
+*[name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")] {
+  group: tr("kaart");
+  throwWarning: tr("Possible duplicated words in {0}", "{0.key}");
+  assertMatch: "node name=\"Duplicate Duplicate\"";
+  assertNoMatch: "node name=\"Nothing to see here\"";
+}
 /* Check for pedestrian ways */
 node[crossing] { set .crossing_node }
 way[highway=~/^(cycleway|footway|pedestrian)$/][footway=crossing] > node { set .footway_crossing }
@@ -462,7 +472,7 @@ node[highway=traffic_signals][traffic_signals:direction][count(parent_tags("name
   throwError: tr("{0} should not be used on nodes connecting two different roads", "{1.key}");
 }
 way[highway][oneway] > node[highway=traffic_signals] { set .onewaytrafficsignals }
-node[highway=traffic_signals][!traffic_signals:direction][count(parent_tags("name")) = 1][!crossing]!.onewaytrafficsignals {
+node[highway=traffic_signals][!traffic_signals:direction][count(parent_tags("name")) = 1][!crossing]!.onewaytrafficsignals:in-downloaded-area {
   group: tr("kaart");
   throwWarning: tr("{0} should have a direction when not on a oneway or an intersection", "{0.value}");
   suggestAlternative: "traffic_signals:direction";
@@ -539,13 +549,14 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 }
 
 *[fixme=~/^.*[ A-Z]+.*$/]:modified,
-*[fixme][fixme!~/^[a-z]*$/]:modified {
+*[fixme][fixme!~/^[a-z:]*$/]:modified {
   group: tr("kaart");
   throwError: tr("fixme should ONLY be a tag");
   suggestAlternative: tr("note");
   assertMatch: "way fixme=\"bad name\"";
   assertNoMatch: "way fixme=\"name\"";
   assertMatch: "way fixme=\"Name\"";
+  assertNoMatch: "way fixme=\"destination:lang:int\"";
 }
 
 
