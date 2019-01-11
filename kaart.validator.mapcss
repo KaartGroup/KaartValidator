@@ -404,18 +404,40 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
 
 /* Bosnia/Serbia/Croatia */
 /* The first letter of sentences AND the first letter of quotes are capitalized */
-*[name=~/^\p{Ll}.*$/][inside("BA,HR,SR")],
-*[name=~/^.*\.\s*\p{Ll}.*$/][inside("BA,HR,SR")],
-*[name=~/^.*"\p{Ll}.*$/][inside("BA,HR,SR")] {
+*[name=~/^\p{Ll}.*$/][inside("SR")],
+*[name=~/^.*\.\s*\p{Ll}.*$/][inside("SR")],
+*[name=~/^.*"\p{Ll}.*$/][inside("SR")] {
   group: tr("kaart");
-  throwWarning: tr("Bosnian/Croatian/Serbian have capital letters at the beginning of sentences or quotes");
+  throwWarning: tr("Serbian have capital letters at the beginning of sentences or quotes");
   assertNoMatch: "node name=\"Čovek je šetao gradom\"";
   assertMatch: "node name=\"čovek je šetao gradom\"";
-  /*assertNoMatch: "node name=\"\"Sutra ću kupiti automobil\"\"";*/
-  /*assertMatch: "node name=\"\"sutra ću kupiti automobil\"\"";*/
+  assertNoMatch: "node name=\"\"Sutra ću kupiti automobil\"\"";
+  assertMatch: "node name=\"\"sutra ću kupiti automobil\"\"";
   assertMatch: "node name=\"Čovek je šetao gradom. čovek je šetao gradom.\"";
   assertMatch: "node name=\"sutra ću kupiti automobil\"";
 }
+/* The first letter of sentences AND the first letter of quotes are capitalized, but only if there is more than one word */
+*[name=~/^\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")],
+*[name=~/^.*\.\s*\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")],
+*[name=~/^.*"\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")] {
+  group: tr("kaart");
+  throwWarning: tr("Bosnian/Croatian have capital letters at the beginning of sentences or quotes (two words+)");
+  assertNoMatch: "node name=\"Čovek je šetao gradom\"";
+  assertMatch: "node name=\"čovek je šetao gradom\"";
+  assertNoMatch: "node name=čovek";
+  assertNoMatch: "node name=\"\"Sutra ću kupiti automobil\"\"";
+  assertMatch: "node name=\"\"sutra ću kupiti automobil\"\"";
+  assertMatch: "node name=\"Čovek je šetao gradom. čovek je šetao gradom.\"";
+  assertMatch: "node name=\"sutra ću kupiti automobil\"";
+}
+*[name=~/^\p{Lu}.*$/][count(split(" ", tag("name"))) == 1][inside("BA,HR")] {
+  group: tr("kaart");
+  throwWarning: tr("Bosnian/Croatian have lower case letters at the beginning of sentences or quotes (one word) (partial coverage)");
+  assertNoMatch: "node name=čovek";
+  assertNoMatch: "node name=\"Čovek je šetao gradom. čovek je šetao gradom.\"";
+  assertMatch: "node name=Čovek";
+}
+
 /***************
  * Misc ********
  ***************/
@@ -469,6 +491,16 @@ node[highway=traffic_signals][!traffic_signals:direction][count(parent_tags("nam
 way[addr:interpolation][addr:street][!building] {
   group: tr("kaart");
   throwWarning: tr("Interpolation lines should not have addr:street on it");
+}
+
+/* Check for fixme's that have tag-value pairs */
+*[fixme][count(split(" ", tag("fixme"))) == 1][tag(tag("fixme")) != "none"] {
+  group: tr("kaart");
+  throwWarning: tr("fixme is a tag which exists on the object, is the fixme fixed?");
+  assertNoMatch: "way fixme=name";
+  assertMatch: "way name=TODO fixme=name";
+  assertNoMatch: "way name=TODO fixme=\"name me\"";
+  assertNoMatch: "way name=TODO";
 }
 
 /***********
