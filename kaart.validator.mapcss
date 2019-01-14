@@ -472,7 +472,7 @@ node[highway=traffic_signals][traffic_signals:direction][count(parent_tags("name
   throwError: tr("{0} should not be used on nodes connecting two different roads", "{1.key}");
 }
 way[highway][oneway] > node[highway=traffic_signals] { set .onewaytrafficsignals }
-node[highway=traffic_signals][!traffic_signals:direction][count(parent_tags("name")) = 1][!crossing]!.onewaytrafficsignals:in-downloaded-area {
+node[highway=traffic_signals][!traffic_signals:direction][count(parent_tags("name")) = 1][!crossing][!direction]!.onewaytrafficsignals:in-downloaded-area {
   group: tr("kaart");
   throwWarning: tr("{0} should have a direction when not on a oneway or an intersection", "{0.value}");
   suggestAlternative: "traffic_signals:direction";
