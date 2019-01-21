@@ -167,7 +167,7 @@ way[highway=~/^(motorway|trunk|primary|secondary)$/][!ref] {
 }
 
 /* Check for erroneous maxspeed */
-way[highway][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5]( mph| knots)?)|none|walk|signals)$/] {
+way[highway][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5]( mph| knots)?)|none|walk|signals|\p{Lu}{2}:.*)$/] {
   group: tr("kaart");
   throwError: tr("Unknown maxspeed -- check the maxspeeds");
 }
@@ -354,12 +354,14 @@ way[highway][name=~/^.*((ΑΕΙ|ΑΤ|ΑΤΕΙ|Αγ|Αλ|Αφοι|Αφών|Β|Β�
 }
 
 /* Transliteration */
-way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!int_name][inside("GR")]:selected {
+/* Transliteration is a different step */
+/*
+*way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!int_name][inside("GR")]:selected {
   group: tr("kaart");
   throwWarning: tr("There should be an int_name");
-  /* Transliteration is a different step */
   fixAdd: concat("int_name=", tag("name"));
 }
+*/
 /* Check int_names */
 way[highway][int_name][int_name!~/^[a-zA-Z0-9 .&'-]*$/] {
   group: tr("kaart");
