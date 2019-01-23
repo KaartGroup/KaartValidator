@@ -1,7 +1,7 @@
 meta
 {
   title: "Validation rules for Kaart Group";
-  version: "2018-11-27";
+  version: "2018-11-28";
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
 }
