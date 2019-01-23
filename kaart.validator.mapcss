@@ -20,24 +20,24 @@ way[oneway=-1] {
   suggestAlternative: tr("oneway=yes and reverse the way");
 }
 /* Check that roads have surfaces */
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$/][!surface],
-way[highway=~/^.*_link$/][!surface] {
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$/][!surface][gpx_distance() < 30],
+way[highway=~/^.*_link$/][!surface][gpx_distance() < 30] {
   group: tr("kaart");
   throwWarning: tr("Missing surface on a road");
 }
-way[highway=~/^(service|living_street)$/][!surface] {
+way[highway=~/^(service|living_street)$/][!surface][gpx_distance() < 30] {
   group: tr("kaart");
   throwOther: tr("Missing surface on a minor road");
 }
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][surface=paved],
-way[highway=~/^(pedestrian)$/][name][surface=paved],
-way[highway=~/^.*_link$/][surface=paved] {
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][surface=paved][gpx_distance() < 30],
+way[highway=~/^(pedestrian)$/][name][surface=paved][gpx_distance() < 30],
+way[highway=~/^.*_link$/][surface=paved][gpx_distance() < 30] {
   group: tr("kaart");
   throwWarning: tr("Generic paved surface on road");
 }
 
 /* Check that roads have lanes */
-way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$/][!lanes][surface!~/^(gravel|ground)$/] {
+way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$/][!lanes][surface!~/^(gravel|ground)$/][gpx_distance() < 30] {
   group: tr("kaart");
   throwWarning: tr("Missing lanes on road");
 }
@@ -167,9 +167,13 @@ way[highway=~/^(motorway|trunk|primary|secondary)$/][!ref] {
 }
 
 /* Check for erroneous maxspeed */
-way[highway][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5]( mph| knots)?)|none|walk|signals|\p{Lu}{2}:.*)$/] {
+way[highway][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5]( mph| knots)?)|none|walk|signals|\p{Lu}{2}:(\p{Ll}|:)*)$/] {
   group: tr("kaart");
   throwError: tr("Unknown maxspeed -- check the maxspeeds");
+}
+way[highway][inside("US")][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5] mph)|none|walk|signals|\p{Lu}{2}:(\p{Ll}|:)*)$/] {
+  group: tr("kaart");
+  throwError: tr("{0} should be in mph in the US, try adding mph to {0}", "{3.key}");
 }
 
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!name][!junction] {
@@ -184,10 +188,25 @@ way[highway=~/^.*_link$/][noname] {
   throwWarning: tr("Links shouldn''t have name/noname tags");
 }
 /* Bring pedestrian crossings forward */
-node[highway=crossing][!crossing]:in-downloaded-area {
+node[highway=crossing][!crossing][gpx_distance() < 30]:in-downloaded-area {
   group: tr("kaart");
   throwWarning: tr("A highway crossing does not have a crossing type");
 }
+/* Look for intersections of railways and highways */
+way[railway] > node { set .in_railway }
+way[highway][highway!~/^(pedestrian|footway)$/] > node { set .in_highway }
+way[highway][highway=~/^(pedestrian|footway)$/] > node { set .in_pedestrian_highway }
+node[!crossing][gpx_distance() < 30].in_railway.in_highway {
+  group: tr("kaart");
+  throwWarning: tr("There should be a crossing of some type here");
+  suggestAlternative: "railway=level_crossing"
+}
+node[!crossing][gpx_distance() < 30].in_railway.in_pedestrian_highway {
+  group: tr("kaart");
+  throwWarning: tr("There should be a crossing of some type here");
+  suggestAlternative: "railway=crossing"
+}
+
 /* Check that way that is ONLY connecting crossings is a footway TODO */
 /*way[highway!=footway][!name] >[index=-1] node[highway=crossing] >[index=1] node[highway=crossing] {
   group: tr("kaart");
@@ -219,13 +238,13 @@ way|z21-[JOSM_search("inview")][highway][bridge][!layer] {
 }
 
 /* Check for potential road restrictions */
-way[highway][bridge][!maxweight] {
+way[highway][bridge][!maxweight][gpx_distance() < 30] {
   group: tr("kaart");
   throwOther: tr("Bridges may have a maxweight");
   suggestAlternative: "maxweight";
 }
 /* TODO fix */
-way[highway][bridge] ⧉ way[highway][!bridge][!maxheight] {
+way[highway][bridge] ⧉ way[highway][!bridge][!maxheight][gpx_distance() < 30] {
   group: tr("kaart");
   throwOther: tr("Ways under bridges occassionally have a maxheight attribute. Check on ground for the information (or OpenStreetCam/Mapillary)");
   suggestAlternative: "maxheight";
@@ -239,7 +258,7 @@ way|z21-[JOSM_search("inview")][highway][maxheight=~/^\d+'\s\d+"$/] {
   throwWarning: tr("maxheight is not properly formatted for feet and inches");
   fixAdd: tr("maxheight={0}", replace(tag("maxheight"), " ", ""));
 }
-way[highway][tunnel] {
+way[highway][tunnel][gpx_distance() < 30] {
   group: tr("kaart");
   throwOther: tr("Tunnels may have a maxheight");
   suggestAlternative: "maxheight";
@@ -454,7 +473,7 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
 /* Check for pedestrian ways */
 node[crossing] { set .crossing_node }
 way[highway=~/^(cycleway|footway|pedestrian)$/][footway=crossing] > node { set .footway_crossing }
-way[highway][oneway=yes] > node { set .possible_divided_highway }
+way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible_divided_highway }
 
 way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35] > node.crossing_node.possible_divided_highway!.footway_crossing,
 way[!highway][waylength() < 30] > node.crossing_node.possible_divided_highway!.footway_crossing {
