@@ -1,6 +1,6 @@
 meta
 {
-  title: "Validation rules for Kaart Group";
+  title: "Mexico-Brazil Validation rules for Kaart Group";
   version: "2019-01-24";
   description: "Various checks that are useful to the Kaart Mexico-Brazil Project";
   author: "Taylor Smock";
