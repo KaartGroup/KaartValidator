@@ -208,6 +208,12 @@ node[railway!~/^(crossing|station|tram_stop)$/][gpx_distance() < 30].in_railway.
   suggestAlternative: "railway=crossing"
 }
 
+/* Detect crossing railway/highways */
+way[highway] ⧉ way[railway] {
+  group: tr("kaart");
+  throwWarning: tr("There is a crossing highway/railway");
+}
+
 /* Check that way that is ONLY connecting crossings is a footway TODO */
 /*way[highway!=footway][!name] >[index=-1] node[highway=crossing] >[index=1] node[highway=crossing] {
   group: tr("kaart");
