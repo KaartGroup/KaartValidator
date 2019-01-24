@@ -1,7 +1,7 @@
 meta
 {
   title: "Mexico-Brazil Validation rules for Kaart Group";
-  version: "2019-01-24";
+  version: "2019-01-25";
   description: "Various checks that are useful to the Kaart Mexico-Brazil Project";
   author: "Taylor Smock";
 }
@@ -37,10 +37,24 @@ meta
 }
 
 /* Check for bridges/tunnels missing a layer tag */
-way[/^(tunnel|bridge)$/][!layer] {
+way[/^(tunnel|bridge)$/][/^(tunnel|bridge)$/!~/^no$/][!layer] {
   group: tr("kaart (MX/BR)");
   throwError: tr("{0} is missing a layer tag", "{0.key}");
   suggestAlternative: "layer";
+  assertMatch: "way highway=residential bridge=yes";
+  assertNoMatch: "way highway=residential bridge=yes layer=1";
+  assertNoMatch: "way highway=residential bridge=no";
+  assertNoMatch: "way highway=residential";
+}
+
+/* Check for ways with bridge AND tunnel tags */
+way[tunnel][tunnel!=no][bridge][bridge!=no] {
+  group: tr("kaart (MX/BR)");
+  throwWarning: tr("Please check if this is both a bridge and a tunnel");
+  assertMatch: "way tunnel=yes bridge=yes";
+  assertNoMatch: "way tunnel=yes bridge=no";
+  assertNoMatch: "way tunnel=no bridge=yes";
+  assertNoMatch: "way tunnel=no bridge=no";
 }
 
 way > node { set .is_in_way }
