@@ -202,7 +202,7 @@ node[railway!=level_crossing][gpx_distance() < 30].in_railway.in_highway {
   throwWarning: tr("There should be a crossing of some type here");
   suggestAlternative: "railway=level_crossing"
 }
-node[railway!~/^(crossing|station)$/][gpx_distance() < 30].in_railway.in_pedestrian_highway {
+node[railway!~/^(crossing|station|tram_stop)$/][gpx_distance() < 30].in_railway.in_pedestrian_highway {
   group: tr("kaart");
   throwWarning: tr("There should be a crossing of some type here");
   suggestAlternative: "railway=crossing"
