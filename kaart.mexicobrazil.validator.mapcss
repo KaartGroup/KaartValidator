@@ -11,8 +11,43 @@ meta
  */
 
 *["telenav:action"] {
+  group: tr("kaart (MX/BR)");
   throwError: tr("{0} is not a valid tag", "{0.key}");
   assertMatch: "node \"telenav:action\"=new";
   assertNoMatch: "node \"telenav:baction\"=new";
   fixRemove: "telenav:action";
+}
+
+/* Check for duplicated words in names */
+*[name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")] {
+  group: tr("kaart (MX/BR)");
+  throwWarning: tr("Possible duplicated words in {0}", "{0.key}");
+  assertMatch: "node name=\"Duplicate Duplicate\"";
+  assertNoMatch: "node name=\"Nothing to see here\"";
+}
+
+/* Check for del/el/a/la/las/los/al/de capitalization */
+*[name][name=~/^.* (Del|El|A|Las|Los|Al|De) .*$/] {
+  group: tr("kaart (MX/BR)");
+  throwError: tr("Check for capitalization issues");
+  assertMatch: "node name=\"Donde El Lama\"";
+  assertNoMatch: "node name=\"Donde el Lama\"";
+  assertNoMatch: "node name=\"El Hombre\"";
+  assertNoMatch: "node name=\"Hombre El\"";
+}
+
+/* Check for bridges/tunnels missing a layer tag */
+way[/^(tunnel|bridge)$/][!layer] {
+  group: tr("kaart (MX/BR)");
+  throwError: tr("{0} is missing a layer tag", "{0.key}");
+  suggestAlternative: "layer";
+}
+
+way > node { set .is_in_way }
+node[number_of_tags() = 0]!.is_in_way {
+  group: tr("kaart (MX/BR)");
+  throwError: tr("Unconnected nodes without physical tags");
+  fixDeleteObject: this;
+  assertMatch: "node";
+  assertNoMatch: "node name=Test";
 }
