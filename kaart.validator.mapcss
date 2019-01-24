@@ -193,15 +193,16 @@ node[highway=crossing][!crossing][gpx_distance() < 30]:in-downloaded-area {
   throwWarning: tr("A highway crossing does not have a crossing type");
 }
 /* Look for intersections of railways and highways */
+way[railway][highway] { set .in_railway_highway }
 way[railway] > node { set .in_railway }
 way[highway][highway!~/^(pedestrian|footway)$/] > node { set .in_highway }
 way[highway][highway=~/^(pedestrian|footway)$/] > node { set .in_pedestrian_highway }
-node[!crossing][gpx_distance() < 30].in_railway.in_highway {
+node[railway!=level_crossing][gpx_distance() < 30].in_railway.in_highway {
   group: tr("kaart");
   throwWarning: tr("There should be a crossing of some type here");
   suggestAlternative: "railway=level_crossing"
 }
-node[!crossing][gpx_distance() < 30].in_railway.in_pedestrian_highway {
+node[railway!~/^(crossing|station)$/][gpx_distance() < 30].in_railway.in_pedestrian_highway {
   group: tr("kaart");
   throwWarning: tr("There should be a crossing of some type here");
   suggestAlternative: "railway=crossing"
@@ -497,6 +498,14 @@ node[highway=traffic_signals][!traffic_signals:direction][count(parent_tags("nam
   group: tr("kaart");
   throwWarning: tr("{0} should have a direction when not on a oneway or an intersection", "{0.value}");
   suggestAlternative: "traffic_signals:direction";
+}
+
+/* Check for traffic sign issues */
+node[traffic_sign][direction=~/^(forward|backward)$/] {
+  group: tr("kaart");
+  throwWarning: tr("{0} should use traffic_sign:{1}=yes", "{0.key}", tag("direction"));
+  fixAdd: concat("traffic_sign:", tag("direction"), "=yes");
+  fixRemove: "direction";
 }
 /* Check for address tagging */
 *[addr:housenumber][!addr:street]:modified {
