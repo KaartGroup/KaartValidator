@@ -493,11 +493,20 @@ node[highway=traffic_signals][traffic_signals:direction][count(parent_tags("name
   group: tr("kaart");
   throwError: tr("{0} should not be used on nodes connecting two different roads", "{1.key}");
 }
-way[highway][oneway] > node[highway=traffic_signals] { set .onewaytrafficsignals }
-node[highway=traffic_signals][!traffic_signals:direction][count(parent_tags("name")) = 1][!crossing][!direction]!.onewaytrafficsignals:in-downloaded-area {
+way[highway][oneway=yes] > node { set .onewaynode }
+node[highway=traffic_signals][!traffic_signals:direction][count(parent_tags("name")) <= 1][!crossing]!.onewaynode:in-downloaded-area {
   group: tr("kaart");
   throwWarning: tr("{0} should have a direction when not on a oneway or an intersection", "{0.value}");
   suggestAlternative: "traffic_signals:direction";
+}
+node[highway=traffic_signals][direction=~/^(forward|backward)$/] {
+  group: tr("kaart");
+  throwWarning: tr("{0} should use traffic_signals:direction instead of direction for {1}", "{0.value}", "{1.value}");
+  fixChangeKey: "direction => traffic_signals:direction";
+  assertMatch: "node highway=traffic_signals direction=forward";
+  assertMatch: "node highway=traffic_signals direction=backward";
+  assertNoMatch: "node highway=traffic_signals traffic_signals:direction=backward";
+  assertNoMatch: "node highway=traffic_signals direction=359.9";
 }
 
 /* Check for traffic sign issues */
@@ -507,6 +516,7 @@ node[traffic_sign][direction=~/^(forward|backward)$/] {
   fixAdd: concat("traffic_sign:", tag("direction"), "=yes");
   fixRemove: "direction";
 }
+
 /* Check for address tagging */
 *[addr:housenumber][!addr:street]:modified {
   group: tr("kaart");
