@@ -1,0 +1,18 @@
+meta
+{
+  title: "Validation rules for Kaart Group";
+  version: "2019-01-24";
+  description: "Various checks that are useful to the Kaart Mexico-Brazil Project";
+  author: "Taylor Smock";
+}
+/* Documentation
+ * https://josm.openstreetmap.de/wiki/Help/Validator/MapCSSTagChecker
+ * https://josm.openstreetmap.de/wiki/Help/Styles/MapCSSImplementation
+ */
+
+*["telenav:action"] {
+  throwError: tr("{0} is not a valid tag", "{0.key}");
+  assertMatch: "node \"telenav:action\"=new";
+  assertNoMatch: "node \"telenav:baction\"=new";
+  fixRemove: "telenav:action";
+}
