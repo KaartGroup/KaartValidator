@@ -27,7 +27,7 @@ meta
 }
 
 /* Check for del/el/a/la/las/los/al/de capitalization */
-*[name][name=~/^.* (Del|El|A|Las|Los|Al|De) .*$/] {
+*[name][name=~/^.* (Del|El|A|Las|Los|Al|De) .*$/][inside("BR,MX,ES")] {
   group: tr("kaart (MX/BR)");
   throwError: tr("Check for capitalization issues");
   assertMatch: "node name=\"Donde El Lama\"";
