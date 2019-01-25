@@ -192,6 +192,16 @@ node[highway=crossing][!crossing][gpx_distance() < 30]:in-downloaded-area {
   group: tr("kaart");
   throwWarning: tr("A highway crossing does not have a crossing type");
 }
+node[highway=crossing][crossing!~/^(traffic_signals|uncontrolled|no|unmarked)$/][gpx_distance() < 30]:in-downloaded-area {
+  group: tr("kaart");
+  throwWarning: tr("A highway crossing is using an unclear crossing type ({0})", tag("crossing"));
+}
+node[highway=crossing][crossing!=/^(zebra|pelican|tiger|toucan|pegasus)$/][gpx_distance() < 30]:in-downloaded-area {
+  group: tr("kaart");
+  throwWarning: tr("A highway crossing is using an unclear crossing type ({0})", tag("crossing"));
+  fixChangeKey: "crossing -> crossing_ref";
+}
+
 /* Look for intersections of railways and highways */
 way[railway][highway] { set .in_railway_highway }
 way[railway] > node { set .in_railway }
