@@ -1,7 +1,7 @@
 meta
 {
   title: "Validation rules for Kaart Group";
-  version: "2018-11-29";
+  version: "2018-11-30";
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
 }
@@ -225,7 +225,7 @@ node[railway!~/^(crossing|station|tram_stop)$/][gpx_distance() < 30].in_railway.
 
 /* Detect crossing railway/highways */
 way[highway] ⧉ way[railway] {
-  group: tr("kaart");
+  group: tr("kaart-experimental");
   throwWarning: tr("There is a crossing highway/railway");
 }
 
