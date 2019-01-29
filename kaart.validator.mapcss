@@ -1,7 +1,7 @@
 meta
 {
   title: "Validation rules for Kaart Group";
-  version: "2018-11-30";
+  version: "2018-11-30_r1";
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
 }
@@ -208,7 +208,10 @@ node[highway=crossing][crossing=~/^(zebra|pelican|tiger|toucan|pegasus)$/][gpx_d
 }
 
 /* Look for intersections of railways and highways */
-way[railway][highway] { set .in_railway_highway }
+way[railway][highway] > node {
+  set .in_railway_highway;
+}
+
 way[railway] > node { set .in_railway }
 way[highway][highway!~/^(pedestrian|footway)$/] > node { set .in_highway }
 way[highway][highway=~/^(pedestrian|footway)$/] > node { set .in_pedestrian_highway }
