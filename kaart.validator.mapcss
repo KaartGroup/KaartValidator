@@ -1,7 +1,7 @@
 meta
 {
   title: "Validation rules for Kaart Group";
-  version: "93_2019-01-30";
+  version: "94_2019-01-30";
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
 }
@@ -13,6 +13,12 @@ meta
 /****************
  ** Roads *******
  ****************/
+/* Check roads for construction tags */
+way[highway][construction][highway!=construction]:modified {
+  group: tr("kaart");
+  throwWarning: tr("Is this road still under construction?");
+}
+
 /* throw error on oneway=-1 */
 way[oneway=-1] {
   group: tr("kaart");
