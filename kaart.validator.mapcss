@@ -1,7 +1,7 @@
 meta
 {
   title: "Validation rules for Kaart Group";
-  version: "92_2019-01-30";
+  version: "93_2019-01-30";
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
 }
@@ -123,7 +123,7 @@ way[highway][turn:both_ways] {
 }
 
 /* Check *_links to see if they have a oneway tag */
-way[highway=~/^.*_link$/][!oneway] {
+way[highway=~/^.*_link$/][!oneway][gpx_distance() < 30] {
   group: tr("kaart");
   throwWarning: tr("Links are usually oneways, but there are some that are occasionally two-ways");
   suggestAlternative: tr("oneway=yes/no");
@@ -511,13 +511,13 @@ node[crossing] { set .crossing_node }
 way[highway=~/^(cycleway|footway|pedestrian)$/][footway=crossing] > node { set .footway_crossing }
 way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible_divided_highway }
 
-way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35] > node.crossing_node.possible_divided_highway!.footway_crossing,
-way[!highway][waylength() < 30] > node.crossing_node.possible_divided_highway!.footway_crossing {
+way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35][gpx_distance() < 30] > node.crossing_node.possible_divided_highway!.footway_crossing,
+way[!highway][waylength() < 30][gpx_distance() < 30] > node.crossing_node.possible_divided_highway!.footway_crossing {
   group: tr("kaart");
   throwWarning: tr("Possible pedestrian crossing");
   suggestAlternative: tr("highway=footway, footway=crossing");
 }
-node[!inside("GR")].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
+node[!inside("GR")][gpx_distnace() < 30].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
   group: tr("kaart");
   throwWarning: tr("Maybe add a pedestrian crossing here");
   suggestAlternative: tr("highway=footway, footway=crossing");
@@ -610,20 +610,14 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 }
 
 /* Check for names on POI's */
-*[amenity=~/^(bank|clinic|college|courthouse|dentist|doctors|fire_station|fuel|hospital|kindergarten|pharmacy|place_of_worship|police|school|university)$/][!name][fixme!=name],
-*[amenity=~/^(bank|clinic|college|courthouse|dentist|doctors|fire_station|fuel|hospital|kindergarten|pharmacy|place_of_worship|police|school|university)$/][!name]:modified!:new {
-  group: tr("kaart");
-  throwWarning: tr("{0} should have a name or a fixme=name", tag("amenity"));
-}
-*[office=~/^(government)$/][!name][fixme!=name],
-*[office=~/^(government)$/][!name]:modified {
-  group: tr("kaart");
-  throwWarning: tr("{0} should have a name or a fixme=name", tag("office"));
-}
-*[tourism=~/^(hotel)$/][!name][fixme!=name],
+*[amenity=~/^(bank|clinic|college|courthouse|dentist|doctors|fire_station|fuel|hospital|kindergarten|pharmacy|place_of_worship|police|school|university)$/][!name][fixme!=name][gpx_distance() < 30],
+*[amenity=~/^(bank|clinic|college|courthouse|dentist|doctors|fire_station|fuel|hospital|kindergarten|pharmacy|place_of_worship|police|school|university)$/][!name]:modified,
+*[office=~/^(government)$/][!name][fixme!=name][gpx_distance() < 30],
+*[office=~/^(government)$/][!name]:modified,
+*[tourism=~/^(hotel)$/][!name][fixme!=name][gpx_distance() < 30],
 *[tourism=~/^(hotel)$/][!name]:modified {
   group: tr("kaart");
-  throwWarning: tr("{0} should have a name or a fixme=name", tag("tourism"));
+  throwWarning: tr("{0} should have a name or a fixme=name", "{0.value}");
 }
 /* Ensure modified poi's have an addr:street */
 *[tourism=~/^(hotel)$/][!addr:street]:modified,
