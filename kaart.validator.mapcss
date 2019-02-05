@@ -1,7 +1,7 @@
 meta
 {
   title: "Validation rules for Kaart Group";
-  version: "97_2019-02-04";
+  version: "99_2019-02-05";
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
 }
@@ -534,7 +534,10 @@ node[highway=traffic_signals][traffic_signals:direction][count(parent_tags("name
   group: concat(tr("kaart"), "_r97");
   throwError: tr("{0} should not be used on nodes connecting two different roads", "{1.key}");
 }
-way[highway][oneway=yes] > node { set .onewaynode }
+
+way[highway][oneway=yes] > node,
+way[highway][junction=roundabout] > node { set .onewaynode }
+
 node[highway=traffic_signals][traffic_signals:direction].onewaynode,
 node[highway=traffic_signals][direction].onewaynode {
   group: concat(tr("kaart"), "_r97");
