@@ -1,7 +1,7 @@
 meta
 {
   title: "Mexico-Brazil Validation rules for Kaart Group";
-  version: "2019-01-25";
+  version: "98_2019-02-05";
   description: "Various checks that are useful to the Kaart Mexico-Brazil Project";
   author: "Taylor Smock";
 }
@@ -27,7 +27,7 @@ meta
 }
 
 /* Check for del/el/a/la/las/los/al/de capitalization */
-*[name][name=~/^.* (Del|El|A|Las|Los|Al|De) .*$/][inside("BR,MX,ES")] {
+*[name][name=~/^.* (Del|El|A|La|Las|Los|Al|De) .*$/][inside("BR,MX,ES")] {
   group: tr("kaart (MX/BR)");
   throwError: tr("Check for capitalization issues");
   assertMatch: "node name=\"Donde El Lama\"";
