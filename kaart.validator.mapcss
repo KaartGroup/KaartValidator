@@ -1,7 +1,7 @@
 meta
 {
   title: "Validation rules for Kaart Group";
-  version: "101_2019-02-19";
+  version: "102_2019-02-19";
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
 }
@@ -15,52 +15,52 @@ meta
  ****************/
 /* Check roads for construction tags */
 way[highway][construction][highway!=construction]:modified {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Is this road still under construction?");
 }
 
 /* throw error on oneway=-1 */
 way[oneway=-1] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("oneway should not be -1");
   suggestAlternative: tr("oneway=yes and reverse the way");
 }
 /* Check that roads have surfaces */
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$/][!surface][gpx_distance() < 30],
 way[highway=~/^.*_link$/][!surface][gpx_distance() < 30] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Missing surface on a road");
 }
 way[highway=~/^(service|living_street)$/][!surface][gpx_distance() < 30] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwOther: tr("Missing surface on a minor road");
 }
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][surface=paved][gpx_distance() < 30],
 way[highway=~/^(pedestrian)$/][name][surface=paved][gpx_distance() < 30],
 way[highway=~/^.*_link$/][surface=paved][gpx_distance() < 30] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Generic paved surface on road");
 }
 
 /* Check that roads have lanes */
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$/][!lanes][surface!~/^(gravel|ground)$/][gpx_distance() < 30] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Missing lanes on road");
 }
 
 /* Check implied motorway tags */
 way[highway=~/^(motorway|motorway_link)$/][!oneway][!junction=roundabout] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
   suggestAlternative: "oneway=yes";
 }
 way[highway=~/^(motorway|motorway_link)$/][!access] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwOther: tr("{0} is typically reserved for motor_vehicles", "{0.tag}");
   suggestAlternative: "access=no with motor_vehicle=yes";
 }
 way[highway=~/^(motorway|motorway_link)$/][access=no][!motor_vehicle] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwOther: tr("{0} is typically accessible to motor_vehicles", "{0.tag}");
   suggestAlternative: "motor_vehicle=yes";
 }
@@ -70,68 +70,52 @@ way[highway=~/^(motorway|motorway_link)$/][access=no][!motor_vehicle] {
  } */
 
 /* Check that turn:lanes/:forward/:backward */
-way[highway][turn:lanes][!oneway] {
-  group: concat(tr("kaart"), "_r101");
+way[highway][turn:lanes][!/^(oneway|junction)$/] {
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("turn:lanes without oneway -- are turn lanes the same in both directions?");
+  assertMatch: "way highway=residential turn:lanes=left";
+  assertNoMatch: "way highway=residential turn:lanes=left oneway=yes";
+  assertNoMatch: "way highway=residential turn:lanes=left junction=roundabout";
 }
 way[highway][turn:lanes][turn:lanes:forward],
 way[highway][turn:lanes][turn:lanes:backward] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("{0} and a directional {1}", "{1.tag}", "{2.tag}");
 }
 way[highway][turn:lanes][/^(oneway|junction)$/][count(split("|", tag("turn:lanes"))) != tag("lanes")],
 way[highway][turn:lanes][!/^(oneway|junction)$/][2 * count(split("|", tag("turn:lanes"))) != tag("lanes")],
 way[highway][turn:lanes][!lanes] {
-  group: concat(tr("kaart"), "_r101");
-  throwWarning: tr("{0} do not match lanes", "{1.key}");
+  group: concat(tr("kaart"), "_r102");
+  throwWarning: tr("{0} do not match {1}", "{1.key}", "lanes");
   assertMatch: "way highway=primary lanes=4 turn:lanes=left|through|through;right";
   assertNoMatch: "way highway=primary lanes=4 turn:lanes=left;through|through;right";
-  assertNoMatch: "way highway=tertiary junction=roundabout lanes=3 through|through|right";
+  assertNoMatch: "way highway=tertiary junction=roundabout lanes=3 turn:lanes=through|through|right";
 }
 way[highway][turn:lanes:forward][lanes:forward][count(split("|", key("turn:lanes:forward"))) != key("lanes:forward")],
 way[highway][turn:lanes:forward][!lanes:forward][count(split("|", key("turn:lanes:forward"))) != key("lanes") / 2],
 way[highway][turn:lanes:forward][!lanes][!lanes:forward] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("{0} do not match lanes:forward", "{1.key}");
 }
 way[highway][turn:lanes:backward][lanes:backward][count(split("|", key("turn:lanes:backward"))) != key("lanes:backward")],
 way[highway][turn:lanes:backward][!lanes:backward][count(split("|", key("turn:lanes:backward"))) != key("lanes") / 2],
 way[highway][turn:lanes:backward][!lanes][!lanes:backward] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwwarning: tr("{0} do not match lanes:backward", "{1.key}");
-}
-way|z21-[JOSM_search("inview")][highway][turn:lanes][oneway][count(split("|", tag("turn:lanes"))) != tag("lanes")],
-way|z21-[JOSM_search("inview")][highway][turn:lanes][!oneway][2 * count(split("|", tag("turn:lanes"))) != tag("lanes")],
-way|z21-[JOSM_search("inview")][highway][turn:lanes][!lanes] {
-  group: concat(tr("kaart"), "_r101");
-  throwWarning: tr("turn:lanes do not match lanes");
-  fixAdd: concat("lanes", "=", count(split("|", tag("turn:lanes"))));
-}
-way|z21-[JOSM_search("inview")][highway][turn:lanes:forward][lanes:forward][count(split("|", tag("turn:lanes:forward"))) != tag("lanes:forward")],
-way|z21-[JOSM_search("inview")][highway][turn:lanes:forward][!lanes:forward][count(split("|", tag("turn:lanes:forward"))) != tag("lanes") / 2] {
-  group: concat(tr("kaart"), "_r101");
-  throwWarning: tr("turn:lanes:forward do not match lanes:forward");
-  fixAdd: concat("lanes:forward=", count(split("|", tag("turn:lanes:forward"))));
-}
-way|z21-[JOSM_search("inview")][highway][turn:lanes:backward][lanes:backward][count(split("|", tag("turn:lanes:backward"))) != tag("lanes:backward")],
-way|z21-[JOSM_search("inview")][highway][turn:lanes:backward][!lanes:backward][count(split("|", tag("turn:lanes:backward"))) != tag("lanes") / 2] {
-  group: concat(tr("kaart"), "_r101");
-  throwwarning: tr("turn:lanes:backward do not match lanes:backward");
-  fixAdd: concat("lanes:backward=", count(split("|", tag("turn:lanes:backward"))));
 }
 
 way[highway][turn],
 way[highway][turn:forward],
 way[highway][turn:backward],
 way[highway][turn:both_ways] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("We shoulding be using turn:<direction>");
   suggestAlternative: tr("turn:lanes:<direction>");
 }
 
 /* Check *_links to see if they have a oneway tag */
 way[highway=~/^.*_link$/][!oneway][gpx_distance() < 30] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Links are usually oneways, but there are some that are occasionally two-ways");
   suggestAlternative: tr("oneway=yes/no");
 }
@@ -156,7 +140,7 @@ node.trunk!.motorway_link!.trunk_link,
 node.primary!.motorway_link!.trunk_link!.primary_link,
 node.secondary!.motorway_link!.trunk_link!.primary_link!.secondary_link,
 node.tertiary!.motorway_link!.trunk_link!.primary_link!.secondary_link!.tertiary_link {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Check the link and the highest road it goes to/comes from");
 }
 
@@ -169,24 +153,24 @@ way >[index=1] node {
 
 /* Check that specific types of roads have refs and names */
 way[highway=~/^(motorway|trunk|primary|secondary)$/][!ref] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("A road is missing a ref");
 }
 
 /* Check for erroneous maxspeed */
 way[highway][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5]( mph| knots)?)|none|walk|signals|\p{Lu}{2}:(\p{Ll}|:)*)$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("Unknown maxspeed -- check the maxspeeds");
 }
 way[highway][inside("US")][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5] mph)|none|walk|signals|\p{Lu}{2}:(\p{Ll}|:)*)$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("{0} should be in mph in the US, try adding mph to {0}", "{3.key}");
 }
 
 /* Check for areas that should have units on maxweight */
 *[maxweight][maxweight=~/^[0-9.]+$/][inside("US")],
 *[maxaxleload][maxaxleload=~/^[0-9.]+$/][inside("US")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("{0} is always in short tons (st)", "{0.key}");
   assertMatch: "way highway=residential maxweight=5.0";
   assertMatch: "way highway=residential maxweight=5";
@@ -195,23 +179,23 @@ way[highway][inside("US")][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^max
 }
 
 way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][!name][!junction] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("A road is missing a name");
 }
 
 /* Check *_links to see if they have a name/noname tag */
 way[highway=~/^.*_link$/][name],
 way[highway=~/^.*_link$/][noname] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Links shouldn''t have name/noname tags");
 }
 /* Bring pedestrian crossings forward */
 node[highway=crossing][!crossing][gpx_distance() < 30]:in-downloaded-area {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("A highway crossing does not have a crossing type");
 }
 node[highway=crossing][crossing][crossing!~/^(traffic_signals|uncontrolled|no|unmarked)$/][gpx_distance() < 30]:in-downloaded-area {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("A highway crossing is using an unknown crossing type ({0})", tag("crossing"));
   assertNoMatch: "node highway=crossing crossing=traffic_signals";
   assertNoMatch: "node highway=crossing crossing=uncontrolled";
@@ -220,7 +204,7 @@ node[highway=crossing][crossing][crossing!~/^(traffic_signals|uncontrolled|no|un
   /* assertMatch: "node highway=crossing crossing=bad_crossing"; TODO figure out why this errors */
 }
 node[highway=crossing][crossing=~/^(zebra|pelican|tiger|toucan|pegasus)$/][gpx_distance() < 30]:in-downloaded-area {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("A highway crossing is using an unclear crossing type that should be in crossing_ref");
   fixChangeKey: "crossing => crossing_ref";
 }
@@ -234,12 +218,12 @@ way[railway] > node { set .in_railway }
 way[highway][highway!~/^(pedestrian|footway)$/] > node { set .in_highway }
 way[highway][highway=~/^(pedestrian|footway)$/] > node { set .in_pedestrian_highway }
 node[railway!=level_crossing][gpx_distance() < 30].in_railway.in_highway!.in_railway_highway {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("There should be a crossing of some type here");
   suggestAlternative: "railway=level_crossing"
 }
 node[railway!~/^(crossing|station|tram_stop)$/][gpx_distance() < 30].in_railway.in_pedestrian_highway {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("There should be a crossing of some type here");
   suggestAlternative: "railway=crossing"
 }
@@ -252,7 +236,7 @@ way[highway] ⧉ way[railway] {
 
 /* Check that way that is ONLY connecting crossings is a footway TODO */
 /*way[highway!=footway][!name] >[index=-1] node[highway=crossing] >[index=1] node[highway=crossing] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("This should probably be a footway");
 }*/
 /* Check *_links and streets to find ways that split-end into _links TODO */
@@ -271,57 +255,57 @@ way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
 
 /* Check bridge tagging */
 way[highway][bridge][!layer] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Bridges should have a layer");
 }
 way|z21-[JOSM_search("inview")][highway][bridge][!layer] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Bridges should have a layer");
   fixAdd: "layer=1";
 }
 
 /* Check for potential road restrictions */
 way[highway][bridge][!maxweight][gpx_distance() < 30] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwOther: tr("Bridges may have a maxweight");
   suggestAlternative: "maxweight";
 }
 /* TODO fix */
 way[highway][bridge] ⧉ way[highway][!bridge][!maxheight][gpx_distance() < 30] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwOther: tr("Ways under bridges occassionally have a maxheight attribute. Check on ground for the information (or OpenStreetCam/Mapillary)");
   suggestAlternative: "maxheight";
 }
 way[highway][maxheight=~/^\d+'\s\d+"$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("maxheight is not properly formatted for feet and inches");
 }
 way|z21-[JOSM_search("inview")][highway][maxheight=~/^\d+'\s\d+"$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("maxheight is not properly formatted for feet and inches");
   fixAdd: tr("maxheight={0}", replace(tag("maxheight"), " ", ""));
 }
 way[highway][tunnel][gpx_distance() < 30] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwOther: tr("Tunnels may have a maxheight");
   suggestAlternative: "maxheight";
 }
 /* Check mini-roundabouts for the correct direction */
 node[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
 }
 node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
   fixAdd: "direction=clockwise";
 }
 node[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
 }
 node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
   fixAdd: "direction=anticlockwise";
 }
@@ -333,12 +317,12 @@ node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwi
 way[junction=roundabout]:in-downloaded-area > node {set .is_in_roundabout}
 node[traffic_calming=island]:in-downloaded-area { set .is_traffic_calming_island}
 way[highway][highway!~/^(pedestrian|footway)$/][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout!.is_traffic_calming_island {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Highway connecting to roundabout is NOT a oneway -- check if there is a traffic_calming=island nearby");
   suggestAlternative: "split ways to have roundabout flares or add traffic_calming=island to a node using imagery"
 }
 way[highway][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout.is_traffic_calming_island {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("The node where a roundabout and a way connect should NOT be a traffic_calming=island (the island should be on the approach, not in the roundabout)");
 }
 
@@ -347,33 +331,33 @@ way[junction=roundabout][name] > node {set .is_in_named_roundabout}
 /* TODO remove the one with parent_tags as soon as parent_osm_ids is in josm-tested */
 node.is_in_roundabout!.is_in_named_roundabout[count(parent_tags("name")) - count(parent_tags("landuse")) > 1]:in-downloaded-area,
 node.is_in_roundabout.is_in_named_roundabout[count(parent_tags("name")) - count(parent_tags("landuse")) > 2]:in-downloaded-area {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Roundabouts should not have more than two additional ways at any node");
 }
 node.is_in_roundabout[count(parent_osm_ids("highway")) - count(parent_osm_ids("junction")) > 1] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("Roundabouts should not have more than two additional ways at any node");
 }
 
 /* Ways entering the roundabout should start/end there */
 way[name][highway][!junction] > node.is_in_roundabout!.end_of_way!.start_of_way { set .roundabout_way_ends }
 node.roundabout_way_ends {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Way {0} does not end at roundabout", parent_tags("name"));
 }
 
 way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Possible roundabout or circular junction");
 }
 
 way[highway=~/^.*_link$/][junction] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("{0} should not be a {1}", tag("junction"), tag("highway"));
 }
 
 relation[type=restriction][!/^restriction/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("Restriction relations should have the type of restriction");
   assertMatch: "relation type=restriction";
   assertNoMatch: "relation type=restriction restriction=no_u_turn";
@@ -389,7 +373,7 @@ relation[type=restriction][!/^restriction/] {
 *[name=~/^(.*)(σ) (.*)$/],
 *[name=~/^(.*)(σ)$/],
 *[name=~/^(σ)$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("σ should be ς at the end of words");
   fixAdd: concat("name", "=", replace(tag("name"), "σ ", "ς ");
   assertMatch: "way highway=primary name=\"Φεσσασ\"";
@@ -400,18 +384,18 @@ relation[type=restriction][!/^restriction/] {
 way[highway].needsgreekname,
 *[name].needsgreekname:modified,
 *|z21-[JOSM_search("inview")][name].needsgreekname {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("There should be a name:el tag");
   fixAdd: concat("name:", "el", "=", tag(name));
 }
 
 way[highway][!name][name:el][inside("GR")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("There should be a name tag");
   fixAdd: concat("name", "=", tag(name:el));
 }
 way[highway][name=~/^.*((ΑΕΙ|ΑΤ|ΑΤΕΙ|Αγ|Αλ|Αφοι|Αφών|Β|Βασ|Γρ|Δ|ΔΣ|Δημ|ΕΛΤΑ|Εθν|Ελ|Θεσ|Ι[. ]?Μ|Ι[. ]?Ν|Κτ|Κων|Λ|Ν|Ορ|Π|Παν|Πλ|Ποτ|Στρ|Σχ|ΤΕΙ|νικης|ωου)[.]?)$/][inside("GR")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("We don''t want to use abbreviations for streets");
 }
 
@@ -419,14 +403,14 @@ way[highway][name=~/^.*((ΑΕΙ|ΑΤ|ΑΤΕΙ|Αγ|Αλ|Αφοι|Αφών|Β|Β�
 /* Transliteration is a different step */
 /*
 *way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!int_name][inside("GR")]:selected {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("There should be an int_name");
   fixAdd: concat("int_name=", tag("name"));
 }
 */
 /* Check int_names */
 way[highway][int_name][int_name!~/^[a-zA-Z0-9 .&'-]*$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Check the int_name for non-latin characters");
   assertNoMatch: "way highway=primary int_name=\"Akti Xaveriou\"";
   assertMatch: "way highway=primary int_name=\"Ακτι Χαωεριου\"";
@@ -436,12 +420,12 @@ way[highway][int_name][int_name!~/^[a-zA-Z0-9 .&'-]*$/] {
 /* A lot of name:en tags are just transliterations. They should be int_name. */
 /*
 *[highway][name:en][!int_name][name][inside("GR")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwOther: tr("Check that the name:en tag is not a transliteration of the name/name:el tag");
 }
 */
 *[highway][tag("name:en")=tag("int_name")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwOther: tr("int_name is the same as the name:en, name:en may be a transliteration");
   /*fixRemove: "name:en";*/
   assertMatch: "way highway=residential name:en=Rop int_name=Rop name=Ροπ";
@@ -450,13 +434,13 @@ way[highway][int_name][int_name!~/^[a-zA-Z0-9 .&'-]*$/] {
 
 /* OSM Greece does NOT want street/road */
 way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/][inside("GR")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: "OSM Greece does not want street/road/other prefixes -- try removing the prefix (fix won't work with different cases)";
   assertMatch: "way highway=primary name=\"Φεσσασ Οδός\"";
   assertNoMatch: "way highway=primary name=\"Φεσσασ\"";
 }
 way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/][inside("GR")]:selected {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: "OSM Greece does not want street/road/other prefixes -- try removing the prefix (fix won't work with different cases)";
   fixAdd: concat("name=", trim(replace(tag("name"), "Οδός", "")));
   fixAdd: concat("name=", trim(replace(tag("name"), "Odos", "")));
@@ -471,7 +455,7 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
 *[name=~/^\p{Ll}.*$/][inside("SR")],
 *[name=~/^.*\.\s*\p{Ll}.*$/][inside("SR")],
 *[name=~/^.*"\p{Ll}.*$/][inside("SR")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Serbian have capital letters at the beginning of sentences or quotes");
   assertNoMatch: "node name=\"Čovek je šetao gradom\"";
   assertMatch: "node name=\"čovek je šetao gradom\"";
@@ -484,7 +468,7 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
 *[name=~/^\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")],
 *[name=~/^.*\.\s*\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")],
 *[name=~/^.*"\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Bosnian/Croatian have capital letters at the beginning of sentences or quotes (two words+)");
   assertNoMatch: "node name=\"Čovek je šetao gradom\"";
   assertMatch: "node name=\"čovek je šetao gradom\"";
@@ -495,7 +479,7 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
   assertMatch: "node name=\"sutra ću kupiti automobil\"";
 }
 *[name=~/^\p{Lu}.*$/][count(split(" ", tag("name"))) == 1][inside("BA,HR")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Bosnian/Croatian have lower case letters at the beginning of sentences or quotes (one word) (partial coverage)");
   assertNoMatch: "node name=čovek";
   assertNoMatch: "node name=\"Čovek je šetao gradom. čovek je šetao gradom.\"";
@@ -508,7 +492,7 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
 
 /* Check for duplicated words in names */
 *[name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Possible duplicated words in {0}", "{0.key}");
   assertMatch: "node name=\"Duplicate Duplicate\"";
   assertNoMatch: "node name=\"Nothing to see here\"";
@@ -520,19 +504,19 @@ way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible
 
 way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35][gpx_distance() < 30] > node.crossing_node.possible_divided_highway!.footway_crossing,
 way[!highway][waylength() < 30][gpx_distance() < 30] > node.crossing_node.possible_divided_highway!.footway_crossing {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Possible pedestrian crossing");
   suggestAlternative: tr("highway=footway, footway=crossing");
 }
 node[!inside("GR")][gpx_distnace() < 30].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Maybe add a pedestrian crossing here");
   suggestAlternative: tr("highway=footway, footway=crossing");
 }
 
 /* Check for traffic signals with directions */
 node[highway=traffic_signals][traffic_signals:direction][count(parent_tags("name")) >= 2] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("{0} should not be used on nodes connecting two different roads", "{1.key}");
 }
 
@@ -541,18 +525,18 @@ way[highway][junction=roundabout] > node { set .onewaynode }
 
 node[highway=traffic_signals][traffic_signals:direction].onewaynode,
 node[highway=traffic_signals][direction].onewaynode {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("There should not be {0} for {1} on a oneway", "{1.key}", "{0.key}");
   fixRemove: "{1.key}";
 }
 
 node[highway=traffic_signals][!direction][!traffic_signals:direction][count(parent_tags("name")) <= 1][!crossing]!.onewaynode:in-downloaded-area {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("{0} should have a direction when not on a oneway or an intersection", "{0.value}");
   suggestAlternative: "traffic_signals:direction";
 }
 node[highway=traffic_signals][direction=~/^(forward|backward)$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("{0} should use traffic_signals:direction instead of direction for {1}", "{0.value}", "{1.value}");
   fixChangeKey: "direction => traffic_signals:direction";
   assertMatch: "node highway=traffic_signals direction=forward";
@@ -563,7 +547,7 @@ node[highway=traffic_signals][direction=~/^(forward|backward)$/] {
 
 /* Check for traffic sign issues */
 node[traffic_sign][direction=~/^(forward|backward)$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("{0} should use traffic_sign:{1}=yes", "{0.key}", tag("direction"));
   fixAdd: concat("traffic_sign:", tag("direction"), "=yes");
   fixRemove: "direction";
@@ -571,17 +555,17 @@ node[traffic_sign][direction=~/^(forward|backward)$/] {
 
 /* Check for address tagging */
 *[addr:housenumber][!addr:street]:modified {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("Addresses should have a street");
   suggestAlternative: tr("addr:street");
 }
 *[addr:housenumber][!addr:street] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Addresses should have a street");
   suggestAlternative: tr("addr:street");
 }
 way[addr:interpolation][addr:street][!building] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Interpolation lines should not have addr:street on it");
 }
 way[highway][name][addr:street][tag("name") == tag("addr:street")] {
@@ -600,7 +584,7 @@ way[highway][name][addr:street][tag("name") != tag("addr:street")] {
 
 /* Check for fixme's that have tag-value pairs */
 *[fixme][count(split(" ", tag("fixme"))) == 1][tag(tag("fixme")) != "none"] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("fixme is a tag which exists on the object, is the fixme fixed?");
   assertNoMatch: "way fixme=name";
   assertMatch: "way name=TODO fixme=name";
@@ -614,28 +598,28 @@ way[highway][name][addr:street][tag("name") != tag("addr:street")] {
 /* Gas stations */
 /* Mark gas stations without a brand but with a common brand name */
 *[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Gas station has a name but no brand");
 }
 *|z21-[JOSM_search("inview")][amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Gas station has a name but no brand");
   fixAdd: concat("brand=", tag("name"));
 }
 
 node[amenity=fuel]:modified {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Gas stations should be an area, not a node");
 }
 
 /* Mark gas stations without a brand */
 *[amenity=fuel][name][!brand] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Gas station has a name but no brand");
 }
 
 node[amenity=fuel][!name][!brand][fixme!=name] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Gas station should have either a brand or a name");
 }
 
@@ -646,20 +630,20 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 *[office=~/^(government)$/][!name][fixme!=name]:modified,
 *[tourism=~/^(hotel)$/][!name][fixme!=name][gpx_distance() < 30],
 *[tourism=~/^(hotel)$/][!name][fixme!=name]:modified {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("There should be a name or a fixme=name");
 }
 /* Ensure modified poi's have an addr:street */
 *[tourism=~/^(hotel)$/][!addr:street]:modified,
 *[office=~/^(government)$/][!addr:street]:modified,
 *[amenity=~/^(bank|clinic|college|courthouse|dentist|doctors|fire_station|fuel|hospital|kindergarten|pharmacy|place_of_worship|police|school|university)$/][!addr:street]:modified {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("Try to add addr:street to new or modified POI's");
 }
 
 *[fixme=~/^.*[ A-Z]+.*$/]:modified,
 *[fixme][fixme!~/^[a-z:]*$/]:modified {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("fixme should ONLY be a tag");
   suggestAlternative: tr("note");
   assertMatch: "way fixme=\"bad name\"";
@@ -675,49 +659,49 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 /* Check destination lane tagging */
 /* Check toll roads */
 *[destination:ref:lanes=~/(.*)toll(.*)$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Toll roads in destination:ref:lanes are lower case, instead of upper case");
   fixAdd: concat("destination:ref:lanes=", replace(tag("destination:ref:lanes"), "toll", "Toll"));
 }
 
 *[destination:ref=~/(.*)toll(.*)$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Toll roads in destination:ref are lower case, instead of upper case");
   fixAdd: concat("destination:ref=", replace(tag("destination:ref"), "toll", "Toll"));
 }
 
 *[destination:lanes:ref] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("destination:lanes:ref should be destination:ref:lanes");
   fixChangeKey: "destination:lanes:ref => destination:ref:lanes";
 }
 
 *[destination:lanes:ref:to] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("destination:lanes:ref:to should be destination:ref:to:lanes");
   fixChangeKey: "destination:lanes:ref:to => destination:ref:to:lanes";
 }
 /* Check *_links to make certain they have destination:ref */
 way[highway=~/^.*_link$/][ref][!destination:ref] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Link has ref but no destination:ref");
 }
 way|z21-[JOSM_search("inview")][highway=~/^.*_link$/][ref][!destination:ref] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("Link has ref but no destination:ref");
   fixChangeKey: "ref => destination:ref";
 }
 
 /* Check for destination:street that is the same as the name of the street */
 way[highway][name][destination:street][tag("name") == tag("destination:street")] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwError: tr("The name of the road is the same as the name of the destination:street");
   fixRemove: "destination:street";
 }
 
 /* Ensure that the destination:lanes/:forward/:backward match the number of lanes on the road */
 way[highway][!lanes][destination:lanes] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("There should be a lanes tag when there is a destination:lanes tag");
 }
 way[highway][lanes][destination:lanes][oneway][count(split("|", tag("destination:lanes"))) != tag("lanes")],
@@ -730,7 +714,7 @@ way[highway][lanes:forward][destination:ref:lanes:forward][oneway][count(split("
 way[highway][!lanes:forward][destination:ref:lanes:forward][count(split("|", tag("destination:ref:lanes:forward"))) != tag("lanes") / 2],
 way[highway][lanes:backward][destination:ref:lanes:backward][oneway][count(split("|", tag("destination:ref:lanes:backward"))) != tag("lanes:backward")],
 way[highway][!lanes:backward][destination:ref:lanes:backward][count(split("|", tag("destination:ref:lanes:backward"))) != tag("lanes") / 2] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("The implied lanes in {0} do not match the lanes in {1}", "{2.tag}", "{1.key}");
 }
 *[destination=~/^(?i)(ave|blvd|str) .*$/],
@@ -741,7 +725,7 @@ way[highway][!lanes:backward][destination:ref:lanes:backward][count(split("|", t
 *[destination:street=~/^.* (?i)(ave|blvd|str)$/],
 *[destination:lanes=~/^.* (?i)(ave|blvd|str)$/],
 *[destination:lanes=~/^(?i)(ave|blvd|str) .*$/] {
-  group: concat(tr("kaart"), "_r101");
+  group: concat(tr("kaart"), "_r102");
   throwWarning: tr("{0} shouldn''t have a street abbreviation in {1}", tag("name"), "{0.key}");
   /*fixAdd: concat("{0.key}=",
 replace(replace(replace(replace(replace(replace(replace(replace(
