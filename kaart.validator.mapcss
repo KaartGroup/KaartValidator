@@ -261,7 +261,7 @@ way[railway][highway] > node {
   set .in_railway_highway;
 }
 
-way[railway] > node { set .in_railway }
+way[railway][railway!~/^(disused|abandoned|dismantled|razed|historic)$/] > node { set .in_railway }
 way[highway][highway!~/^(pedestrian|footway)$/] > node { set .in_highway }
 way[highway][highway=~/^(pedestrian|footway)$/] > node { set .in_pedestrian_highway }
 node[railway!=level_crossing][gpx_distance() < 30 || gpx_distance() >= 50000000].in_railway.in_highway!.in_railway_highway {
