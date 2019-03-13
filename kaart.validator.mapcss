@@ -50,7 +50,7 @@ way[!/^(highway|railway)$/][/^(surface)$/][!/^amenity|leisure|aeroway|natural$/]
   throwError: tr("Is this a {0} -- it has a {1} tag", "{0.key}", "{1.key}"); }
 
 node[/^.*(lanes|turn|surface).*$/],
-node[/^.*(maxspeed|maxweight|maxheight|maxwidth).*$][!/^(traffic_sign|parking|barrier)] {
+node[/^.*(maxspeed|maxweight|maxheight|maxwidth).*$/][!/^(traffic_sign|parking|barrier)/] {
   group: concat(tr("kaart"), "_r135");
   throwError: tr("Nodes typically don''t have {0}", "{0.key}");
   fixRemove: "{0.key}";
