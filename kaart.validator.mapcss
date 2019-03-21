@@ -446,11 +446,11 @@ relation[type=restriction][!/^restriction/] {
  ***********************/
 /* Bosnia/Serbia/Croatia */
 /* The first letter of sentences AND the first letter of quotes are capitalized */
-*[name=~/^\p{Ll}.*$/][inside("SR")],
-*[name=~/^.*\.\s*\p{Ll}.*$/][inside("SR")],
+*[name=~/^\p{Ll}.*$/][inside("BA,HR,SR")],
+*[name=~/^.*\.\s*\p{Ll}.*$/][inside("BA,HR,SR")],
 *[name=~/^.*"\p{Ll}.*$/][inside("SR")] {
   group: concat(tr("kaart"), "_r142");
-  throwWarning: tr("Serbian have capital letters at the beginning of sentences or quotes");
+  throwWarning: tr("Bosnian/Croatian/Serbian have capital letters at the beginning of sentences or quotes");
   assertNoMatch: "node name=\"Čovek je šetao gradom\"";
   assertMatch: "node name=\"čovek je šetao gradom\"";
   assertNoMatch: "node name=\"\"Sutra ću kupiti automobil\"\"";
