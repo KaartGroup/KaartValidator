@@ -534,7 +534,7 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
 *[name=~/^.*\.\s*\p{Ll}.*$/][inside("SR")],
 *[name=~/^.*"\p{Ll}.*$/][inside("SR")] {
   group: concat(tr("kaart"), "_r142");
-  throwWarning: tr("Serbian have capital letters at the beginning of sentences or quotes");
+  throwOther: tr("Serbian have capital letters at the beginning of sentences or quotes");
   assertNoMatch: "node name=\"Čovek je šetao gradom\"";
   assertMatch: "node name=\"čovek je šetao gradom\"";
   assertNoMatch: "node name=\"\"Sutra ću kupiti automobil\"\"";
@@ -547,7 +547,7 @@ way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/]
 *[name=~/^.*\.\s*\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")],
 *[name=~/^.*"\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")] {
   group: concat(tr("kaart"), "_r142");
-  throwWarning: tr("Bosnian/Croatian have capital letters at the beginning of sentences or quotes (two words+)");
+  throwOther: tr("Bosnian/Croatian have capital letters at the beginning of sentences or quotes (two words+)");
   assertNoMatch: "node name=\"Čovek je šetao gradom\"";
   assertMatch: "node name=\"čovek je šetao gradom\"";
   assertNoMatch: "node name=čovek";
