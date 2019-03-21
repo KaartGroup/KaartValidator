@@ -444,124 +444,19 @@ relation[type=restriction][!/^restriction/] {
 /***********************
  ** Country Specific ***
  ***********************/
-/* Greece */
-/* Copy name to name:<appropriate> */
-*[name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!name:el][/^name:.*$/][inside("GR")] { set .needsgreekname }
-/* Check end of names for σ instead of ς */
-*[name=~/^(.*)(σ) (.*)$/],
-*[name=~/^(.*)(σ)$/],
-*[name=~/^(σ)$/] {
-  group: concat(tr("kaart"), "_r142");
-  throwError: tr("σ should be ς at the end of words");
-  fixAdd: concat("name", "=", replace(tag("name"), "σ ", "ς ");
-  assertMatch: "way highway=primary name=\"Φεσσασ\"";
-  assertMatch: "way highway=primary name=\"Φεσσασ Φεσσας\"";
-  assertNoMatch: "way highway=primary name=\"Φεσσας\"";
-  assertNoMatch: "way highway=primary name=\"Φεσσας Φεσσας\"";
-}
-way[highway].needsgreekname,
-*[name].needsgreekname:modified,
-*|z21-[JOSM_search("inview")][name].needsgreekname {
-  group: concat(tr("kaart"), "_r142");
-  throwWarning: tr("There should be a name:el tag");
-  fixAdd: concat("name:", "el", "=", tag(name));
-}
-
-way[highway][!name][name:el][inside("GR")] {
-  group: concat(tr("kaart"), "_r142");
-  throwWarning: tr("There should be a name tag");
-  fixAdd: concat("name", "=", tag(name:el));
-}
-way[highway][name=~/^.*((ΑΕΙ|ΑΤ|ΑΤΕΙ|Αγ|Αλ|Αφοι|Αφών|Β|Βασ|Γρ|Δ|ΔΣ|Δημ|ΕΛΤΑ|Εθν|Ελ|Θεσ|Ι[. ]?Μ|Ι[. ]?Ν|Κτ|Κων|Λ|Ν|Ορ|Π|Παν|Πλ|Ποτ|Στρ|Σχ|ΤΕΙ|νικης|ωου)[.]?)$/][inside("GR")] {
-  group: concat(tr("kaart"), "_r142");
-  throwWarning: tr("We don''t want to use abbreviations for streets");
-}
-
-/* Transliteration */
-/* Transliteration is a different step */
-/*
-*way[highway][name=~/^(.*)(Α|α|ά|Β|β|Γ|γ|Δ|δ|Ε|ε|έ|Ζ|ζ|Η|η|Θ|θ|Ι|ι|ί|Κ|κ|Λ|λ|Μ|μ|Ν|ν|Ξ|ξ|Ο|ο|Π|π|Ρ|ρ|Σ|σ|ς|Τ|τ|Υ|υ|Φ|φ|Χ|χ|Ψ|ψ|Ω|ω)+(.*)$/][!int_name][inside("GR")]:selected {
-  group: concat(tr("kaart"), "_r142");
-  throwWarning: tr("There should be an int_name");
-  fixAdd: concat("int_name=", tag("name"));
-}
-*/
-/* Check int_names */
-way[highway][int_name][int_name!~/^[\p{IsLatin}\p{ASCII}]*$/] {
-  group: concat(tr("kaart"), "_r142");
-  throwWarning: tr("Check the int_name for non-latin characters");
-  assertNoMatch: "way highway=primary int_name=\"Akti Xaveriou\"";
-  assertMatch: "way highway=primary int_name=\"Ακτι Χαωεριου\"";
-  assertNoMatch: "way highway=primary int_name=\"Neofytou Vamva A' Parodos\"";
-}
-
-/* A lot of name:en tags are just transliterations. They should be int_name. */
-/*
-*[highway][name:en][!int_name][name][inside("GR")] {
-  group: concat(tr("kaart"), "_r142");
-  throwOther: tr("Check that the name:en tag is not a transliteration of the name/name:el tag");
-}
-*/
-*[highway][tag("name:en")=tag("int_name")] {
-  group: concat(tr("kaart"), "_r142");
-  throwOther: tr("int_name is the same as the name:en, name:en may be a transliteration");
-  /*fixRemove: "name:en";*/
-  assertMatch: "way highway=residential name:en=Rop int_name=Rop name=Ροπ";
-  assertNoMatch: "way highway=residential name:en=Rope int_name=Rop name=Ροπ";
-}
-
-/* OSM Greece does NOT want street/road */
-way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/][inside("GR")] {
-  group: concat(tr("kaart"), "_r142");
-  throwWarning: "OSM Greece does not want street/road/other prefixes -- try removing the prefix (fix won't work with different cases)";
-  assertMatch: "way highway=primary name=\"Φεσσασ Οδός\"";
-  assertNoMatch: "way highway=primary name=\"Φεσσασ\"";
-}
-way[highway][/^(name|name:el)$/=~/(?i)(?u).*(Οδός|Odos|Λεωφόρος).*/][inside("GR")]:selected {
-  group: concat(tr("kaart"), "_r142");
-  throwWarning: "OSM Greece does not want street/road/other prefixes -- try removing the prefix (fix won't work with different cases)";
-  fixAdd: concat("name=", trim(replace(tag("name"), "Οδός", "")));
-  fixAdd: concat("name=", trim(replace(tag("name"), "Odos", "")));
-  fixAdd: concat("name=", trim(replace(tag("name"), "Λεωφόρος", "")));
-  fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Οδός", "")));
-  fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Odos", "")));
-  fixAdd: concat("name:el=", trim(replace(tag("name:el"), "Λεωφόρος", "")));
-}
-
 /* Bosnia/Serbia/Croatia */
 /* The first letter of sentences AND the first letter of quotes are capitalized */
 *[name=~/^\p{Ll}.*$/][inside("SR")],
 *[name=~/^.*\.\s*\p{Ll}.*$/][inside("SR")],
 *[name=~/^.*"\p{Ll}.*$/][inside("SR")] {
   group: concat(tr("kaart"), "_r142");
-  throwOther: tr("Serbian have capital letters at the beginning of sentences or quotes");
+  throwWarning: tr("Serbian have capital letters at the beginning of sentences or quotes");
   assertNoMatch: "node name=\"Čovek je šetao gradom\"";
   assertMatch: "node name=\"čovek je šetao gradom\"";
   assertNoMatch: "node name=\"\"Sutra ću kupiti automobil\"\"";
   assertMatch: "node name=\"\"sutra ću kupiti automobil\"\"";
   assertMatch: "node name=\"Čovek je šetao gradom. čovek je šetao gradom.\"";
   assertMatch: "node name=\"sutra ću kupiti automobil\"";
-}
-/* The first letter of sentences AND the first letter of quotes are capitalized, but only if there is more than one word */
-*[name=~/^\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")],
-*[name=~/^.*\.\s*\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")],
-*[name=~/^.*"\p{Ll}.*$/][count(split(" ", tag("name"))) > 1][inside("BA,HR")] {
-  group: concat(tr("kaart"), "_r142");
-  throwOther: tr("Bosnian/Croatian have capital letters at the beginning of sentences or quotes (two words+)");
-  assertNoMatch: "node name=\"Čovek je šetao gradom\"";
-  assertMatch: "node name=\"čovek je šetao gradom\"";
-  assertNoMatch: "node name=čovek";
-  assertNoMatch: "node name=\"\"Sutra ću kupiti automobil\"\"";
-  assertMatch: "node name=\"\"sutra ću kupiti automobil\"\"";
-  assertMatch: "node name=\"Čovek je šetao gradom. čovek je šetao gradom.\"";
-  assertMatch: "node name=\"sutra ću kupiti automobil\"";
-}
-*[name=~/^\p{Lu}.*$/][count(split(" ", tag("name"))) == 1][inside("BA,HR")] {
-  group: concat(tr("kaart"), "_r142");
-  throwWarning: tr("Bosnian/Croatian have lower case letters at the beginning of sentences or quotes (one word) (partial coverage)");
-  assertNoMatch: "node name=čovek";
-  assertNoMatch: "node name=\"Čovek je šetao gradom. čovek je šetao gradom.\"";
-  assertMatch: "node name=Čovek";
 }
 
 /***************
