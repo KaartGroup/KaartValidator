@@ -589,6 +589,20 @@ relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associa
   suggestAlternative: tr("{0}, {1}, or a {2} relation", "addr:street", "addr:place", "associatedStreet");
 }
 
+/* Recommend removing associatedStreet relations when the houses have the addr:street tag */
+relation[type=associatedStreet][name] >[role=street] *[highway][!name],
+relation[type=associatedStreet][name] >[role=house] *[building][!addr:street] {
+  group: tr("kaart");
+  throwError: tr("{0} has no name and the {1} relation does have a name", "{0.key}", "associatedStreet");
+  fixAdd: concat("{1.key}", "=", parent_tag("name"));
+}
+
+relation[type=associatedStreet][name] {
+  group: tr("kaart");
+  throwWarning: tr("Try to remove the {0} relation by copying the {1} tag to the {1}/{2} tags on the members (should be in error section above) and then deleting the relation", "associatedStreet", "name", "addr:street");
+  fixDeleteObject: this;
+}
+
 way[addr:interpolation][addr:street][!building] {
   group: concat(tr("kaart"), "_r158");
   throwWarning: tr("Interpolation lines should not have addr:street on it");
