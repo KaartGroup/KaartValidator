@@ -583,12 +583,6 @@ relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associa
   suggestAlternative: tr("{0}, {1}, or a {2} relation", "addr:street", "addr:place", "associatedStreet");
 }
 
-*[addr:housenumber][!addr:street][!addr:place]!.associatedStreet!:modified {
-  group: concat(tr("kaart"), "_r158");
-  throwWarning: tr("Addresses should have a street");
-  suggestAlternative: tr("{0}, {1}, or a {2} relation", "addr:street", "addr:place", "associatedStreet");
-}
-
 /* Recommend removing associatedStreet relations when the houses have the addr:street tag */
 relation[type=associatedStreet][name] >[role=street] *[highway][!name],
 relation[type=associatedStreet][name] >[role=house] *[building][!addr:street] {
