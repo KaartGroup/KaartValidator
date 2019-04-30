@@ -574,21 +574,26 @@ node[traffic_sign][direction=~/^(forward|backward)$/] {
   fixRemove: "direction";
 }
 
+relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associatedStreet }
+
 /* Check for address tagging */
-*[addr:housenumber][!addr:street][!addr:place]:modified {
+*[addr:housenumber][!addr:street][!addr:place]!.associatedStreet:modified {
   group: concat(tr("kaart"), "_r158");
   throwError: tr("Addresses should have a street");
-  suggestAlternative: tr("{0} or {1}", "addr:street", "addr:place");
+  suggestAlternative: tr("{0}, {1}, or a {2} relation", "addr:street", "addr:place", "associatedStreet");
 }
-*[addr:housenumber][!addr:street][!addr:place]!:modified {
+
+*[addr:housenumber][!addr:street][!addr:place]!.associatedStreet!:modified {
   group: concat(tr("kaart"), "_r158");
   throwWarning: tr("Addresses should have a street");
-  suggestAlternative: tr("{0} or {1}", "addr:street", "addr:place");
+  suggestAlternative: tr("{0}, {1}, or a {2} relation", "addr:street", "addr:place", "associatedStreet");
 }
+
 way[addr:interpolation][addr:street][!building] {
   group: concat(tr("kaart"), "_r158");
   throwWarning: tr("Interpolation lines should not have addr:street on it");
 }
+
 way[highway][name][/^addr:/],
 way[highway][!name][/^addr:/][!addr:street] {
   group: concat(tr("kaart"), "_r158");
