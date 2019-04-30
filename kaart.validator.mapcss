@@ -484,9 +484,9 @@ relation[type=restriction][!/^restriction/] {
 }
 
 /* Check against incorrect capitalization of names where the first word IS capitalized */
-*[name=~/^((\p{Lu}[\p{Ll}'-]*)|[0-9]*).*\s\p{Ll}{4,}($|\s)/][highway=~/service|living_street|residential|tertiary|secondary|primary|trunk|motorway/]{
+*[/^name/=~/^((\p{Lu}[\p{Ll}'-]*)|[0-9]*).*\s\p{Ll}{4,}($|\s)/][highway=~/service|living_street|residential|tertiary|secondary|primary|trunk|motorway/]{
   group: concat(tr("kaart"), "_r158");
-  throwWarning: tr("First word is capitalized, additional words are probably capitalized (check the country specific naming rules)");
+  throwWarning: tr("First word is capitalized, additional words are probably capitalized (check the country specific naming rules) in {0}", "{0.key}");
   assertMatch: "way name=\"29 road\" highway=residential";
   assertNoMatch: "way name=\"29 Road\" highway=residential";
   assertMatch: "way name=\"Twenty-nine road\" highway=residential";
