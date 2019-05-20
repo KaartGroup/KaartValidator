@@ -144,8 +144,8 @@ way[highway][turn:both_ways] {
 way[highway][/turn:lanes/][/turn:lanes/!~/^((reverse|merge_to_right|left)[|;]?)*((merge_to_right|slight_left)[|;]?)*[|]*((through|none)[|;]?)*[|]*((slight_right|merge_to_left)[|;]?)*((right|merge_to_left)[|;]?)*$/]:righthandtraffic {
   group: concat(tr("kaart"), "_r170");
   throwError: tr("Check the order of {0}", "{1.key}");
-  assertMatch: "way turn:lanes=\"through|reverse\"";
-  assertNoMatch: "way turn:lanes=\"reverse|left|merge_to_right|through\"";
+  assertMatch: "way highway=tertiary turn:lanes=\"through|reverse\"";
+  assertNoMatch: "way highway=tertiary turn:lanes=\"reverse|left|merge_to_right|through\"";
 }
 
 /* Check *_links to see if they have a oneway tag */
@@ -249,10 +249,6 @@ node[traffic_sign][overtaking][count(parent_tags("overtaking:backward")) == 0 &&
 *[maxaxleload][maxaxleload=~/^[0-9.]+$/][inside("US")] {
   group: concat(tr("kaart"), "_r170");
   throwError: tr("{0} is always in short tons (st)", "{0.key}");
-  assertMatch: "way highway=residential maxweight=5.0";
-  assertMatch: "way highway=residential maxweight=5";
-  assertNoMatch: "way highway=residential maxweight=\"5 st\"";
-  assertNoMatch: "way highway=residential maxweight=\"5.0 st\"";
 }
 
 /* Check *_links to see if they have a name/noname tag */
@@ -374,28 +370,28 @@ way[highway][tunnel][gpx_distance() < 30 || gpx_distance() >= 50000000] {
 }
 
 /* Check mini-roundabouts for the correct direction */
-node[highway=mini_roundabout][direction!=clockwise][JOSM_search("-inview")]!:righthandtraffic,
-node|z-20[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
+node[highway=mini_roundabout][direction!=clockwise][JOSM_search("-inview")]!:righthandtraffic:in-downloaded-area,
+node|z-20[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:in-downloaded-area {
   group: concat(tr("kaart"), "_r170");
   throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
 }
 
-node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=clockwise]!:righthandtraffic {
+node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:in-downloaded-area {
   group: concat(tr("kaart"), "_r170");
   throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
-  fixAdd: "direction=clockwise";
+  /*fixAdd: "direction=clockwise";*/
 }
 
-node[highway=mini_roundabout][direction!=anticlockwise][JOSM_search("-inview")]:righthandtraffic,
-node|z-20[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
+node[highway=mini_roundabout][direction!=anticlockwise][JOSM_search("-inview")]:righthandtraffic:in-downloaded-area,
+node|z-20[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:in-downloaded-area {
   group: concat(tr("kaart"), "_r170");
   throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
 }
 
-node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic {
+node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:in-downloaded-area {
   group: concat(tr("kaart"), "_r170");
   throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
-  fixAdd: "direction=anticlockwise";
+  /*fixAdd: "direction=anticlockwise";*/
 }
 
 /*****************
@@ -529,7 +525,7 @@ relation[type=restriction][!/^restriction/] {
 /* Convert ‘ and ’ to ' (unicode differences) */
 *[/name/=~/.*([‘’]+).*/]:modified {
   group: concat(tr("kaart"), "_r170");
-  throwOther: println(tr("Avoid using unicode '' in names (‘’) ({0})", "{0.key}"));
+  throwOther: tr("Avoid using unicode '' in names (‘’) ({0})", "{0.key}");
   suggestAlternative: "'";
   /*fixAdd: concat("{0.key}", "=", replace(replace(replace(tag("{0.key}"), "‘", "'"), "’", "'"), "Street", "Avenue"));*/
   /*fixAdd: concat("{0.key}", "=", concat("{0.tag}", "(check)"), " ", "{0.value}");*/
