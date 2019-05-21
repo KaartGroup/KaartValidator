@@ -498,7 +498,7 @@ relation[type=restriction][!/^restriction/] {
 *[tag("name")!=tag("name:ar")][tag("name")!=tag("name:en")][inside("JO")]:modified,
 *[tag("name")!=tag("name:ar")][tag("name")!=tag("name:en")][inside("JO")]:selected {
   group: concat(tr("kaart"), "_r170");
-  throwWarning: tr("The default language is arabic for this country. Consider copying name:ar to name, but check spelling first.");
+  throwWarning: tr("The default language is arabic for this country. Consider copying name:ar to name, but check spelling first (this may also be a mismatch between name and name:ar)");
 }
 
 /* Make certain there is a name tag if there is a name:* tag */
