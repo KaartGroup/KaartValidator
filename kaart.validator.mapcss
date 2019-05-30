@@ -488,15 +488,15 @@ relation[type=restriction][!/^restriction/] {
 }
 
 /* Check for the possibility of copying name:ar to name in Jordan */
-*[tag("name")=tag("name:en")]["name:ar"][inside("JO")]:modified,
-*[tag("name")=tag("name:en")]["name:ar"][inside("JO")]:selected {
+*[name=*"name:en"]["name:ar"][inside("JO")]:modified,
+*[name=*"name:en"]["name:ar"][inside("JO")]:selected {
   group: concat(tr("kaart"), "_r170");
   throwWarning: tr("The default language is arabic for this country. Consider copying name:ar to name.");
   fixAdd: concat("name=", tag("name:ar"));
 }
 
-*[tag("name")!=tag("name:ar")][tag("name")!=tag("name:en")][inside("JO")]:modified,
-*[tag("name")!=tag("name:ar")][tag("name")!=tag("name:en")][inside("JO")]:selected {
+*[name!=*"name:ar"][name!=*"name:en"][inside("JO")]:modified,
+*[name!=*"name:ar"][name!=*"name:en"][inside("JO")]:selected {
   group: concat(tr("kaart"), "_r170");
   throwWarning: tr("The default language is arabic for this country. Consider copying name:ar to name, but check spelling first (this may also be a mismatch between name and name:ar)");
 }
