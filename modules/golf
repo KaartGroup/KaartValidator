@@ -1,0 +1,16 @@
+/******************
+ ** Golf Courses **
+ ******************/
+way[highway=~/^(path|footway|track)$/][golf_cart=~/^(yes|designated)$/] > node { set .golf_carts_allowed }
+way[highway=~/^(path|footway|track)$/][motor_vehicle=~/^(yes|designated)$/] > node { set .motor_vehicle_allowed }
+
+way[highway=~/^(path|footway|track)$/][motor_vehicle=~/^(yes|designated)$/] ∈ way[leisure=golf_course],
+way[highway][golf] {
+  group: tr("kaart");
+  throwWarning: tr("Should motor_vehicles be allowed on this path?");
+  suggestAlternative: "golf_cart=(yes|designated)";
+}
+node.golf_carts_allowed.motor_vehicle_allowed {
+  group: tr("kaart");
+  throwOther: tr("There is a junction point on paths/tracks where motor_vehicles are allowed and golf_carts are allowed. Is this right?");
+}

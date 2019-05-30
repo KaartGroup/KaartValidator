@@ -1,0 +1,139 @@
+/***************
+ * Misc ********
+ ***************/
+
+/* Check for duplicated words in names */
+*[name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")] {
+  group: tr("kaart");
+  throwWarning: tr("Possible duplicated words in {0}", "{0.key}");
+  assertMatch: "node name=\"Duplicate Duplicate\"";
+  assertNoMatch: "node name=\"Nothing to see here\"";
+}
+
+/* Check for ways that should have a building tag */
+way[/^(addr.*)$/][!building]:closed,
+way[amenity][amenity=~/fuel/][!building]:closed {
+  group: tr("kaart");
+  throwWarning: tr("Area may be a building");
+}
+/* Check for pedestrian ways */
+node[crossing] { set .crossing_node }
+way[highway=~/^(cycleway|footway|pedestrian)$/][footway=crossing] > node { set .footway_crossing }
+way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible_divided_highway }
+
+@supports (min-josm-version: 14802) {
+  way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing,
+  way[!highway][waylength() < 30][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing {
+    group: tr("kaart");
+    throwWarning: tr("Possible pedestrian crossing");
+    suggestAlternative: tr("highway=footway, footway=crossing");
+  }
+  node[!inside("GR")][gpx_distance() < 30 || gpx_distance() >= 50000000].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
+    group: tr("kaart");
+    throwWarning: tr("Maybe add a pedestrian crossing here");
+    suggestAlternative: tr("highway=footway, footway=crossing");
+  }
+}
+
+/* Check for traffic signals with directions */
+node[highway=traffic_signals][traffic_signals:direction][count(parent_tags("name")) >= 2] {
+  group: tr("kaart");
+  throwError: tr("{0} should not be used on nodes connecting two different roads", "{1.key}");
+}
+node[traffic_signal:direction] {
+  group: tr("kaart");
+  throwError: tr("{0} should be traffic_signals:direction", "{0.key}");
+  fixChangeKey: "traffic_signal:direction => traffic_signals:direction";
+}
+
+way[/^highway|railway$/][oneway=yes] > node,
+way[/^highway|railway$/][junction=roundabout] > node { set .onewaynode }
+
+node[highway=traffic_signals][traffic_signals:direction].onewaynode,
+node[highway=traffic_signals][direction].onewaynode {
+  group: tr("kaart");
+  throwWarning: tr("There should not be {0} for {1} on a oneway", "{1.key}", "{0.key}");
+  fixRemove: "{1.key}";
+}
+
+node[highway=traffic_signals][!direction][!traffic_signals:direction][count(parent_tags("name")) <= 1 && count(parent_tags("ref")) <= 1 && count(parent_tags("highway")) <= 1][!crossing]!.onewaynode:in-downloaded-area {
+  group: tr("kaart");
+  throwWarning: tr("{0} should have a direction when not on a oneway or an intersection", "{0.value}");
+  suggestAlternative: "traffic_signals:direction";
+}
+node[highway=traffic_signals][direction=~/^(forward|backward)$/] {
+  group: tr("kaart");
+  throwWarning: tr("{0} should use traffic_signals:direction instead of direction for {1}", "{0.value}", "{1.value}");
+  fixChangeKey: "direction => traffic_signals:direction";
+  assertMatch: "node highway=traffic_signals direction=forward";
+  assertMatch: "node highway=traffic_signals direction=backward";
+  assertNoMatch: "node highway=traffic_signals traffic_signals:direction=backward";
+  assertNoMatch: "node highway=traffic_signals direction=359.9";
+}
+
+/* Check for traffic sign issues */
+node[traffic_sign][direction=~/^(forward|backward)$/] {
+  group: tr("kaart");
+  throwWarning: tr("{0} should use traffic_sign:{1}=yes", "{0.key}", tag("direction"));
+  fixAdd: concat("traffic_sign:", tag("direction"), "=yes");
+  fixRemove: "direction";
+}
+
+relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associatedStreet }
+
+/* Check for address tagging */
+*[addr:housenumber][!addr:street][!addr:place]!.associatedStreet:modified {
+  group: tr("kaart");
+  throwError: tr("Addresses should have a street");
+  suggestAlternative: tr("{0}, {1}, or a {2} relation", "addr:street", "addr:place", "associatedStreet");
+}
+
+/* Recommend removing associatedStreet relations when the houses have the addr:street tag */
+relation[type=associatedStreet][name] >[role=street] *[highway][!name],
+relation[type=associatedStreet][name] >[role=house] *[building][!addr:street] {
+  group: tr("kaart");
+  throwError: tr("{0} has no name and the {1} relation does have a name", "{0.key}", "associatedStreet");
+  fixAdd: concat("{1.key}", "=", parent_tag("name"));
+}
+
+relation[type=associatedStreet][name] {
+  group: tr("kaart");
+  throwWarning: tr("Try to remove the {0} relation by copying the {1} tag to the {1}/{2} tags on the members (should be in error section above) and then deleting the relation", "associatedStreet", "name", "addr:street");
+  fixDeleteObject: this;
+}
+
+way[addr:interpolation][addr:street][!building] {
+  group: tr("kaart");
+  throwWarning: tr("Interpolation lines should not have addr:street on it");
+}
+
+way[highway][name][/^addr:/],
+way[highway][!name][/^addr:/][!addr:street] {
+  group: tr("kaart");
+  throwWarning: tr("There shouldn''t be any {0} tags on a {1}", "{2.key}", "{0.key}");
+  fixRemove: "{2.key}";
+  assertMatch: "way highway=residential name=random addr:street=random";
+  assertNoMatch: "way highway=residential addr:street=random2";
+}
+way[highway][!name][addr:street] {
+  group: tr("kaart");
+  throwWarning: tr("There shouldn''t be any {0} tags on a {1}", "{2.key}", "{0.key}");
+  assertMatch: "way highway=residential addr:street=random";
+  assertNoMatch: "way highway=residential name=random1 addr:street=random2";
+}
+
+/* Check for fixme's that have tag-value pairs */
+*[fixme][count(split(" ", tag("fixme"))) == 1][tag(tag("fixme")) != "none"] {
+  group: tr("kaart");
+  throwWarning: tr("fixme is a tag which exists on the object, is the fixme fixed?");
+  assertNoMatch: "way fixme=name";
+  assertMatch: "way name=TODO fixme=name";
+  assertNoMatch: "way name=TODO fixme=\"name me\"";
+  assertNoMatch: "way name=TODO";
+}
+
+/* Check for modified landuses */
+node:new < *[/landuse|boundary/]:modified!:new {
+  group: tr("kaart");
+  throwError: tr("A {0} was modified, did you intend to modify it? If not, use `alt` + `j` to disconnect the node from the way.", "{0.key}");
+}

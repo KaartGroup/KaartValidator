@@ -1,0 +1,85 @@
+/***********************
+ ** Country Specific ***
+ ***********************/
+/* Bosnia/Serbia/Croatia */
+/* The first letter of sentences AND the first letter of quotes are capitalized */
+*[name=~/^\p{Ll}.*$/][inside("BA,HR,SR")],
+*[name=~/^.*\.\s*\p{Ll}.*$/][inside("BA,HR,SR,RS")],
+*[name=~/^.*"\p{Ll}.*$/][inside("SR")] {
+  group: tr("kaart");
+  throwOther: tr("Bosnian/Croatian/Serbian have capital letters at the beginning of sentences or quotes");
+  assertNoMatch: "node name=\"Čovek je šetao gradom\"";
+  assertMatch: "node name=\"čovek je šetao gradom\"";
+  assertNoMatch: "node name=\"\"Sutra ću kupiti automobil\"\"";
+  assertMatch: "node name=\"\"sutra ću kupiti automobil\"\"";
+  assertMatch: "node name=\"Čovek je šetao gradom. čovek je šetao gradom.\"";
+  assertMatch: "node name=\"sutra ću kupiti automobil\"";
+}
+
+/* The first letter of sentences AND the first letter of quotes are capitalized, but not others */
+*[name=~/(\p{Lu}\p{Ll}*([\p{Lu}\p{Ll}\s])*){2,}/][inside("BA,HR,SR,RS")] {
+  group: tr("kaart");
+  throwOther: tr("Bosnian/Croatian/Serbian have capital letters at the beginning of sentences or quotes but not usually after that (with some exceptions)");
+  assertNoMatch: "node name=\"Čovek je šetao gradom\"";
+  assertNoMatch: "node name=\"čovek je šetao gradom\"";
+  assertNoMatch: "node name=\"\"Sutra ću kupiti automobil\"\"";
+  assertNoMatch: "node name=\"\"sutra ću kupiti automobil\"\"";
+  assertMatch: "node name=\"Čovek je šetao Гradom. čovek je šetao gradom.\"";
+  assertMatch: "node name=\"Sutra ću Кupiti automobil\"";
+  assertMatch: "way name=\"Цтунеа Кдле\"";
+}
+
+/* Encourage copying name tags to name:en */
+*[name=~/^([a-zA-Z0-9.$`'‘’ -]+)$/][!"name:en"][inside("JO")]:modified,
+*[name=~/^([a-zA-Z0-9.$`'‘’ -]+)$/][!"name:en"][inside("JO")]:selected {
+  group: tr("kaart");
+  throwError: tr("Please copy (NOT move) the name over to name:en");
+  fixAdd: concat("name:en=", tag("name"));
+}
+
+/* Check for the possibility of copying name:ar to name in Jordan */
+*[name=*"name:en"]["name:ar"][inside("JO")]:modified,
+*[name=*"name:en"]["name:ar"][inside("JO")]:selected {
+  group: tr("kaart");
+  throwWarning: tr("The default language is arabic for this country. Consider copying name:ar to name.");
+  fixAdd: concat("name=", tag("name:ar"));
+}
+
+*[name!=*"name:ar"][name!=*"name:en"][inside("JO")]:modified,
+*[name!=*"name:ar"][name!=*"name:en"][inside("JO")]:selected {
+  group: tr("kaart");
+  throwWarning: tr("The default language is arabic for this country. Consider copying name:ar to name, but check spelling first (this may also be a mismatch between name and name:ar)");
+}
+
+/* Make certain there is a name tag if there is a name:* tag */
+*[!name][/name:/]:modified,
+*[!name][/name:/]:selected {
+  group: tr("kaart");
+  throwError: tr("Copy (NOT move) a translated name to the name tag");
+  assertMatch: "way name:en=True";
+  assertNoMatch: "way name=True name:en=True";
+}
+
+/* Check against incorrect capitalization of names where the first word IS capitalized */
+*[/^name/=~/^((\p{Lu}[\p{Ll}'-]*)|[0-9]*).*\s\p{Ll}{4,}($|\s)/][highway=~/service|living_street|residential|tertiary|secondary|primary|trunk|motorway/]{
+  group: tr("kaart");
+  throwWarning: tr("First word is capitalized, additional words are probably capitalized (check the country specific naming rules) in {0}", "{0.key}");
+  assertMatch: "way name=\"29 road\" highway=residential";
+  assertNoMatch: "way name=\"29 Road\" highway=residential";
+  assertMatch: "way name=\"Twenty-nine road\" highway=residential";
+  assertNoMatch: "way name=\"Twenty-nine Road\" highway=residential";
+  assertMatch: "way name=\"Al-Jazhera road\" highway=residential";
+  assertNoMatch: "way name=\"Al-Jazhera Road\" highway=residential";
+}
+
+/* Convert ‘ and ’ to ' (unicode differences) */
+*[/name/=~/.*([‘’]+).*/]:modified {
+  group: tr("kaart");
+  throwOther: tr("Avoid using unicode '' in names (‘’) ({0})", "{0.key}");
+  suggestAlternative: "'";
+  /*fixAdd: concat("{0.key}", "=", replace(replace(replace(tag("{0.key}"), "‘", "'"), "’", "'"), "Street", "Avenue"));*/
+  /*fixAdd: concat("{0.key}", "=", concat("{0.tag}", "(check)"), " ", "{0.value}");*/
+  assertNoMatch: "way name=\"Testing's Road\"";
+  assertMatch: "way name=\"Testing‘s Road\"";
+  assertMatch: "way name=\"Testing’s Road\"";
+}
