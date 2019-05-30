@@ -881,3 +881,11 @@ tr("{0}", "{0.key}"),
 "Blvd.", "Boulevard")
 );*/
 }
+
+/* Check for ref and name being equal */
+way[highway][name][ref][name = *ref] {
+  throwWarning: tr("{0} and {1} are the same", "name", "ref");
+  group: tr("kaart");
+  assertMatch: "way highway=tertiary name=22 ref=22";
+  assertNoMatch: "way highway=tertiary name=22 ref=23";
+}
