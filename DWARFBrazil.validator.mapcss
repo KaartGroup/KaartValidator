@@ -1,0 +1,161 @@
+meta {
+  title: "Brazil Validator Tool";
+  description: "Validator tool for the Kaart Brazil Project";
+  version: "1_2019-05-30";
+  author: "Taylor Smock (vorpalblade77-kaart), Andrew Piechota(G_Fyyar), RD Clare(mr_et)";
+}
+
+/* Creates list of Current/Past Project Users */
+/* Taylor Smock. Edited by Andrew Piechota for BP */
+*[JOSM_search("user:G_Fyyar or user:Meowshane or  user:mr_et or user:FarieBerrie or user:Kyleta8 or user:\"El Pescador\" or user:rytheking or user:Ajaie or user:BobGod or user:csjupiter1 or user:GhostEye or user:ArleneC or user:leedlelee or user:\"Leonardo DeMAPrio\" or user:logans127 or user:mapcraft or user:Plutocrats or user:chuck97! or user:Senzubeandealer or user:swells5 or user:notmee-uh or user:Traaker_L or user:yodacodyone1 or user:Dillon9 or user:jacob_kubeczko or user:LSkalayo or user:Traaker_L or user:MTG5093 or user:Zebulonium")] {
+  set .kaart_user;
+}
+
+/* Flags all notes on all highways. Also checks for notes added by Kaart Users. Will flag if Kaart user is last author and tag exists */
+/* Andrew Piechota, RD Clare */
+way[highway][note][note != "Check Classification"],
+way[highway][note][note != "Check Classification"].kaart_user {
+  throwWarning: tr("Check if note was added to object by Kaart user");
+  fixRemove: "note";
+}
+
+/* Flags notes that say Check Classification */
+/* RD Clare */
+way[highway != /^.*_link$/][note][note = "Check Classification"]{
+  throwWarning: tr("Check Classification");
+}
+
+/* Checks if name and alt_name are equivalent  */
+/* Andrew Piechota */
+way[highway][name = *alt_name] {
+  throwWarning: tr("Name and alt_name are equivalent");
+  fixRemove: "alt_name"; 
+}
+
+/* Check for dos|do|da|e|de|ou|que|o|eu|tu|ele|ela|nos|elas|eles capitalization */
+/* Taylor Smock. Edited by RD Clare and Andrew Piechota for BP */
+way[highway][name][/^(name|alt_name)$/ =~ /^.* (Dos|Do|Da|E|De|Ou|Que|O|Eu|Tu|Ele|Ela|Nos|Elas|Eles) .*$/][inside("BR,MX,ES")] {
+  throwWarning: tr("Check for capitalization issues");
+}
+
+/* Check for duplicated words in names */
+/* Taylor Smock, edited by Andrew Piechota for BP  */
+way[highway][name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")],
+way[highway][alt_name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("alt_name"), "(?i)")] {
+  throwWarning: tr("Possible duplicated words in {0}", "{0.key}");
+  assertMatch: "way name=\"Duplicate Duplicate\"";
+  assertNoMatch: "way name=\"Nothing to see here\"";
+}
+
+/* Checks if links have oneway tag */
+/* Taylor Smock */
+way[highway=~/^.*_link$/][!oneway] {
+  throwWarning: tr("_links are usually {0}", "{1.key}");
+  fixAdd: "oneway=yes";
+}
+
+/* Checks for commas in name/alt_name */
+/* Andrew Piechota */
+way[highway][/^(name|alt_name)$/ =~ /,/] {
+  throwError: tr("Name/alt_name with comma");
+  suggestAlternative: "an alt_name";
+}
+
+/* Checks if links have name/noname tag */
+/* Taylor Smock, Andrew Piechota, RD Clare */
+way[highway=~/^.*_link$/][name][!note],
+way[highway=~/^.*_link$/][noname][!note] {
+  throwWarning: tr("Links shouldn''t have name/noname tags");
+  suggestAlternative: "a note";
+  fixAdd: "note=Check Classification";
+}
+
+/* Checks for noname tag. Will flag if Kaart user is last author and tag exists */
+/* RD Clare */
+way[highway][noname].kaart_user {
+  throwWarning: tr("Check noname tag added by Kaart user");
+  fixRemove: "noname";
+}
+
+/* Checks if ref and name tag are present and if name and ref are equal */
+/* RD Clare, Andrew Piechota */
+way[highway][name][ref][name = *ref] {
+  throwWarning: tr("Name contains ref tag");
+}
+
+/* Checks for "Rodovia REF-1000" or ref tag in name/alt_name */
+/* Andrew Piechota, RD Clare */
+way[highway][/^(name|alt_name)$/ =~ /(Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servidão|Servidao|Acesso|Beco|Praca|Caminho|Ponte|Viaduto|Via) ([A-Z]{2,3}-[0-9]{2,4})/],
+way[highway][/^(name|alt_name)$/ =~ /([A-Z]{2,3}-[0-9]{2,4})/] {
+  throwWarning: tr ("name/alt_name should not contain ref name");
+}
+
+/* Abbreviated words in name/alt_name in ways */
+/* Andrew Piechota */
+way[/^(name|alt_name)$/ =~ /(?i)(^|.* )(Cel|Cmte|Cond|Conj|Dª|Dr|Eng|Gov|Hab|Jd|Jr|Marg|Mun|p\/|Pde|Pe|Pq|Pst|Pref|Profa|Profª|Prof|Res|s\/|Sr(a|ª)?|Sta|Sto|Ver)\.? .*/] {
+  throwWarning: tr("Abbreviated word in name/alt_name");
+}
+
+/* Checks for Antiga (old) in name/alt_name */
+/* Andrew Piechota */
+*[/^(name|alt_name)$/=~/(?i)antiga/] {
+  throwWarning: tr("Antiga (old) in the name/alt_name");
+  assertMatch: "way name=\"antiga testing\"";
+  assertMatch: "way name=\"Antiga testing\"";
+  assertMatch: "way name=\"Rua Sao Paulo Antiga\"";
+  assertMatch: "way name=\"There are five words Antiga\"";
+  assertNoMatch: "way name=\"Something else\"";
+}
+
+/* Checks for Projetada (project) in name/alt_name */
+/* Andrew Piechota */
+*[/^(name|alt_name)$/=~/(?i)projetada/] {
+  throwWarning: tr("Projetada (project) in the name/alt_name");
+  assertMatch: "way name=\"projetada testing\"";
+  assertMatch: "way name=\"Projetada testing\"";
+  assertMatch: "way name=\"Rua Sao Paulo Projetada\"";
+  assertMatch: "way name=\"There are five words Projetada\"";
+  assertNoMatch: "way name=\"Something else\"";
+}
+
+/* Checks for Sem Nome (no name) in name/alt_name */
+/* Andrew Piechota */
+*[/^(name|alt_name)$/=~/(?i)sem nome/],
+*[/^(name|alt_name)$/=~/(?i)sd/] {
+  throwWarning: tr("Sem Nome (no name) in the name/alt_name");
+  assertMatch: "way name=\"sem nome testing\"";
+  assertMatch: "way name=\"SD\"";
+  assertMatch: "way name=\"Sem Nome testing\"";
+  assertMatch: "way name=\"Rua Sao Paulo Sem Nome\"";
+  assertMatch: "way name=\"There are six words Sem Nome\"";
+  assertNoMatch: "way name=\"Something else\"";
+}
+
+/* Checks bridges/tunnels for layer tag */
+/* Andrew Piechota */
+way[highway][bridge][!layer],
+way[highway][tunnel][!layer] {
+  throwWarning: tr("Bridge/tunnel missing layer tag");
+}
+
+/* Checks for ou (or) in name/alt_name */
+/* Andrew Piechota */
+*[/^(name|alt_name)$/ =~ / ou /] {
+  throwWarning: tr("ou implies two names");
+  suggestAlternative: "an alt_name";
+}
+
+/* Checks if roundabouts have the highway = _link tag */
+/* RD Clare */
+way[highway =~ /^.*_link$/][junction = roundabout] {
+  throwWarning: tr("roundabouts are usually not links");
+  suggestAlternative: "non _link or add note";
+  fixAdd: "note=Check Classification";
+}
+/* Checks for numbers in names/alt_names. Always flags if a number is in the name/alt_name */
+/* RD Clare, Andrew Piechota */
+way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /([0-9])/],
+way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(Um|Dois|Tres|Três|Quatro|Cinco|Seis|Sete|Oito|Nove|Dez|Onze|Doze|Treze|Quatorze|Catorze|Quinze|Dezesseis|Dezessete|Dezoito|Deznove|Vinte|Trinta|Quarenta|Cinquenta|Sessenta|Setenta|Oitenta|Noventa|Cem|Duzentos|Trezentos|Quatrocentos|Quinhentos|Seiscentos|Setecentos|Oitocentos|Novecentos|Mil|Primer(a|o)|Segund(a|o)|Tercer(a|o)|Terceir(a|o)|1(º|ª)|2(º|ª)|3(ª|º))/]{
+  throwWarning: tr("Check for number alt_name");
+  suggestAlternative: "an alt_name or update the alt_name";
+} 
