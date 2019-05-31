@@ -156,7 +156,7 @@ way[highway =~ /^.*_link$/][junction = roundabout] {
 /* Checks for numbers/roman numerals in names/alt_names. Always flags if a number is in the name/alt_name */
 /* RD Clare, Andrew Piechota */
 way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /([0-9])/],
-way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(/ I/|/ V/|/ X/|/ M/|Um|Dois|Tres|Três|Quatro|Cinco|Seis|Sete|Oito|Nove|Dez|Onze|Doze|Treze|Quatorze|Catorze|Quinze|Dezesseis|Dezessete|Dezoito|Deznove|Vinte|Trinta|Quarenta|Cinquenta|Sessenta|Setenta|Oitenta|Noventa|Cem|Duzentos|Trezentos|Quatrocentos|Quinhentos|Seiscentos|Setecentos|Oitocentos|Novecentos|Mil|Primer(a|o)|Segund(a|o)|Tercer(a|o)|Terceir(a|o)|1(º|ª)|2(º|ª)|3(ª|º))/]{
+way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(Um|Dois|Tres|Três|Quatro|Cinco|Seis|Sete|Oito|Nove|Dez|Onze|Doze|Treze|Quatorze|Catorze|Quinze|Dezesseis|Dezessete|Dezoito|Deznove|Vinte|Trinta|Quarenta|Cinquenta|Sessenta|Setenta|Oitenta|Noventa| Cem |Duzentos|Trezentos|Quatrocentos|Quinhentos|Seiscentos|Setecentos|Oitocentos|Novecentos| Mil |Primer(a|o)|Segund(a|o)|Tercer(a|o)|Terceir(a|o)|1(º|ª)|2(º|ª)|3(ª|º))/]{
   throwWarning: tr("Check for number alt_name");
   suggestAlternative: "an alt_name or update the alt_name";
 }
