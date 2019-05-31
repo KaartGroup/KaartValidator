@@ -85,8 +85,8 @@ way[highway][name][ref][name = *ref] {
 
 /* Checks for "Rodovia REF-1000" or ref tag in name/alt_name */
 /* Andrew Piechota, RD Clare */
-way[highway][/^(name|alt_name)$/ =~ /(Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servidão|Servidao|Acesso|Beco|Praca|Caminho|Ponte|Viaduto|Via) ([A-Z]{2,3}-[0-9]{2,4})/],
-way[highway][/^(name|alt_name)$/ =~ /([A-Z]{2,3}-[0-9]{2,4})/] {
+way[highway][/^(name|alt_name)$/ =~ /(Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servidão|Servidao|Acesso|Beco|Praca|Caminho|Ponte|Viaduto|Via) ([a-zA-Z]{2,3}-?[0-9]{2,4})/],
+way[highway][/^(name|alt_name)$/ =~ /([a-zA-Z]{2,3}-?[0-9]{2,4})/] {
   throwWarning: tr ("name/alt_name should not contain ref name");
 }
 
