@@ -79,15 +79,10 @@ way[highway][noname].kaart_user {
 
 /* Checks if ref and name tag are present and if name and ref are equal */
 /* RD Clare, Andrew Piechota */
-way[highway][name][ref][name = *ref] {
-  throwWarning: tr("Name contains ref tag");
-}
-
-/* Checks for "Rodovia REF-1000" or ref tag in name/alt_name */
-/* Andrew Piechota, RD Clare */
-way[highway][/^(name|alt_name)$/ =~ /(Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servidão|Servidao|Acesso|Beco|Praca|Caminho|Ponte|Viaduto|Via) ([a-zA-Z]{2,3}-?[0-9]{2,4})/],
-way[highway][/^(name|alt_name)$/ =~ /([a-zA-Z]{2,3}-?[0-9]{2,4})/] {
-  throwWarning: tr ("name/alt_name should not contain ref name");
+way[highway][name][ref][name = *ref],
+way[highway][/^(name|alt_name)$/ !~ / - /][/^(name|alt_name)$/ =~ /(Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servidão|Servidao|Acesso|Beco|Praca|Caminho|Ponte|Viaduto|Via) ([a-zA-Z]{2,3}-?[0-9]{2,4})/],
+way[highway][/^(name|alt_name)$/ !~ / - /][/^(name|alt_name)$/ =~ /([a-zA-Z]{2,3}-?[0-9]{2,4})/] {
+  throwWarning: tr("Name may contain ref");
 }
 
 /* Abbreviated words in name/alt_name in ways */
