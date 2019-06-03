@@ -7,7 +7,7 @@ meta {
 
 /* Creates list of Current/Past Project Users */
 /* Taylor Smock. Edited by Andrew Piechota for BP */
-*[JOSM_search("user:G_Fyyar or user:Meowshane or  user:mr_et or user:FarieBerrie or user:Kyleta8 or user:\"El Pescador\" or user:rytheking or user:Ajaie or user:BobGod or user:csjupiter1 or user:GhostEye or user:ArleneC or user:leedlelee or user:\"Leonardo DeMAPrio\" or user:logans127 or user:mapcraft or user:Plutocrats or user:chuck97! or user:Senzubeandealer or user:swells5 or user:notmee-uh or user:Traaker_L or user:yodacodyone1 or user:Dillon9 or user:jacob_kubeczko or user:LSkalayo or user:Traaker_L or user:MTG5093 or user:Zebulonium")] {
+*[JOSM_search("user:G_Fyyar or user:mr_et or user:Meowshane or user:staysavy or user:FarieBerrie or user:Kyleta8 or user:\"El Pescador\" or user:rytheking or user:Ajaie or user:BobGod or user:csjupiter1 or user:GhostEye or user:ArleneC or user:leedlelee or user:\"Leonardo DeMAPrio\" or user:logans127 or user:mapcraft or user:Plutocrats or user:chuck97! or user:Senzubeandealer or user:swells5 or user:notmee-uh or user:Traaker_L or user:yodacodyone1 or user:Dillon9 or user:jacob_kubeczko or user:LSkalayo or user:Traaker_L or user:MTG5093 or user:Zebulonium")] {
   set .kaart_user;
 }
 
