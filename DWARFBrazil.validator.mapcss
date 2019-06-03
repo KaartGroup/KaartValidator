@@ -13,7 +13,7 @@ meta {
 
 /* Flags all notes on all highways. Also checks for notes added by Kaart Users. Will flag if Kaart user is last author and tag exists */
 /* Andrew Piechota, RD Clare */
-way[highway][note != "Check Classification"] {
+way[highway][note][note != "Check Classification"] {
   throwWarning: tr("Check if note was added to object by Kaart user");
   fixRemove: "note";
 }
