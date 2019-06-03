@@ -21,7 +21,7 @@ way[highway][note][note != "Check Classification"].kaart_user {
 
 /* Flags notes that say Check Classification */
 /* RD Clare */
-way[highway != /^.*_link$/][note][note = "Check Classification"]{
+way[highway !~ /^.*_link$/][note][note = "Check Classification"]{
   throwWarning: tr("Check Classification");
 }
 
@@ -164,4 +164,5 @@ way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(Um|Dois|Tres|Três|Qu
   throwWarning: tr("Check for Roman Numerals");
   suggestAlternative: "an alt_name or update the alt_name";
 }
+*/
 
