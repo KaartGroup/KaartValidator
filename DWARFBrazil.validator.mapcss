@@ -13,7 +13,7 @@ meta {
 
 /* Flags all notes on all highways. Also checks for notes added by Kaart Users. Will flag if Kaart user is last author and tag exists */
 /* Andrew Piechota, RD Clare */
-way[highway][note][note != "Check Classification"] {
+way[highway][note != "Check Classification"] {
   throwWarning: tr("Check if note was added to object by Kaart user");
   fixRemove: "note";
 }
@@ -88,16 +88,6 @@ way[highway][/^(name|alt_name)$/ !~ / - /][/^(name|alt_name)$/ =~ /([a-zA-Z]{2,3
 /* Andrew Piechota */
 way[/^(name|alt_name)$/ =~ /(?i)(^|.* )(Cel|Cmte|Cond|Conj|Dª|Dr|Eng|Gov|Hab|Jd|Jr|Marg|Mun|p\/|Pde|Pe|Pq|Pst|Pref|Profa|Profª|Prof|Res|s\/|Sr(a|ª)?|Sta|Sto|Ver)\.? .*/] {
   throwWarning: tr("Abbreviated word in name/alt_name");
-}
-
-/* Road Prefixes in name/alt_name */
-/* Andrew Piechota */
-way[/^(name|alt_name)$/ =~ /(?i)(^|.* )(R|R.|Es.|Es|Est.|Est|Av|Av.|Al|Al.|T|T.|Tv|Tv.|Trav|Trav.|Cam|Cam.)\.? .*/] {
-  assertMatch: "way name=\"R. Sao Paulo\"";
-  assertMatch: "way name=\"R Sao Paulo\"";
-  assertNoMatch: "way name=\"Rua R. Sao Paulo\"";
-  assertNoMatch: "way name=\"Rua R Sao Paulo\"";
-  throwWarning: tr("Abbreviated road prefix in name/alt_name");
 }
 
 /* Checks for Antiga (old) in name/alt_name */
