@@ -105,18 +105,23 @@ way[/^(name|alt_name)$/ =~ /(?i)(^|.* )(Cel|Cmte|Cond|Conj|Dª|Dr|Eng|Gov|Hab|Jd
   assertNoMatch: "way name=\"Something else\"";
 }
 
-/* Checks for Projetada (project) in name/alt_name */
+/* Checks for Projetada (project) and its variations in name/alt_name */
 /* Andrew Piechota */
-*[/^(name|alt_name)$/=~/(?i)projetada/] {
+*[/^(name|alt_name)$/=~/(?i)projetada/],
+*[/^(name|alt_name)$/=~/(?i)projetado/] {
   throwWarning: tr("Projetada (project) in the name/alt_name");
   assertMatch: "way name=\"projetada testing\"";
   assertMatch: "way name=\"Projetada testing\"";
+  assertMatch: "way name=\"projetado testing\"";
+  assertMatch: "way name=\"Projetado testing\"";
   assertMatch: "way name=\"Rua Sao Paulo Projetada\"";
+  assertMatch: "way name=\"Rua Sao Paulo Projetado\"";
   assertMatch: "way name=\"There are five words Projetada\"";
+  assertMatch: "way name=\"There are five words Projetado\"";
   assertNoMatch: "way name=\"Something else\"";
 }
 
-/* Checks for Sem Nome (no name) and it's variations in name/alt_name */
+/* Checks for Sem Nome (no name) and its variations in name/alt_name */
 /* Andrew Piechota */
 *[/^(name|alt_name)$/=~/(?i)sem nome/],
 *[/^(name|alt_name)$/=~/SD/],
