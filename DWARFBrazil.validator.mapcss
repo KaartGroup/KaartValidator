@@ -96,6 +96,16 @@ way[/^(name|alt_name)$/ =~ /(?i)(^|.* )(Cel|Cmte|Cond|Conj|Dª|Dr|Eng|Gov|Hab|Jd
   throwWarning: tr("Abbreviated word in name/alt_name");
 }
 
+/* Road Prefixes in name/alt_name */
+/* Andrew Piechota */
+way[/^(name|alt_name)$/ =~ /(?i)(^|.* )(R|R.|Es.|Es|Est.|Est|Av|Av.|Al|Al.|T|T.|Tv|Tv.|Trav|Trav.|Cam|Cam.)\.? .*/] {
+  assertMatch: "way name=\"R. Sao Paulo\"";
+  assertMatch: "way name=\"R Sao Paulo\"";
+  assertNoMatch: "way name=\"Rua R. Sao Paulo\"";
+  assertNoMatch: "way name=\"Rua R Sao Paulo\"";
+  throwWarning: tr("Abbreviated road prefix in name/alt_name");
+}
+
 /* Checks for Antiga (old) in name/alt_name */
 /* Andrew Piechota */
 *[/^(name|alt_name)$/=~/(?i)antiga/] {
