@@ -1,7 +1,7 @@
 meta {
   title: "Brazil Validator Tool";
   description: "Validator tool for the Kaart Brazil Project";
-  version: "1_2019-06-03";
+  version: "1_2019-06-04";
   author: "Taylor Smock (vorpalblade77-kaart), Andrew Piechota(G_Fyyar), RD Clare(mr_et)";
 }
 
@@ -21,7 +21,7 @@ way[highway][note][note != "Check Classification"].kaart_user {
 
 /* Flags notes that say Check Classification */
 /* RD Clare */
-way[highway != /^.*_link$/][note][note = "Check Classification"]{
+way[highway != /^.*_link$/][note][note = "Check Classification"] {
   throwWarning: tr("Check Classification");
 }
 
