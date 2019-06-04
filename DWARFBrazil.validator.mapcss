@@ -34,7 +34,7 @@ way[highway][name = *alt_name] {
 
 /* Check for dos|do|da|e|de|ou|que|o|eu|tu|ele|ela|nos|elas|eles capitalization */
 /* Taylor Smock. Edited by RD Clare and Andrew Piechota for BP */
-way[highway][name][/^(name|alt_name)$/ =~ /^.* (Dos|Do|Da|E|De|Ou|Que|O|Eu|Tu|Ele|Ela|Nos|Elas|Eles) .*$/][inside("BR")] {
+way[highway][name][/^(name|alt_name)$/ =~ /^.* (Dos|Das|Do|Da|E|De|Ou|Que|O|Eu|Tu|Ele|Ela|Nos|Elas|Eles) .*$/][inside("BR")] {
   throwWarning: tr("Check for capitalization issues");
 }
 
