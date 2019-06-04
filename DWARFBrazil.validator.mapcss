@@ -138,8 +138,7 @@ way[/^(name|alt_name)$/ =~ /(?i)(^|.* )(Cel|Cmte|Cond|Conj|Dª|Dr|Eng|Gov|Hab|Jd
 
 /* Checks bridges/tunnels for layer tag */
 /* Andrew Piechota */
-way[highway][bridge][!layer],
-way[highway][tunnel][!layer] {
+way[/^(tunnel|bridge)$/][/^(tunnel|bridge)$/!~/^no$/][!layer]  {
   throwWarning: tr("Bridge/tunnel missing layer tag");
 }
 
