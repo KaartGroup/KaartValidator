@@ -1,7 +1,7 @@
 meta {
   title: "Brazil Validator Tool";
   description: "Validator tool for the Kaart Brazil Project";
-  version: "1_2019-06-06";
+  version: "1_2019-06-07";
   author: "Taylor Smock (vorpalblade77-kaart), Andrew Piechota(G_Fyyar), RD Clare(mr_et), Lucas Bingham(Traaker_L), Ryan Fleming(rytheking), Farris Billy(FarieBerrie)";
 }
 
@@ -13,14 +13,14 @@ meta {
 
 /* Flags all notes on all highways */
 /* Andrew Piechota, RD Clare, Lucas Bingham */
-way[highway][note][note !~ /(?i)Check Classification/] {
+way[highway][note][note !~ /(?i)(Check)(.*)(Classification)/] {
   throwWarning: tr("Check if note was added to object by Kaart user");
   fixRemove: "note";
 }
 
 /* Flags notes that say Check Classification */
 /* RD Clare, Lucas Bingham */
-way[highway !~ /^.*_link$/][note][note =~ /(?i)Check Classification/] {
+way[highway !~ /^.*_link$/][note][note =~ /(?i)(Check)(.*)(Classification)/] {
   throwWarning: tr("Check Classification");
 }
 
@@ -37,6 +37,12 @@ way[highway][name][/^(name|alt_name)$/ =~ /^.* (D(o|a)s|D(o|a)|E|Em|De|Ou|Que|O|
   throwWarning: tr("Check for capitalization issues");
 }
 
+/* Flags Perimetral (Perimeter) and Municipal in name/alt_name */
+/* Andrew Piechota */
+way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(?i)(perimetral|municipal)/] {
+  throwWarning: tr("Perimetral/Municipal in name/alt_name");
+}
+
 /* Checks if links have oneway tag */
 /* Taylor Smock */
 way[highway=~/^.*_link$/][!oneway] {
@@ -48,7 +54,6 @@ way[highway=~/^.*_link$/][!oneway] {
 /* Andrew Piechota */
 way[highway][/^(name|alt_name)$/ =~ /,/] {
   throwError: tr("Name/alt_name with comma");
-  suggestAlternative: "an alt_name";
 }
 
 /* Checks if links have name/noname tag */
@@ -63,7 +68,7 @@ way[highway=~/^.*_link$/][noname][!note] {
 
 /* Checks for duplicate road prefixes in the name/alt_name */
 /* Andrew Piechota, Farris Billy */
-way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /((Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servid(a|ã)o|Acesso|Beco|Pra(c|ç)a|Caminho|Ponte|Viaduto).*){2,}$/][/^(name|alt_name)$/ !~ /;/] {
+way[highway][/^(name|alt_name)$/][name =~ /((Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servid(a|ã)o|Acesso|Beco|Pra(c|ç)a|Caminho|Ponte|Viaduto).*){2,}$/][alt_name =~ /((Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servid(a|ã)o|Acesso|Beco|Pra(c|ç)a|Caminho|Ponte|Viaduto).*){2,}$/][alt_name !~ /;/] {
   throwWarning: tr("Check for duplicated prefixes in name/alt_name");
 }
 
@@ -84,7 +89,7 @@ way[highway][/^(name|alt_name)$/ !~ / - /][/^(name|alt_name)$/ =~ /([a-zA-Z]{2,3
 
 /* Abbreviated words in name/alt_name in ways */
 /* Andrew Piechota */
-way[/^(name|alt_name)$/ =~ /(?i)(^|.* )(Cel|Cmte|Cond|Conj|Dª|Dr|Eng|Gov|Hab|Jd|Jr|Marg|Mun|p\/|Pde|Pe|Pq|Pst|Pref|Profa|Profª|Prof|Res|s\/|Sr(a|ª)?|Sta|Sto|Ver)\.? .*/] {
+way[highway][/^(name|alt_name)$/ =~ /(?i)(^|.* )(Cel|Cmte|Cond|Conj|Dª|Dr|Eng|Gov|Hab|Jd|Jr|Marg|Mun|p\/|Pde|Pe|Pq|Pst|Pref|Profa|Profª|Prof|Res|s\/|Sr(a|ª)?|Sta|Sto|Ver)\.? .*/] {
   throwWarning: tr("Abbreviated word in name/alt_name");
 }
 
@@ -172,10 +177,10 @@ way[!highway][!waterway]:new {
 
 /* Check ways for proper road prefixes */
 /* Andrew Piechota */
-way[highway][name][name!~/(Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servid(a|ã)o|Beco|Pra(c|ç)a|Caminho|Ponte|Viaduto|Passagem)/],
-way[highway][alt_name][alt_name!~/(Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servid(a|ã)o|Beco|Pra(c|ç)a|Caminho|Ponte|Viaduto|Passagem)/],
-way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(?i)(^|.* )(R|R.|Es.|Es|Est.|Est|Av|Av.|Al|Al.|T|T.|Tv|Tv.|Trav|Trav.|Cam|Cam.) \.? .*/],
-way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(^|.* )(rodovia|estrada|travessa|rua|avenida|alameda|viela|servid(a|ã)o|beco|pra(c|ç)a|caminho|ponte|viaduto|passagem) \.? .*/] {
+way[highway][name][name!~/(Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servid(a|ã)o|Beco|Pra(c|ç)a|Caminho|Ponte|Viaduto|Passagem|Quadra)/],
+way[highway][alt_name][alt_name!~/(Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servid(a|ã)o|Beco|Pra(c|ç)a|Caminho|Ponte|Viaduto|Passagem|Quadra)/],
+way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(?i)(^|.* )(R|R.|Es.|Es|Est.|Est|Av|Av.|Al|Al.|T|T.|Tv|Tv.|Trav|Trav.|Cam|Cam.|Q.) \.? .*/],
+way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(^|.* )(rodovia|estrada|travessa|rua|avenida|alameda|viela|servid(a|ã)o|beco|pra(c|ç)a|caminho|ponte|viaduto|passagem|quadra) \.? .*/] {
   throwWarning: tr("Possible incorrect/abbreviated road prefix");
   assertMatch: "way highway=residential alt_name=\"Travessa Fluminense\" name=\"Canal Agua Cristal\"";
   assertMatch: "way highway=residential name=\"Travessa Fluminense\" alt_name=\"Canal Agua Cristal\"";
@@ -213,7 +218,7 @@ way[highway][name][alt_name][name =~ /15/][alt_name !~ /Quinze/],
 way[highway][name][alt_name][name =~ /16/][alt_name !~ /Dezesseis/],
 way[highway][name][alt_name][name =~ /17/][alt_name !~ /Dezessete/],
 way[highway][name][alt_name][name =~ /18/][alt_name !~ /Dezoito/],
-way[highway][name][alt_name][name =~ /19/][alt_name !~ /Deznove/],
+way[highway][name][alt_name][name =~ /19/][alt_name !~ /Dezenove/],
 way[highway][name][alt_name][name =~ /(\s|^)20(\s|$)/][alt_name !~ /Vinte/],
 way[highway][name][alt_name][name =~ /21/][alt_name !~ /Vinte e Um/],
 way[highway][name][alt_name][name =~ /22/][alt_name !~ /Vinte e Dois/],
@@ -245,16 +250,16 @@ way[highway][name][alt_name][name =~ /47/][alt_name !~ /Quarenta e Sete/],
 way[highway][name][alt_name][name =~ /48/][alt_name !~ /Quarenta e Oito/],
 way[highway][name][alt_name][name =~ /49/][alt_name !~ /Quarenta e Nove/],
 way[highway][name][alt_name][name =~ /(\s|^)50(\s|$)/][alt_name !~ /Cinquenta/],
-way[highway][name][alt_name][name =~ /51/][alt_name !~ /Cinequenta e Um/],
-way[highway][name][alt_name][name =~ /52/][alt_name !~ /Cinequenta e Dois/],
-way[highway][name][alt_name][name =~ /53/][alt_name !~ /Cinequenta e Tr(e|ê)s/],
-way[highway][name][alt_name][name =~ /54/][alt_name !~ /Cinequenta e Quatro/],
-way[highway][name][alt_name][name =~ /55/][alt_name !~ /Cinequenta e Cinco/],
-way[highway][name][alt_name][name =~ /56/][alt_name !~ /Cinequenta e Seis/],
-way[highway][name][alt_name][name =~ /57/][alt_name !~ /Cinequenta e Sete/],
-way[highway][name][alt_name][name =~ /58/][alt_name !~ /Cinequenta e Oito/],
-way[highway][name][alt_name][name =~ /59/][alt_name !~ /Cinequenta e Nove/],
-way[highway][name][alt_name][name =~ /60(\s|$)/][alt_name !~ /Sessenta/],
+way[highway][name][alt_name][name =~ /51/][alt_name !~ /Cinquenta e Um/],
+way[highway][name][alt_name][name =~ /52/][alt_name !~ /Cinquenta e Dois/],
+way[highway][name][alt_name][name =~ /53/][alt_name !~ /Cinquenta e Tr(e|ê)s/],
+way[highway][name][alt_name][name =~ /54/][alt_name !~ /Cinquenta e Quatro/],
+way[highway][name][alt_name][name =~ /55/][alt_name !~ /Cinquenta e Cinco/],
+way[highway][name][alt_name][name =~ /56/][alt_name !~ /Cinquenta e Seis/],
+way[highway][name][alt_name][name =~ /57/][alt_name !~ /Cinquenta e Sete/],
+way[highway][name][alt_name][name =~ /58/][alt_name !~ /Cinquenta e Oito/],
+way[highway][name][alt_name][name =~ /59/][alt_name !~ /Cinquenta e Nove/],
+way[highway][name][alt_name][name =~ /(\s|^)60(\s|$)/][alt_name !~ /Sessenta/],
 way[highway][name][alt_name][name =~ /61/][alt_name !~ /Sessenta e Um/],
 way[highway][name][alt_name][name =~ /62/][alt_name !~ /Sessenta e Dois/],
 way[highway][name][alt_name][name =~ /63/][alt_name !~ /Sessenta e Tr(e|ê)s/],
@@ -295,8 +300,8 @@ way[highway][name][alt_name][name =~ /97/][alt_name !~ /Noventa e Sete/],
 way[highway][name][alt_name][name =~ /98/][alt_name !~ /Noventa e Oito/],
 way[highway][name][alt_name][name =~ /99/][alt_name !~ /Noventa e Nove/],
 way[highway][name][alt_name][name =~ /(\s|^)100(\s|$)/][alt_name !~ /Cem/],
-way[highway][name][alt_name][name =~ /(\s|^)Um(\s|$)/][name !~ /(\s|^)(Dez|Vinte|Trinta|Quarenta|Cinquenta|Sessenta|Setenta|Oitenta|Noventa|Cem)(\s|$)/][alt_name !~ /(\s|^)1(\s|$)/],
-way[highway][name][alt_name][name =~ /(\s|^)Dois(\s|$)/][name !~ /(\s|^)(Dez|Vinte|Trinta|Quarenta|Cinquenta|Sessenta|Setenta|Oitenta|Noventa|Cem)(\s|$)/][alt_name !~ /2(\s|$)/],
+way[highway][name][alt_name][name =~ /(\s|^)Um(\s|$)/][name !~ /(\s|^)(Dez|Vinte|Trinta|Quarenta|Cinquenta|Sessenta|Setenta|Oitenta|Noventa|Cem)(\s|$)/][alt_name !~ /1/],
+way[highway][name][alt_name][name =~ /(\s|^)Dois(\s|$)/][name !~ /(\s|^)(Dez|Vinte|Trinta|Quarenta|Cinquenta|Sessenta|Setenta|Oitenta|Noventa|Cem)(\s|$)/][alt_name !~ /2/],
 way[highway][name][alt_name][name =~ /(\s|^)Tr(e|ê)s(\s|$)/][name !~ /(\s|^)(Dez|Vinte|Trinta|Quarenta|Cinquenta|Sessenta|Setenta|Oitenta|Noventa|Cem)(\s|$)/][alt_name !~ /3/],
 way[highway][name][alt_name][name =~ /(\s|^)Quatro(\s|$)/][name !~ /(\s|^)(Dez|Vinte|Trinta|Quarenta|Cinquenta|Sessenta|Setenta|Oitenta|Noventa|Cem)(\s|$)/][alt_name !~ /4/],
 way[highway][name][alt_name][name =~ /(\s|^)Cinco(\s|$)/][name !~ /(\s|^)(Dez|Vinte|Trinta|Quarenta|Cinquenta|Sessenta|Setenta|Oitenta|Noventa|Cem)(\s|$)/][alt_name !~ /5/],
@@ -313,7 +318,7 @@ way[highway][name][alt_name][name =~ /Quinze/][alt_name !~ /15/],
 way[highway][name][alt_name][name =~ /Dezesseis/][alt_name !~ /16/],
 way[highway][name][alt_name][name =~ /Dezessete/][alt_name !~ /17/],
 way[highway][name][alt_name][name =~ /Dezoito/][alt_name !~ /18/],
-way[highway][name][alt_name][name =~ /Deznove/][alt_name !~ /19/],
+way[highway][name][alt_name][name =~ /Dezenove/][alt_name !~ /19/],
 way[highway][name][alt_name][name =~ /Vinte/][name !~ /(\s|^)(Um|Dois|Tr(e|ê)s|Quatro|Cinco|Seis|Sete|Oito|Nove)(\s|$)/][alt_name !~ /20/],
 way[highway][name][alt_name][name =~ /Vinte e Um/][alt_name !~ /21/],
 way[highway][name][alt_name][name =~ /Vinte e Dois/][alt_name !~ /22/],
@@ -345,15 +350,15 @@ way[highway][name][alt_name][name =~ /Quarenta e Sete/][alt_name !~ /47/],
 way[highway][name][alt_name][name =~ /Quarenta e Oito/][alt_name !~ /48/],
 way[highway][name][alt_name][name =~ /Quarenta e Nove/][alt_name !~ /49/],
 way[highway][name][alt_name][name =~ /Cinquenta/][name !~ /(\s|^)(Um|Dois|Tr(e|ê)s|Quatro|Cinco|Seis|Sete|Oito|Nove)(\s|$)/][alt_name !~ /50/],
-way[highway][name][alt_name][name =~ /Cinequenta e Um/][alt_name !~ /51/],
-way[highway][name][alt_name][name =~ /Cinequenta e Dois/][alt_name !~ /52/],
-way[highway][name][alt_name][name =~ /Cinequenta e Tr(e|ê)s/][alt_name !~ /53/],
-way[highway][name][alt_name][name =~ /Cinequenta e Quatro/][alt_name !~ /54/],
-way[highway][name][alt_name][name =~ /Cinequenta e Cinco/][alt_name !~ /55/],
-way[highway][name][alt_name][name =~ /Cinequenta e Seis/][alt_name !~ /56/],
-way[highway][name][alt_name][name =~ /Cinequenta e Sete/][alt_name !~ /57/],
-way[highway][name][alt_name][name =~ /Cinequenta e Oito/][alt_name !~ /58/],
-way[highway][name][alt_name][name =~ /Cinequenta e Nove/][alt_name !~ /59/],
+way[highway][name][alt_name][name =~ /Cinquenta e Um/][alt_name !~ /51/],
+way[highway][name][alt_name][name =~ /Cinquenta e Dois/][alt_name !~ /52/],
+way[highway][name][alt_name][name =~ /Cinquenta e Tr(e|ê)s/][alt_name !~ /53/],
+way[highway][name][alt_name][name =~ /Cinquenta e Quatro/][alt_name !~ /54/],
+way[highway][name][alt_name][name =~ /Cinquenta e Cinco/][alt_name !~ /55/],
+way[highway][name][alt_name][name =~ /Cinquenta e Seis/][alt_name !~ /56/],
+way[highway][name][alt_name][name =~ /Cinquenta e Sete/][alt_name !~ /57/],
+way[highway][name][alt_name][name =~ /Cinquenta e Oito/][alt_name !~ /58/],
+way[highway][name][alt_name][name =~ /Cinquenta e Nove/][alt_name !~ /59/],
 way[highway][name][alt_name][name =~ /Sessenta/][name !~ /(\s|^)(Um|Dois|Tr(e|ê)s|Quatro|Cinco|Seis|Sete|Oito|Nove)(\s|$)/][alt_name !~ /60/],
 way[highway][name][alt_name][name =~ /Sessenta e Um/][alt_name !~ /61/],
 way[highway][name][alt_name][name =~ /Sessenta e Dois/][alt_name !~ /62/],
@@ -407,8 +412,8 @@ way[highway][name][alt_name][name =~ /(\s|^)Cem(\s|$)/][name !~ /(\s|^)(Um|Dois|
 /* TODO */
 /* ACCENTS GALORE */
 /* Andrew Piechota */
-way[highway][/^(name|alt_name)$/=~/(^|\s)(servid(a|ã)o|jos(e|é)|ant(o|ô)nio|pra(c|ç)a|gon(c|ç)alves|jo(a|ã)o|s(a|ã)o|tr(e|ê)s|tom(e|é)|lu(i|í)(z|s)|maranh(a|ã)o|capit(a|ã)o|gra(c|ç)a|marqu(e|ê)s|mar(c|ç)o|(a|à)gua|le(a|ã)o|galv(a|ã)o|esp(i|í)rito)/],
-way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|Joao|Sao|Tres|Tome|Lui(z|s)|Maranhao|Capitao|Graca|Marques|Marco|Agua|Leao|Galvao|Espirito)/] {
+way[highway][/^(name|alt_name)$/=~/(^|\s)(servid(a|ã)o|jos(e|é)|ant(o|ô)nio|pra(c|ç)a|gon(c|ç)alves|jo(a|ã)o|s(a|ã)o|tr(e|ê)s|tom(e|é)|lu(i|í)(z|s)|maranh(a|ã)o|capit(a|ã)o|gra(c|ç)a|marqu(e|ê)s|mar(c|ç)o|(a|à)gua|le(a|ã)o|galv(a|ã)o|esp(i|í)rito|assun(ca|çã|ça|cã)o|in(e|ê)s|lul(u|ú)|cristov(a|ã)o|j(u|ú)lio|c(e|é)sar|bel(e|é)m|nazar(e|é)|l(u|ú)cio|orqu(i|í)deas|ing(a|á)|macap(a|á)|caj(u|ú)|cupua(c|ç)u|l(a|á)zaro|sebasti(a|ã)o|concei(ca|çã|ça|cã)o|ipacara(i|í)|jerusal(e|é)m|par(a|á)|m(a|á)rio|falc(a|ã)o|f(e|é))(\s|$)/],
+way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|Joao|Sao|Tres|Tome|Lui(z|s)|Maranhao|Capitao|Graca|Marques|Marco|Agua|Leao|Galvao|Espirito|Assun(ca|ça|cã)o|Ines|Lulu|Cristovao|Julio|Cesar|Belem|Nazare|Lucio|Orquideas|Inga|Macapa|Caju|Cupuacu|Lazaro|Sebastiao|concei(ca|ça|cã)o|Ipacarai|Jerusalem|Para|Mario|Falcao|Fe)(\s|$)/] {
   throwWarning: tr("Accent, click ''fix''");
   fixAdd: concat("name=",
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
@@ -417,6 +422,14 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(
   tag("name"),
   "jose", "José"),
   "josé", "José"),
@@ -454,7 +467,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "maranhao", "Maranhão"),
   "maranhão", "Maranhão"),
   "Maranhao", "Maranhão"),
-  "capitão", "Capitão"),
+  "capitao", "Capitão"),
   "capitão", "Capitão"),
   "Capitao", "Capitão"),
   "graca", "Graça"),
@@ -477,7 +490,83 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "Galvao", "Galvão"),
   "espirito", "Espírito"),
   "espírito", "Espírito"),
-  "Espirito", "Espírito")
+  "Espirito", "Espírito"),
+  "assuncao", "Assunção"),
+  "assunçao", "Assunção"),
+  "assuncão", "Assunção"),
+  "assunção", "Assunção"),
+  "Assuncao", "Assunção"),
+  "Assunçao", "Assunção"),
+  "Assuncão", "Assunção"),
+  "ines", "Inês"),
+  "inês", "Inês"),
+  "Ines", "Inês"),
+  "lulu", "Lulú"),
+  "lulú", "Lulú"),
+  "Lulu", "Lulú"),
+  "cristovao", "Cristovão"),
+  "cristovão", "Cristovão"),
+  "Cristovao", "Cristovão"),
+  "julio", "Júlio"),
+  "júlio", "Júlio"),
+  "Julio", "Júlio"),
+  "cesar", "César"),
+  "césar", "César"),
+  "Cesar", "César"),
+  "belem", "Belém"),
+  "belém", "Belém"),
+  "Belem", "Belém"),
+  "nazare", "Nazaré"),
+  "nazaré", "Nazaré"),
+  "Nazare", "Nazaré"),
+  "lucio", "Lúcio"),
+  "lúcio", "Lúcio"),
+  "Lucio", "Lúcio"),
+  "orquideas", "Orquídeas"),
+  "orquídeas", "Orquídeas"),
+  "Orquideas", "Orquídeas"),
+  "inga", "Ingá"),
+  "ingá", "Ingá"),
+  "Inga", "Ingá"),
+  "macapa", "Macapá"),
+  "macapá", "Macapá"),
+  "Macapa", "Macapá"),
+  "caju", "Cajú"),
+  "cajú", "Cajú"),
+  "Caju", "Cajú"),
+  "cupuacu", "Cupuaçu"),
+  "cupuaçu", "Cupuaçu"),
+  "Cupuacu", "Cupuaçu"),
+  "lazaro", "Lázaro"),
+  "lázaro", "Lázaro"),
+  "Lazaro", "Lázaro"),
+  "sebastiao", "Sebastião"),
+  "sebastião", "Sebastião"),
+  "Sebastiao", "Sebastião"),
+  "conceicao", "Conceição"),
+  "conceiçao", "Conceição"),
+  "conceicão", "Conceição"),
+  "conceição", "Conceição"),
+  "Conceicao", "Conceição"),
+  "Conceiçao", "Conceição"),
+  "Conceicão", "Conceição"),
+  "ipacarai", "Ipacaraí"),
+  "ipacaraí", "Ipacaraí"),
+  "Ipacarai", "Ipacaraí"),
+  "jerusalem", "Jerusalém"),
+  "jerusalém", "Jerusalém"),
+  "Jerusalem", "Jerusalém"),
+  "para", "Pará"),
+  "pará", "Pará"),
+  "Para", "Pará"),
+  "mario", "Mário"),
+  "mário", "Mário"),
+  "Mario", "Mário"),
+  "falcao", "Falcão"),
+  "falcão", "Falcão"),
+  "Falcao", "Falcão"),
+  "fe", "Fé"),
+  "fé", "Fé")
   );
 
  fixAdd: concat("alt_name=",
@@ -487,6 +576,14 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(
   tag("alt_name"),
   "jose", "José"),
   "josé", "José"),
@@ -524,7 +621,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "maranhao", "Maranhão"),
   "maranhão", "Maranhão"),
   "Maranhao", "Maranhão"),
-  "capitão", "Capitão"),
+  "capitao", "Capitão"),
   "capitão", "Capitão"),
   "Capitao", "Capitão"),
   "graca", "Graça"),
@@ -547,9 +644,84 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "Galvao", "Galvão"),
   "espirito", "Espírito"),
   "espírito", "Espírito"),
-  "Espirito", "Espírito")
+  "Espirito", "Espírito"),
+  "assuncao", "Assunção"),
+  "assunçao", "Assunção"),
+  "assuncão", "Assunção"),
+  "assunção", "Assunção"),
+  "Assuncao", "Assunção"),
+  "Assunçao", "Assunção"),
+  "Assuncão", "Assunção"),
+  "ines", "Inês"),
+  "inês", "Inês"),
+  "Ines", "Inês"),
+  "lulu", "Lulú"),
+  "lulú", "Lulú"),
+  "Lulu", "Lulú"),
+  "cristovao", "Cristovão"),
+  "cristovão", "Cristovão"),
+  "Cristovao", "Cristovão"),
+  "julio", "Júlio"),
+  "júlio", "Júlio"),
+  "Julio", "Júlio"),
+  "cesar", "César"),
+  "césar", "César"),
+  "Cesar", "César"),
+  "belem", "Belém"),
+  "belém", "Belém"),
+  "Belem", "Belém"),
+  "nazare", "Nazaré"),
+  "nazaré", "Nazaré"),
+  "Nazare", "Nazaré"),
+  "lucio", "Lúcio"),
+  "lúcio", "Lúcio"),
+  "Lucio", "Lúcio"),
+  "orquideas", "Orquídeas"),
+  "orquídeas", "Orquídeas"),
+  "Orquideas", "Orquídeas"),
+  "inga", "Ingá"),
+  "ingá", "Ingá"),
+  "Inga", "Ingá"),
+  "macapa", "Macapá"),
+  "macapá", "Macapá"),
+  "Macapa", "Macapá"),
+  "caju", "Cajú"),
+  "cajú", "Cajú"),
+  "Caju", "Cajú"),
+  "cupuacu", "Cupuaçu"),
+  "cupuaçu", "Cupuaçu"),
+  "Cupuacu", "Cupuaçu"),
+  "lazaro", "Lázaro"),
+  "lázaro", "Lázaro"),
+  "Lazaro", "Lázaro"),
+  "sebastiao", "Sebastião"),
+  "sebastião", "Sebastião"),
+  "Sebastiao", "Sebastião"),
+  "conceicao", "Conceição"),
+  "conceiçao", "Conceição"),
+  "conceicão", "Conceição"),
+  "conceição", "Conceição"),
+  "Conceicao", "Conceição"),
+  "Conceiçao", "Conceição"),
+  "Conceicão", "Conceição"),
+  "ipacarai", "Ipacaraí"),
+  "ipacaraí", "Ipacaraí"),
+  "Ipacarai", "Ipacaraí"),
+  "jerusalem", "Jerusalém"),
+  "jerusalém", "Jerusalém"),
+  "Jerusalem", "Jerusalém"),
+  "para", "Pará"),
+  "pará", "Pará"),
+  "Para", "Pará"),
+  "mario", "Mário"),
+  "mário", "Mário"),
+  "Mario", "Mário"),
+  "falcao", "Falcão"),
+  "falcão", "Falcão"),
+  "Falcao", "Falcão"),
+  "fe", "Fé"),
+  "fé", "Fé")
   );
-
 }
 
 /* Check for duplicated words in names */
