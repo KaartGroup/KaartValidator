@@ -557,7 +557,7 @@ way[highway][name][ref][name = *ref] {
  ***************/
 
 /* Check for duplicated words in names */
-*[name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")] {
+*[/name/][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")] {
   group: tr("kaart");
   throwWarning: tr("Possible duplicated words in {0}", "{0.key}");
   assertMatch: "node name=\"Duplicate Duplicate\"";
