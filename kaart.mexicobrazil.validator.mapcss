@@ -37,7 +37,7 @@ meta
 }
 
 /* Check for bridges/tunnels missing a layer tag */
-way[/^(tunnel|bridge)$/][/^(tunnel|bridge)$/!~/^no$/][!layer] {
+way[/^(tunnel|bridge)$/][/^(tunnel|bridge)$/!~/^(no|building_passage)$/][!layer] {
   group: tr("kaart (MX/BR)");
   throwError: tr("{0} is missing a layer tag", "{0.key}");
   suggestAlternative: "layer";
