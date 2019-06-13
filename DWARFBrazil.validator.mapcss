@@ -1,7 +1,7 @@
 meta {
   title: "Brazil Validator Tool";
   description: "Validator tool for the Kaart Brazil Project";
-  version: "1_2019-06-12";
+  version: "1_2019-06-13";
   author: "Taylor Smock (vorpalblade77-kaart), Andrew Piechota(G_Fyyar), RD Clare(mr_et), Lucas Bingham(Traaker_L), Ryan Fleming(rytheking), Farris Billy(FarieBerrie)";
 }
 
@@ -615,8 +615,8 @@ way[highway][name][alt_name][alt_name =~ /(\s|^|;)Cem(\s|$|;)/][alt_name !~ /(\s
 /* TODO */
 /* ACCENTS GALORE */
 /* Andrew Piechota */
-way[highway][/^(name|alt_name)$/=~/(\s)(servid(a|ã)o|jos(e|é)|ant(o|ô)nio|pra(c|ç)a|gon(c|ç)alves|jo(a|ã)o|s(a|ã)o|tr(e|ê)s|tom(e|é)|lu(i|í)s|maranh(a|ã)o|capit(a|ã)o|gra(c|ç)a|marqu(e|ê)s|mar(c|ç)o|(a|à)gua|le(a|ã)o|galv(a|ã)o|esp(i|í)rito|assun(ca|çã|ça|cã)o|in(e|ê)s|lul(u|ú)|cristov(a|ã)o|j(u|ú)lio|c(e|é)sar|bel(e|é)m|nazar(e|é)|l(u|ú)cio|orqu(i|í)deas|ing(a|á)|macap(a|á)|caj(u|ú)|cupua(c|ç)u|l(a|á)zaro|sebasti(a|ã)o|concei(ca|çã|ça|cã)o|ipacara(i|í)|jerusal(e|é)m|par(a|á)|m(a|á)rio|falc(a|ã)o|f(e|é)|pe(c|ç)anha|expedicion(a|á)rio|para(i|í)so|f(a|á)tima)(\s|$)/],
-way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|Joao|Sao|Tres|Tome|Luis|Maranhao|Capitao|Graca|Marques|Marco|Agua|Leao|Galvao|Espirito|Assun(ca|ça|cã)o|Ines|Lulu|Cristovao|Julio|Cesar|Belem|Nazare|Lucio|Orquideas|Inga|Macapa|Caju|Cupuacu|Lazaro|Sebastiao|Concei(ca|ça|cã)o|Ipacarai|Jerusalem|Para|Mario|Falcao|Fe|Pecanha|Expedicionario|Paraiso|Fatima)(\s|$)/] {
+way[highway][/^(name|alt_name)$/=~/(\s)(servid(a|ã)o|jos(e|é)|ant(o|ô)nio|pra(c|ç)a|gon(c|ç)alves|jo(a|ã)o|s(a|ã)o|tr(e|ê)s|tom(e|é)|lu(i|í)s|maranh(a|ã)o|capit(a|ã)o|gra(c|ç)a|marqu(e|ê)s|mar(c|ç)o|(a|à)gua|le(a|ã)o|galv(a|ã)o|esp(i|í)rito|assun(ca|çã|ça|cã)o|in(e|ê)s|lul(u|ú)|cristov(a|ã)o|j(u|ú)lio|c(e|é)sar|bel(e|é)m|nazar(e|é)|l(u|ú)cio|orqu(i|í)deas|ing(a|á)|macap(a|á)|caj(u|ú)|cupua(c|ç)u|l(a|á)zaro|sebasti(a|ã)o|concei(ca|çã|ça|cã)o|ipacara(i|í)|jerusal(e|é)m|par(a|á)|m(a|á)rio|falc(a|ã)o|f(e|é)|pe(c|ç)anha|expedicion(a|á)rio|para(i|í)so|f(a|á)tima|d(e|é)cimo|jer(o|ô)nimo|mendon(c|ç)a|(a|â)ngelo|cambar(a|á)|corn(e|é)lio|piau(i|í)|paran(a|á)|goi(a|á)s|(a|á)guias|gavi(a|ã)o|(a|á)reas|cl(a|á)udio|ot(a|á)vio|maranh(a|ã)es|feij(o|ó)|say(a|ã)o|cora(ca|ça|cã|çã)o)(\s|$)/],
+way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|Joao|Sao|Tres|Tome|Luis|Maranhao|Capitao|Graca|Marques|Marco|Agua|Leao|Galvao|Espirito|Assun(ca|ça|cã)o|Ines|Lulu|Cristovao|Julio|Cesar|Belem|Nazare|Lucio|Orquideas|Inga|Macapa|Caju|Cupuacu|Lazaro|Sebastiao|Concei(ca|ça|cã)o|Ipacarai|Jerusalem|Para|Mario|Falcao|Fe|Pecanha|Expedicionario|Paraiso|Fatima|Decimo|Jeronimo|Mendonca|Angelo|Cambara|Cornelio|Piaui|Parana|Goias|Aguias|Gaviao|Areas|Claudio|Otavio|Maranhaes|Feijo|Sayao|Cora(ca|ça|cã)o)(\s|$)/] {
   throwWarning: tr("Accent, click ''fix''");
   fixAdd: concat("name=",
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
@@ -633,7 +633,12 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(
   tag("name"),
   "jose", "José"),
   "josé", "José"),
@@ -757,16 +762,12 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "jerusalem", "Jerusalém"),
   "jerusalém", "Jerusalém"),
   "Jerusalem", "Jerusalém"),
-  " para", " pará"),
-  "Para", "Pará"),
   "mario", "Mário"),
   "mário", "Mário"),
   "Mario", "Mário"),
   "falcao", "Falcão"),
   "falcão", "Falcão"),
   "Falcao", "Falcão"),
-  " fe", " Fé"),
-  " fé", " Fé"),
   "pecanha", "Peçanha"),
   "peçanha", "Peçanha"),
   "Pecanha", "Peçanha"),
@@ -778,7 +779,65 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "Paraiso", "Paraíso"),
   "fatima", "Fátima"),
   "fátima", "Fátima"),
-  "Fatima", "Fátima")
+  "Fatima", "Fátima"),
+  "decimo", "Décimo"),
+  "décimo", "Décimo"),
+  "Decimo", "Décimo"),
+  "jeronimo", "Jerônimo"),
+  "jerônimo", "Jerônimo"),
+  "Jeronimo", "Jerônimo"),
+  "mendonca", "Mendonça"),
+  "mendonça", "Mendonça"),
+  "Mendonca", "Mendonça"),
+  "angelo", "Ângelo"),
+  "ângelo", "Ângelo"),
+  "Angelo", "Ângelo"),
+  "cambara", "Cambará"),
+  "cambara", "Cambará"),
+  "Cambara", "Cambará"),
+  "cornelio", "Cornélio"),
+  "cornélio", "Cornélio"),
+  "Cornelio", "Cornélio"),
+  "piaui", "Piauí"),
+  "piauí", "Piauí"),
+  "Piaui", "Piauí"),
+  "parana", "Paraná"),
+  "paraná", "Paraná"),
+  "Parana", "Paraná"),
+  "goias", "Goiás"),
+  "goiás", "Goiás"),
+  "Goias", "Goiás"),
+  "aguias", "Águias"),
+  "águias", "Águias"),
+  "Aguias", "Águias"),
+  "gaviao", "Gavião"),
+  "gavião", "Gavião"),
+  "Gaviao", "Gavião"),
+  "areas", "Áreas"),
+  "áreas", "Áreas"),
+  "Areas", "Áreas"),
+  "claudio", "Cláudio"),
+  "cláudio", "Cláudio"),
+  "Claudio", "Cláudio"),
+  "otavio", "Otávio"),
+  "otávio", "Otávio"),
+  "Otavio", "Otávio"),
+  "maranhaes", "Maranhães"),
+  "maranhães", "Maranhães"),
+  "Maranhaes", "Maranhães"),
+  "feijo", "Feijó"),
+  "feijó", "Feijó"),
+  "Feijo", "Feijó"),
+  "sayao", "Sayão"),
+  "sayão", "Sayão"),
+  "Sayao", "Sayão"),
+  "coracao", "Coração"),
+  "coraçao", "Coração"),
+  "coracão", "Coração"),
+  "coração", "Coração"),
+  "Coracao", "Coração"),
+  "Coraçao", "Coração"),
+  "Coracão", "Coração")
   );
 
  fixAdd: concat("alt_name=",
@@ -796,7 +855,12 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(
   tag("alt_name"),
   "jose", "José"),
   "josé", "José"),
@@ -920,16 +984,12 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "jerusalem", "Jerusalém"),
   "jerusalém", "Jerusalém"),
   "Jerusalem", "Jerusalém"),
-  " para", " pará"),
-  "Para", "Pará"),
   "mario", "Mário"),
   "mário", "Mário"),
   "Mario", "Mário"),
   "falcao", "Falcão"),
   "falcão", "Falcão"),
   "Falcao", "Falcão"),
-  " fe", " Fé"),
-  " fé", " Fé"),
   "pecanha", "Peçanha"),
   "peçanha", "Peçanha"),
   "Pecanha", "Peçanha"),
@@ -941,7 +1001,65 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "Paraiso", "Paraíso"),
   "fatima", "Fátima"),
   "fátima", "Fátima"),
-  "Fatima", "Fátima")
+  "Fatima", "Fátima"),
+  "decimo", "Décimo"),
+  "décimo", "Décimo"),
+  "Decimo", "Décimo"),
+  "jeronimo", "Jerônimo"),
+  "jerônimo", "Jerônimo"),
+  "Jeronimo", "Jerônimo"),
+  "mendonca", "Mendonça"),
+  "mendonça", "Mendonça"),
+  "Mendonca", "Mendonça"),
+  "angelo", "Ângelo"),
+  "ângelo", "Ângelo"),
+  "Angelo", "Ângelo"),
+  "cambara", "Cambará"),
+  "cambara", "Cambará"),
+  "Cambara", "Cambará"),
+  "cornelio", "Cornélio"),
+  "cornélio", "Cornélio"),
+  "Cornelio", "Cornélio"),
+  "piaui", "Piauí"),
+  "piauí", "Piauí"),
+  "Piaui", "Piauí"),
+  "parana", "Paraná"),
+  "paraná", "Paraná"),
+  "Parana", "Paraná"),
+  "goias", "Goiás"),
+  "goiás", "Goiás"),
+  "Goias", "Goiás"),
+  "aguias", "Águias"),
+  "águias", "Águias"),
+  "Aguias", "Águias"),
+  "gaviao", "Gavião"),
+  "gavião", "Gavião"),
+  "Gaviao", "Gavião"),
+  "areas", "Áreas"),
+  "áreas", "Áreas"),
+  "Areas", "Áreas"),
+  "claudio", "Cláudio"),
+  "cláudio", "Cláudio"),
+  "Claudio", "Cláudio"),
+  "otavio", "Otávio"),
+  "otávio", "Otávio"),
+  "Otavio", "Otávio"),
+  "maranhaes", "Maranhães"),
+  "maranhães", "Maranhães"),
+  "Maranhaes", "Maranhães"),
+  "feijo", "Feijó"),
+  "feijó", "Feijó"),
+  "Feijo", "Feijó"),
+  "sayao", "Sayão"),
+  "sayão", "Sayão"),
+  "Sayao", "Sayão"),
+  "coracao", "Coração"),
+  "coraçao", "Coração"),
+  "coracão", "Coração"),
+  "coração", "Coração"),
+  "Coracao", "Coração"),
+  "Coraçao", "Coração"),
+  "Coracão", "Coração")
   );
 }
 
