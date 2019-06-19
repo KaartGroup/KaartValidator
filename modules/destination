@@ -141,7 +141,7 @@ relation[type=destination_sign] >[role=sign] node.road_node {
 }
 
 /* Check for via roles in destination_sign relations */
-relation[type=destination_sign] >[role=via] {
+relation[type=destination_sign] >[role=via] * {
   group: tr("kaart");
   throwError: tr("{0} is not a valid role in {1} relations", "via", "destination_sign");
   suggestAlternative: "intersection";
