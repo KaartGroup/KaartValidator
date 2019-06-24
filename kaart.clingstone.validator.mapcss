@@ -914,3 +914,9 @@ relation[type=destination_sign] >[role=via] * {
   throwError: tr("{0} is not a valid role in {1} relations", "via", "destination_sign");
   suggestAlternative: "intersection";
 }
+
+/* Check for from/to roles that are nodes */
+relation[type=destination_sign] >[role=to] node {
+  group: tr("kaart");
+  throwWarning: tr("{0} should be a way", "to/from");
+}
