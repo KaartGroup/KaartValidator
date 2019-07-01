@@ -110,7 +110,7 @@ way[addr:interpolation][addr:street][!building] {
 way[highway][name][/^addr:/],
 way[highway][!name][/^addr:/][!addr:street] {
   group: tr("kaart");
-  throwWarning: tr("There shouldn''t be any {0} tags on a {1}", "{2.key}", "{0.key}");
+  throwWarning: tr("There shouldn''t be any {0} tags on a {1}", "addr:*", "{0.key}");
   fixRemove: "{2.key}";
   assertMatch: "way highway=residential name=random addr:street=random";
   assertNoMatch: "way highway=residential addr:street=random2";

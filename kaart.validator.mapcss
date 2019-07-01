@@ -664,7 +664,7 @@ way[addr:interpolation][addr:street][!building] {
 way[highway][name][/^addr:/],
 way[highway][!name][/^addr:/][!addr:street] {
   group: tr("kaart");
-  throwWarning: tr("There shouldn''t be any {0} tags on a {1}", "{2.key}", "{0.key}");
+  throwWarning: tr("There shouldn''t be any {0} tags on a {1}", "addr:*", "{0.key}");
   fixRemove: "{2.key}";
   assertMatch: "way highway=residential name=random addr:street=random";
   assertNoMatch: "way highway=residential addr:street=random2";
@@ -770,7 +770,8 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
  ***** Destination Tagging ************
  **************************************/
 /* Check for destination_sign relations where there shouldn't be destination_sign relations */
-relation[type=destination_sign][!distance][!time] > way[highway=~/^(motorway|trunk)$/] {
+relation[type=destination_sign][!distance][!time] > way[highway=motorway],
+relation[type=destination_sign][!distance][!time] > way[highway=trunk][oneway=yes] {
   group: tr("kaart");
   throwError: tr("{0} relations should not be used on {1}", "destination_sign", tag("highway"));
   suggestAlternative: "destination:lanes";
