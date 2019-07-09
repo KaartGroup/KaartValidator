@@ -103,10 +103,13 @@ way[oneway=-1] {
 }
 
 /* Look for possible highways without highway tags */
-way[!/^(highway|railway)$/][/^.*(lanes|maxspeed|maxweight|maxheight|maxwidth|turn).*$/][!/^aeroway$/],
-way[!/^(highway|railway)$/][/^(surface)$/][!/^amenity|leisure|aeroway|natural$/][place!=square] {
+way[!/^(.*:)*(highway|railway)$/][/^.*(lanes|maxspeed|maxweight|maxheight|maxwidth|turn).*$/][!/^aeroway$/],
+way[!/^(.*:)*(highway|railway)$/][/^(surface)$/][!/^amenity|leisure|aeroway|natural$/][place!=square] {
   group: tr("kaart");
-  throwError: tr("Is this a {0} -- it has a {1} tag", "{0.key}", "{1.key}"); }
+  throwError: tr("Is this a {0} -- it has a {1} tag", "{0.key}", "{1.key}");
+  assertMatch: "way surface=asphalt";
+  assertNoMatch: "way disused:highway=residential surface=asphalt";
+}
 
 node[/^.*(lanes|turn|surface).*$/],
 node[/^.*(maxspeed|maxweight|maxheight|maxwidth).*$/][!/^(traffic_sign|parking|barrier|traffic_calming)$/][!highway=speed_camera] {
@@ -137,11 +140,12 @@ way[highway][turn:both_ways] {
 }
 
 /* Check for turn lanes that are definately wrong */
-way[highway][/turn:lanes/][/turn:lanes/!~/^((reverse|merge_to_right|left)[|;]?)*((merge_to_right|slight_left)[|;]?)*[|]*((through|none)[|;]?)*[|]*((slight_right|merge_to_left)[|;]?)*((right|merge_to_left)[|;]?)*$/]:righthandtraffic {
+way[highway][/turn:lanes/][/turn:lanes/!~/^(none[|;]?)*((reverse|merge_to_right|left)[|;]?)*((merge_to_right|slight_left)[|;]?)*[|]*((through|none)[|;]?)*[|]*((slight_right|merge_to_left)[|;]?)*((right|merge_to_left)[|;]?)*(none[|;]?)*$/]:righthandtraffic {
   group: tr("kaart");
   throwError: tr("Check the order of {0}", "{1.key}");
   assertMatch: "way highway=tertiary turn:lanes=\"through|reverse\"";
   assertNoMatch: "way highway=tertiary turn:lanes=\"reverse|left|merge_to_right|through\"";
+  assertNoMatch: "way highway=motorway turn:lanes=through|through|through;slight_right|none";
 }
 
 @supports (min-josm-version: 14802) {
