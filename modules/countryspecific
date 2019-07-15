@@ -38,15 +38,15 @@
 }
 
 /* Check for the possibility of copying name:ar to name in Jordan */
-*[name=*"name:en"]["name:ar"][inside("JO")]:modified,
-*[name=*"name:en"]["name:ar"][inside("JO")]:selected {
+*[name][name=*"name:en"]["name:ar"][inside("JO")]:modified,
+*[name][name=*"name:en"]["name:ar"][inside("JO")]:selected {
   group: tr("kaart");
   throwWarning: tr("The default language is arabic for this country. Consider copying name:ar to name.");
   fixAdd: concat("name=", tag("name:ar"));
 }
 
-*[name!=*"name:ar"][name!=*"name:en"][inside("JO")]:modified,
-*[name!=*"name:ar"][name!=*"name:en"][inside("JO")]:selected {
+*[name][name!=*"name:ar"][name!=*"name:en"][inside("JO")]:modified,
+*[name][name!=*"name:ar"][name!=*"name:en"][inside("JO")]:selected {
   group: tr("kaart");
   throwWarning: tr("The default language is arabic for this country. Consider copying name:ar to name, but check spelling first (this may also be a mismatch between name and name:ar)");
 }

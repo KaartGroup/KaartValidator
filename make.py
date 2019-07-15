@@ -2,6 +2,7 @@
 import json
 import os
 import glob
+import shutil
 
 PROJECT_DIRECTORY = "projects"
 MODULE_DIRECTORY = "modules"
@@ -46,3 +47,4 @@ if __name__ == "__main__":
         filename = 'kaart.' + os.path.splitext(os.path.basename(project))[0] + '.validator.mapcss'
         writeHeader(filename, data)
         addTests(filename, data)
+    shutil.copyfile('kaart.clingstone.validator.mapcss', 'kaart.validator.mapcss')

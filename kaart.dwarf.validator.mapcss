@@ -26,6 +26,12 @@ way[highway !~ /^.*_link$/][note][note =~ /(?i)(Check)(.*)(Classification)/] {
   group: tr(kaart_dwarf);
 }
 
+/* Checks for erroneous accents */
+/* Andrew Piechota */
+way[highway][/^(name|alt_name)$/ =~ /^(Luíz|Preféito)$/] {
+  throwWarning: tr("Remove incorrect accent");
+}
+
 /* Checks if name and alt_name are equivalent  */
 /* Andrew Piechota */
 way[highway][name = *alt_name] {

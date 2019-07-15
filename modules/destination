@@ -2,7 +2,8 @@
  ***** Destination Tagging ************
  **************************************/
 /* Check for destination_sign relations where there shouldn't be destination_sign relations */
-relation[type=destination_sign][!distance][!time] > way[highway=~/^(motorway|trunk)$/] {
+relation[type=destination_sign][!distance][!time] > way[highway=motorway],
+relation[type=destination_sign][!distance][!time] > way[highway=trunk][oneway=yes] {
   group: tr("kaart");
   throwError: tr("{0} relations should not be used on {1}", "destination_sign", tag("highway"));
   suggestAlternative: "destination:lanes";
@@ -138,4 +139,17 @@ way[highway] > node { set .road_node; }
 relation[type=destination_sign] >[role=sign] node.road_node {
   group: tr("kaart");
   throwWarning: tr("The {0} role should typically be where the {0} is, not on the road way itself", "sign");
+}
+
+/* Check for via roles in destination_sign relations */
+relation[type=destination_sign] >[role=via] * {
+  group: tr("kaart");
+  throwError: tr("{0} is not a valid role in {1} relations", "via", "destination_sign");
+  suggestAlternative: "intersection";
+}
+
+/* Check for from/to roles that are nodes */
+relation[type=destination_sign] >[role=to] node {
+  group: tr("kaart");
+  throwWarning: tr("{0} should be a way", "to/from");
 }

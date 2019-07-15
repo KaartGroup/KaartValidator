@@ -3,7 +3,7 @@
  ***************/
 
 /* Check for duplicated words in names */
-*[name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")] {
+*[/name/][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")] {
   group: tr("kaart");
   throwWarning: tr("Possible duplicated words in {0}", "{0.key}");
   assertMatch: "node name=\"Duplicate Duplicate\"";
@@ -110,7 +110,7 @@ way[addr:interpolation][addr:street][!building] {
 way[highway][name][/^addr:/],
 way[highway][!name][/^addr:/][!addr:street] {
   group: tr("kaart");
-  throwWarning: tr("There shouldn''t be any {0} tags on a {1}", "{2.key}", "{0.key}");
+  throwWarning: tr("There shouldn''t be any {0} tags on a {1}", "addr:*", "{0.key}");
   fixRemove: "{2.key}";
   assertMatch: "way highway=residential name=random addr:street=random";
   assertNoMatch: "way highway=residential addr:street=random2";
@@ -136,4 +136,11 @@ way[highway][!name][addr:street] {
 node:new < *[/landuse|boundary/]:modified!:new {
   group: tr("kaart");
   throwError: tr("A {0} was modified, did you intend to modify it? If not, use `alt` + `j` to disconnect the node from the way.", "{0.key}");
+}
+
+*[/.*/=~/.*;[\\r\\n\\t\\f\\v ]+.*/]:modified {
+  group: tr("kaart");
+  throwError: tr("There exists a tag with {0} separators and whitespace after the separator", ";");
+  assertMatch: "way alt_name=\"Avenida 11; Cerrada Calle 11\"";
+  assertNoMatch: "way alt_name=\"Avenida 11;Cerrada Calle 11\"";
 }
