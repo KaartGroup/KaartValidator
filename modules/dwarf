@@ -1,0 +1,12 @@
+/***************
+** Kaart Users *
+***************/
+
+relation[JOSM_search("user:vorpalblade77-kaart or user:vespax or user:TheJAwesome1 or user:CapAhab or user:\"Leonardo DeMAPrio\" or user:Soccersweeper or user:alyssamaps or user:G_Fyyar or user:EarthAngel or user:And_12 or user:ArleneC or user:orca_horka or user:\"El Pescador\" or user:\"Unicorn Ostrich\" or user:Street_Shark or user:peacewaya or user:chuck97! or user:chancethewrapper or user:CartographicChels or user:mama_bear or user:Corban8 or user:Te-Ika or user:dhic or user:krinkov76239 or user:Dillon9 or user:Anoesis or user:RedBot or user:ebraplmap or user:VigotheCarpathian or user:TigerTamer or user:GOwin or user:Evandering or user:FarieBerrie or user:Copernicus529 or user:Velocimaptor or user:theArchDruid or user:Hoordinates or user:Baconcrisp or user:CoolGuyJake or user:jacob_kubeczko o ruser:Hulk_Maps or user:AnonJason or user:Red_Ranger or user:geoJenn or user:yjn3n or user:_Poliwrath_ or user:JonKrato or user:spuddy93 or user:Gr8fulDead or user:JAAS or user:pizzagal or user:Kyleta8 or user:birdeatscake or user:LSkalayo or user:geografer or user:BlueBot or user:Traaker_L or user:Ids68W or user:medrano93 or user:MTG5093 or user:MappnMatt or user:notmee-uh or user:MichNicole or user:trigeo or user:MMantio or user:rallynukab or user:Ned_Stark or user:MoonDragon or user:daFisch or user:jedimasterflint or user:n1y0m1 or user:Georafas or user:Rally or user:Rasterfarian89 or user:whatmeinfallible or user:RobinNoodles or user:Mel_1 or user:EptingR or user:\"Whimsical Otter\" or user:rytheking or user:Kaarti_B or user:BobGod or user:TheAnimappor or user:happy-camper or user:Sherbare or user:mapcraft or user:Avocadough! or user:Smoothdog or user:LiuTwo or user:\"Владимир К\" or user:ImjusBuddy or user:the_node_less_traveled or user:Zebulonium")] { set .kaart_user }
+
+relation[type=route].kaart_user {
+  group: tr("kaart");
+  throwOther: "Route modified by Kaart, check for continuity problems";
+}
+
+

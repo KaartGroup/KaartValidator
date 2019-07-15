@@ -1,0 +1,11 @@
+{
+	"meta": {
+		"title": "Validation rules for Kaart Group--Dwarf Team",
+		"version": "TO_BE_IMPLEMENTED",
+		"description": "Various checks that are useful to Kaart",
+		"author": "Taylor Smock, et al.",
+	},
+	"modules": [
+		"dwarf"
+	]
+}
