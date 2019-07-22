@@ -167,15 +167,6 @@ way[highway =~ /^.*_link$/][junction = roundabout] {
   fixAdd: "note=Check Classification";
 }
 
-/* Checks if roundabouts are oneway */
-/* RD Clare */
-way[highway][junction = roundabout][!oneway] {
-  throwWarning: tr("roundabouts are usually oneway");
-  group: tr(kaart_dwarf);
-  suggestAlternative: "oneway = yes";
-  fixAdd: "oneway=yes";
-}
-
 /* Checks for Romans numerals (up to 31,XXXI) in alt_names/names */
 /* RD Clare */
 way[highway][name][!alt_name][name =~ /(^|\s)(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX|XXI|XXII|XXIII|XXIV|XXV|XXVI|XXVII|XXVIII|XXIX|XXX|XXXI)(\s|$)/],
