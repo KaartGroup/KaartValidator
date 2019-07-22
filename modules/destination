@@ -153,3 +153,9 @@ relation[type=destination_sign] >[role=to] node {
   group: tr("kaart");
   throwWarning: tr("{0} should be a way", "to/from");
 }
+
+/* Ensure that destination_sign relations have a from role */
+relation[type=destination_sign][count_roles("from") == 0] {
+  group: tr("kaart-experimental");
+  throwWarning: tr("{0} should have a {1} role", "destination_sign", "from");
+}
