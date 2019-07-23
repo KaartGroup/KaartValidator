@@ -1,11 +1,11 @@
 {
-	"meta": {
-		"title": "Validation rules for Kaart Group--Dwarf Team",
-		"version": "TO_BE_IMPLEMENTED",
-		"description": "Various checks that are useful to Kaart",
-		"author": "Taylor Smock, et al.",
-	},
-	"modules": [
-		"dwarf"
-	]
+   "meta" : {
+      "author" : "Taylor Smock (vorpalblade77-kaart), Andrew Piechota(G_Fyyar), RD Clare(mr_et), Lucas Bingham(Traaker_L), Ryan Fleming(rytheking), Farris Billy(FarieBerrie)",
+      "description" : "Validator tool for the Kaart Brazil Project",
+      "title" : "Validation rules for Kaart Group--Dwarf Team",
+      "version" : "1_2019-06-13"
+   },
+   "modules" : [
+      "dwarf"
+   ]
 }
