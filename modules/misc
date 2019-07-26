@@ -138,7 +138,8 @@ node:new < *[/landuse|boundary/]:modified!:new {
   throwError: tr("A {0} was modified, did you intend to modify it? If not, use `alt` + `j` to disconnect the node from the way.", "{0.key}");
 }
 
-*[/.*/=~/.*;[\\r\\n\\t\\f\\v ]+.*/]:modified {
+/* Check for separators with a space */
+*[/.*/=~/.*;[\\n\\t\\f\\v ]+.*/]:modified {
   group: tr("kaart");
   throwError: tr("There exists a tag with {0} separators and whitespace after the separator", ";");
   assertMatch: "way alt_name=\"Avenida 11; Cerrada Calle 11\"";
