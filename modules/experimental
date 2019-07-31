@@ -1,15 +1,31 @@
 /* Check for missing arabic characters */
 *[name][name:ar][name!=*"name:ar"][name=~/شارع/][name:ar!~/شارع/][inside("JO")],
 *[name][name:ar][name!=*"name:ar"][name:ar=~/شارع/][name!~/شارع/][inside("JO")] {
+  group: tr("kaart-experimental");
   throwError: tr("{0} does not match {2} and has a Street suffix (شارع).", "{3.key}", "{4.key}");
   assertMatch: "way name=\"شارع جبل عرفات\" name:ar=\"جبل عرفات\"";
   assertNoMatch: "way name=\"جبل عرفات\" name:ar=\"جبل عرفات\"";
 }
 
 *[/^(name|alt_name)$/=~/(?i)antiga/] {
+  group: tr("kaart-experimental");
   throwWarning: tr("{0} in the name", "{0.value}");
   assertMatch: "way name=\"antiga testing\"";
   assertMatch: "way name=\"Antiga testing\"";
   assertNoMatch: "way name=\"Something else\"";
   assertMatch: "way name=\"Rua Sao Paulo Antiga\"";
+}
+
+/* Check for ways that don't have the parent relation ref */
+relation[type=route][ref] > way[ref][!regexp_test(join_list("|", split(";", tag("ref"))), parent_tag("ref"))],
+relation[type=route][ref] > way[!ref] {
+  group: tr("kaart-experimental");
+  throwError: tr("Parent ref not in child ref");
+}
+
+/* Check for ways that have a ref that is not in a parent */
+/* Needs sort to work properly */
+way[ref][count(parent_tags("ref")) == 0 || println(join_list(";", sort(split(";", tag("ref"))))) != println(join_list(";", sort(parent_tags("ref"))))] {
+  group: tr("kaart-experimental");
+  throwError: tr("Possible mismatched refs");
 }

@@ -154,6 +154,15 @@ relation[type=destination_sign] >[role=to] node {
   throwWarning: tr("{0} should be a way", "to/from");
 }
 
+/* Ensure tagging consistency for destination:<INTERIOR>:forward/:backward */
+*[/destination:(forward|backward):(.*)/] {
+  group: tr("kaart");
+  throwError: tr("Bad tagging scheme for destination directions");
+  suggestAlternative: "destination:<SCHEME>:(forward|backward)";
+  assertNoMatch: "way destination:ref:to:forward=A9";
+  assertMatch: "way destination:forward:ref:to=A9";
+}
+
 /* Ensure that destination_sign relations have a from role */
 relation[type=destination_sign][count_roles("from") == 0] {
   group: tr("kaart-experimental");

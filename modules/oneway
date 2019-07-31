@@ -1,0 +1,36 @@
+/* Check for common backward/forward tagging */
+way[motor_vehicle:backward=no] {
+  throwWarning: tr("Try to use oneway tags");
+  fixAdd: "oneway=yes";
+  fixRemove: "motor_vehicle:backward";
+  assertMatch: "way motor_vehicle:backward=no";
+  assertNoMatch: "way oneway=yes";
+}
+
+way[motorcycle:backward=yes] {
+  throwWarning: tr("Try to use oneway tags");
+  fixAdd: "oneway:motorcycle=no";
+  fixRemove: "motorcycle:backward";
+  assertMatch: "way motorcycle:backward=yes";
+  assertNoMatch: "way oneway=yes";
+}
+
+way[moped:backward=yes] {
+  throwWarning: tr("Try to use oneway tags");
+  fixAdd: "oneway:moped=no";
+  fixRemove: "moped:backward";
+  assertMatch: "way moped:backward=yes";
+  assertNoMatch: "way oneway=yes";
+}
+
+way[mofa:backward=yes] {
+  throwWarning: tr("Try to use oneway tags");
+  fixAdd: "oneway:mofa=no";
+  fixRemove: "mofa:backward";
+  assertMatch: "way mofa:backward=yes";
+  assertNoMatch: "way oneway=yes";
+}
+
+way[/(motorcycle|moped|mofa|motor_vehicle|vehicle):(forward|backward)/] {
+  throwOther: tr("Try to use oneway tags");
+}

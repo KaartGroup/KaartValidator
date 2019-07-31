@@ -13,6 +13,8 @@
 		"misc",
 		"golf",
 		"poi",
-		"destination"
+		"destination",
+		"oneway",
+		"experimental"
 	]
 }
