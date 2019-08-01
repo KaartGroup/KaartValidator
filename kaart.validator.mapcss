@@ -476,7 +476,7 @@ way[highway][barrier=kerb][highway!~/(pedestrian|footway)/] {
   throwWarning: tr("There is a {0} on the road", "{1.value}");
 }
 
-node[barrier=kerb] < way[highway][highway!~/(pedestrian|footway)/] {
+node[barrier=kerb] < way[highway][highway=~/(service|residential|unclassified|tertiary|secondary|primary|trunk|motorway)/] {
   group: tr("kaart");
   throwWarning: tr("There is a {0} on the road", "kerb");
 }
