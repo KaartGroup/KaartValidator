@@ -8,7 +8,7 @@ meta
 }
 @supports (min-josm-version: 15282) {
   /* Check for ways that don't have the parent relation ref */
-  relation[type=route][ref] > way[ref][!regexp_test(join_list("|", split(";", tag("ref"))), parent_tag("ref"))],
+  relation[type=route][ref] > way[ref][!regexp_test(join_list("|", split(";", tag("reg_ref")), split(";", tag("int_ref")), split(";", tag("ref"))), parent_tag("ref"))],
   relation[type=route][ref] > way[!ref] {
     group: tr("kaart");
     throwError: tr("Parent ref not in child ref");
@@ -16,8 +16,8 @@ meta
 
   /* Check for ways that have a ref that is not in a parent */
   /* Needs sort to work properly */
-  way[highway][ref][count(parent_tags("ref")) == 0 || println(join_list(";", sort_list(split(";", tag("ref"))))) != println(join_list(";", sort_list(parent_tags("ref"))))] {
+  way[highway][ref][count(parent_tags("ref")) == 0 || join_list(";", sort_list(split(";", tag("ref")), split(";", tag("int_ref")), split(";", tag("reg_ref")))) != join_list(";", sort_list(parent_tags("ref")))] {
     group: tr("kaart");
-    throwError: tr("A {} on a way is not in a parent relation", "ref");
+    throwError: tr("A {0} on a way is not in a parent relation", "ref");
   }
 }
