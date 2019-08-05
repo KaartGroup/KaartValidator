@@ -1,0 +1,12 @@
+{
+	"meta": {
+		"title": "Road Ref Validations",
+		"version": "1_2019-08-05",
+		"description": "Check for road ref inconsistencies",
+		"author": "Taylor Smock",
+		"min-josm-version": 15282
+	},
+	"modules": [
+		"refs"
+	]
+}
