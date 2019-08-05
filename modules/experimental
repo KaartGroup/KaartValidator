@@ -15,17 +15,3 @@
   assertNoMatch: "way name=\"Something else\"";
   assertMatch: "way name=\"Rua Sao Paulo Antiga\"";
 }
-
-/* Check for ways that don't have the parent relation ref */
-relation[type=route][ref] > way[ref][!regexp_test(join_list("|", split(";", tag("ref"))), parent_tag("ref"))],
-relation[type=route][ref] > way[!ref] {
-  group: tr("kaart-experimental");
-  throwError: tr("Parent ref not in child ref");
-}
-
-/* Check for ways that have a ref that is not in a parent */
-/* Needs sort to work properly */
-way[ref][count(parent_tags("ref")) == 0 || println(join_list(";", sort(split(";", tag("ref"))))) != println(join_list(";", sort(parent_tags("ref"))))] {
-  group: tr("kaart-experimental");
-  throwError: tr("Possible mismatched refs");
-}

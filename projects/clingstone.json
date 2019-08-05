@@ -15,6 +15,7 @@
 		"poi",
 		"destination",
 		"oneway",
+		"refs",
 		"experimental"
 	]
 }
