@@ -3,6 +3,8 @@ import json
 import os
 import glob
 import shutil
+import git # I use GitPython
+import datetime
 
 PROJECT_DIRECTORY = "projects"
 MODULE_DIRECTORY = "modules"
@@ -10,6 +12,13 @@ MODULE_DIRECTORY = "modules"
 def projectData(project):
     with open(project) as f:
         return json.load(f)
+
+def getVersion(filename):
+    git_object = git.Repo(os.path.dirname(filename)).git
+    version = str(len(git_object.log(filename).split('\n')))
+    date = datetime.datetime.utcnow().strftime("%Y-%m-%d")
+    return version + "_" + date
+
 
 def writeHeader(filename, data):
     if "meta" in data:
@@ -19,6 +28,7 @@ def writeHeader(filename, data):
             f.write("{\n")
             for key in meta:
                 f.write("  " + str(key) + ": \"" + str(meta[key]) + "\";\n")
+            f.write("  version: \"" + getVersion(filename) + "\";\n")
             f.write("}\n")
         return True
     return False

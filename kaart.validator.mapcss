@@ -1,10 +1,10 @@
 meta
 {
   title: "Validation rules for Kaart Group";
-  version: "114_2019-02-25";
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
   min-josm-version: "8087";
+  version: "123_2019-08-14";
 }
 /****************
  ** Kaart Users *
