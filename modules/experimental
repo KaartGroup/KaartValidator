@@ -1,12 +1,14 @@
 /* Check for missing arabic characters */
 *[name][name:ar][name!=*"name:ar"][name=~/شارع/][name:ar!~/شارع/][inside("JO")],
 *[name][name:ar][name!=*"name:ar"][name:ar=~/شارع/][name!~/شارع/][inside("JO")] {
+  group: tr("kaart-experimental");
   throwError: tr("{0} does not match {2} and has a Street suffix (شارع).", "{3.key}", "{4.key}");
   assertMatch: "way name=\"شارع جبل عرفات\" name:ar=\"جبل عرفات\"";
   assertNoMatch: "way name=\"جبل عرفات\" name:ar=\"جبل عرفات\"";
 }
 
 *[/^(name|alt_name)$/=~/(?i)antiga/] {
+  group: tr("kaart-experimental");
   throwWarning: tr("{0} in the name", "{0.value}");
   assertMatch: "way name=\"antiga testing\"";
   assertMatch: "way name=\"Antiga testing\"";
