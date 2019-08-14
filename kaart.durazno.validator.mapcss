@@ -1,0 +1,316 @@
+meta
+{
+  title: "Validation rules for the Kaart Group Durazno Team";
+  description: "Validation tool for the Kaart Mexico Project";
+  author: "Rd Clare(mr_et) Taylor Smock(vorpalblade77-kaart) Farris Billy(FarieBerrie)";
+  version: "1_2019-08-14";
+}
+
+/* Creates list of current/past Project Users  */
+*[JOSM_search(“user:LSkalayo or user:Soccersweeper or user:ArleneC or user:3agleOne or user:\“Unicorn Ostrich\” or user:Goose6thAB or user:\“Chilly Chinchillas\” or user:Cinderblock or user:Dalekokarta or user:BlueRanger or user:MTG5093 or user:MappnMatt or user:MMantlo or user:rallynukab or user:jedimasterflint or user:RobinNoodles or user:Mel_1 or user:Sherbare or user:Smoothdog or user:ImjusBuddy or user:DreadPirateRoberts or user:EthanK or user:Yagni”)]{
+  set .kaart_user
+}
+
+
+/* Double prefix check */
+/* Rd Clare */
+way[highway][name =~ /(^(?i)(Calle|Cerrada|Privada|Callejón|Prolongación|Avenida|Retorno|Calzada|Circuito|Bulevar|Andador|Boulevard|Camino|Carretera)\s)((?i)(Calle|Cerrada|Privada|Callejón|Prolongación|Avenida|Retorno|Calzada|Circuito|Bulevar|Andador|Boulevard|Camino|Carretera))/]{
+  throwWarning: tr("2 or more prefixes found");
+  group: tr(kaart_durazno);
+}
+
+/* abbreviation check */
+/* Farris Billy */
+way[highway][/^(name|alt_name)$/ =~ /(?i)(^|.* )(And|Arq|Av|Ave|Blvd|Blvrd|Blv|Blv|C|Calz|Cda|Cjon|Diag|Dr|Edo|Gral|Ing|Lic|Mz|Nte|Occ|Ote|Pre|Priv|Prof|Prol|Pte|Ret|Tte)\.? .*/]{
+  group: tr(kaart_durazno);
+  throwWarning: tr("Abbreviation in Name/Alt_name");
+}
+
+/* Checks if name and alt_name are equivalent  */
+/* Andrew Piechota */
+way[highway][name = *alt_name] {
+  throwWarning: tr("Name and alt_name are equivalent");
+  group: tr(kaart_durazno);
+  fixRemove: "alt_name";
+}
+
+/* Checks if links have oneway tag */
+/* Taylor Smock */
+way[highway][highway=~/^.*_link$/][!oneway]{
+  throwWarning: tr("_links are usually oneway ");
+  group: tr(kaart_durazno);
+  fixAdd: "oneway=yes";
+}
+
+/* Checks for commas in name/alt_name */
+/* Andrew Piechota */
+way[highway][/^(name|alt_name)$/ =~ /,/] {
+  throwError: tr("Name/alt_name with comma");
+  group: tr(kaart_durazno);
+}
+
+/* Checks bridges/tunnels for layer tag */
+/* Andrew Piechota */
+way[/^(tunnel|bridge)$/][/^(tunnel|bridge)$/!~/^no$/][!layer] {
+  throwWarning: tr("Bridge/tunnel missing layer tag");
+  group: tr(kaart_durazno);
+}
+
+/* Checks if roundabouts have the highway = _link tag */
+/* RD Clare */
+way[highway =~ /^.*_link$/][junction = roundabout] {
+  throwWarning: tr("roundabouts are not links");
+  group: tr(kaart_durazno);
+  suggestAlternative: "non _link or add note";
+}
+
+/* Checks if links have name/noname tag */
+/* Taylor Smock, Andrew Piechota, RD Clare */
+way[highway=~/^.*_link$/][name],
+way[highway=~/^.*_link$/][noname] {
+  throwWarning: tr("Links shouldn''t have name/noname tags");
+  group: tr(kaart_durazno);
+  fixRemove: "noname";
+}
+
+/* Checks for noname tag. Will flag if Kaart user is last author and tag exists */
+/* RD Clare */
+way[highway][noname].kaart_user {
+  throwWarning: tr("Check noname tag added by Kaart user");
+  group: tr(kaart_durazno);
+  fixRemove: "noname";
+}
+
+/* Accent fixer */
+/* need testing/validity check */
+/* Andrew Piechota, Rd Clare */
+way[highway][/^(name|alt_name)$/ =~ /(\s)(callej(o|ó)n|prolongaci(o|ó)n|orqu(í|i)dea|orqu(í|i)deas|cempas(ú|u)chil|tulip(á|a)n|villagr(á|a)n|pi(ñ|n)a|pi(ñ|n)as|pl(á|a)tano|pl(á|a)tanos|lim(ó)n|d(á|a)tiles|ar(á|a)ndono|ar(á|a)ndonos|maracuy(á|a)|cipr(é|e)s|(á|a)lamo|asi(á|a)tica|capul(í|i)n|(á|a)guila|gorri(ó|o)n|colibr(í|i)|halc(ó|o)n|cacat(ú|u)a|j(ú|u)piter|ne(ó|o)n|nitr(ó|o)geno|f(ó|o)sforo|per(ú|u)|(á|a)frica|m(é|e)xico|canad(á|a)|panam(á|a)|espa(ñ|n)a)(\s|$|;)/],
+way[highway][/^(name|alt_name)$/ =~ /(^|\s)(Callejon|Prolongacion|Orquidea|Orquideas|Cempasuchil|Tulipan|Villagran|Pina|Pinas|Platano|Platanos|Limon|Datiles|Arandono|Arandonos|Maracuya|Cipres|Alamo|Asiatica|Capulin|Aguila|Gorrion|Colibri|Halcon|Cacatua|Jupiter|Neon|Nitrogeno|Fosforo|Peru|Africa|Mexico|Canada|Panama|Espana)(\s|$|;)/]{
+  throwWarning: tr("Missing Accent, click ''fix''");
+  group: tr(kaart_durazno);
+  fixAdd: concat("name=",
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  tag("name"),
+  "callejon", "Callejón"),
+  "callejón", "Callejón"),
+  "Callejon", "Callejón"),
+  "prolongacion", "Prolongación"),
+  "prolongación", "Prolongación"),
+  "Prolongacion", "Prolongación"),
+  "orquidea", "Orquídea"),
+  "orquídea", "Orquídea"),
+  "Orquidea", "Orquídea"),
+  "orquideas", "Orquídeas"),
+  "orquídeas", "Orquídeas"),
+  "Orquideas", "Orquídeas"),
+  "cempasuchil", "Cempasúchil"),
+  "cempasúchil", "Cempasúchil"),
+  "Cempasuchil", "Cempasúchil"),
+  "tulipan", "Tulipán"),
+  "tulipán", "Tulipán"),
+  "Tulipan", "Tulipán"),
+  "villagran", "Villagrán"),
+  "villagrán", "Villagrán"),
+  "Villagran", "Villagrán"),
+  "pina", "Piña"),
+  "piña", "Piña"),
+  "Pina", "Piña"),
+  "pinas", "Piñas"),
+  "piñas", "Piñas"),
+  "Pinas", "Piñas"),
+  "platano", "Plátano"),
+  "plátano", "Plátano"),
+  "Platano", "Plátano"),
+  "limon", "Limón"),
+  "limón", "Limón"),
+  "Limon", "Limón"),
+  "datiles", "Dátiles"),
+  "dátiles", "Dátiles"),
+  "Datiles", "Dátiles"),
+  "arandono", "Arándono"),
+  "arándono", "Arándono"),
+  "Arandono", "Arándono"),
+  "arandonos", "Arándonos"),
+  "arándonos", "Arándonos"),
+  "Arandonos", "Arándonos"),
+  "maracuya", "Maracuyá"),
+  "maracuyá", "Maracuyá"),
+  "Maracuya", "Maracuyá"),
+  "cipres", "Ciprés"),
+  "ciprés", "Ciprés"),
+  "Cipres", "Ciprés"),
+  "alamo", "Álamo"),
+  "álamo", "Álamo"),
+  "Alamo", "Álamo"),
+  "asiatica", "Asiática"),
+  "asiática", "Asiática"),
+  "Asiatica", "Asiática"),
+  "capulin", "Capulín"),
+  "capulín", "Capulín"),
+  "Capulin", "Capulín"),
+  "aguila", "Águila"),
+  "águila", "Águila"),
+  "Aguila", "Águila"),
+  "gorrion", "Gorrión"),
+  "gorrión", "Gorrión"),
+  "Gorrion", "Gorrión"),
+  "halcon", "Halcón"),
+  "halcón", "Halcón"),
+  "Halcon", "Halcón"),
+  "cacatua", "Cacatúa"),
+  "cacatúa", "Cacatúa"),
+  "Cacatua", "Cacatúa"),
+  "jupiter", "Júpiter"),
+  "júpiter", "Júpiter"),
+  "Jupiter", "Júpiter"),
+  "neon", "Neón"),
+  "neón", "Neón"),
+  "Neon", "Neón"),
+  "nitrogeno", "Nitrógeno"),
+  "nitrógeno", "Nitrógeno"),
+  "Nitrogeno", "Nitrógeno"),
+  "fosforo", "Fósforo"),
+  "fósforo", "Fósforo"),
+  "Fosforo", "Fósforo"),
+  "peru", "Perú"),
+  "perú", "Perú"),
+  "Peru", "Perú"),
+  "africa", "África"),
+  "áfrica", "África"),
+  "Africa", "África"),
+  "mexico", "México"),
+  "méxico", "México"),
+  "Mexico", "México"),
+  "canada", "Canadá"),
+  "canadá", "Canadá"),
+  "Canada", "Canadá"),
+  "panama", "Panamá"),
+  "panamá", "Panamá"),
+  "Panama", "Panamá"),
+  "espana", "España"),
+  "españa", "España"),
+  "Espana", "España")
+  );
+
+  fixAdd: concat("alt_name=",
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  tag("alt_name"),
+  "callejon", "Callejón"),
+  "callejón", "Callejón"),
+  "Callejon", "Callejón"),
+  "prolongacion", "Prolongación"),
+  "prolongación", "Prolongación"),
+  "Prolongacion", "Prolongación"),
+  "orquidea", "Orquídea"),
+  "orquídea", "Orquídea"),
+  "Orquidea", "Orquídea"),
+  "orquideas", "Orquídeas"),
+  "orquídeas", "Orquídeas"),
+  "Orquideas", "Orquídeas"),
+  "cempasuchil", "Cempasúchil"),
+  "cempasúchil", "Cempasúchil"),
+  "Cempasuchil", "Cempasúchil"),
+  "tulipan", "Tulipán"),
+  "tulipán", "Tulipán"),
+  "Tulipan", "Tulipán"),
+  "villagran", "Villagrán"),
+  "villagrán", "Villagrán"),
+  "Villagran", "Villagrán"),
+  "pina", "Piña"),
+  "piña", "Piña"),
+  "Pina", "Piña"),
+  "pinas", "Piñas"),
+  "piñas", "Piñas"),
+  "Pinas", "Piñas"),
+  "platano", "Plátano"),
+  "plátano", "Plátano"),
+  "Platano", "Plátano"),
+  "limon", "Limón"),
+  "limón", "Limón"),
+  "Limon", "Limón"),
+  "datiles", "Dátiles"),
+  "dátiles", "Dátiles"),
+  "Datiles", "Dátiles"),
+  "arandono", "Arándono"),
+  "arándono", "Arándono"),
+  "Arandono", "Arándono"),
+  "arandonos", "Arándonos"),
+  "arándonos", "Arándonos"),
+  "Arandonos", "Arándonos"),
+  "maracuya", "Maracuyá"),
+  "maracuyá", "Maracuyá"),
+  "Maracuya", "Maracuyá"),
+  "cipres", "Ciprés"),
+  "ciprés", "Ciprés"),
+  "Cipres", "Ciprés"),
+  "alamo", "Álamo"),
+  "álamo", "Álamo"),
+  "Alamo", "Álamo"),
+  "asiatica", "Asiática"),
+  "asiática", "Asiática"),
+  "Asiatica", "Asiática"),
+  "capulin", "Capulín"),
+  "capulín", "Capulín"),
+  "Capulin", "Capulín"),
+  "aguila", "Águila"),
+  "águila", "Águila"),
+  "Aguila", "Águila"),
+  "gorrion", "Gorrión"),
+  "gorrión", "Gorrión"),
+  "Gorrion", "Gorrión"),
+  "halcon", "Halcón"),
+  "halcón", "Halcón"),
+  "Halcon", "Halcón"),
+  "cacatua", "Cacatúa"),
+  "cacatúa", "Cacatúa"),
+  "Cacatua", "Cacatúa"),
+  "jupiter", "Júpiter"),
+  "júpiter", "Júpiter"),
+  "Jupiter", "Júpiter"),
+  "neon", "Neón"),
+  "neón", "Neón"),
+  "Neon", "Neón"),
+  "nitrogeno", "Nitrógeno"),
+  "nitrógeno", "Nitrógeno"),
+  "Nitrogeno", "Nitrógeno"),
+  "fosforo", "Fósforo"),
+  "fósforo", "Fósforo"),
+  "Fosforo", "Fósforo"),
+  "peru", "Perú"),
+  "perú", "Perú"),
+  "Peru", "Perú"),
+  "africa", "África"),
+  "áfrica", "África"),
+  "Africa", "África"),
+  "mexico", "México"),
+  "méxico", "México"),
+  "Mexico", "México"),
+  "canada", "Canadá"),
+  "canadá", "Canadá"),
+  "Canada", "Canadá"),
+  "panama", "Panamá"),
+  "panamá", "Panamá"),
+  "Panama", "Panamá"),
+  "espana", "España"),
+  "españa", "España"),
+  "Espana", "España")
+  );
+}

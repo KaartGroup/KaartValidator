@@ -1,10 +1,5 @@
-meta
-{
-  title: "Mexico-Brazil Validation rules for Kaart Group";
-  version: "98_2019-02-05";
-  description: "Various checks that are useful to the Kaart Mexico-Brazil Project";
-  author: "Taylor Smock";
-}
+/* Old Mexico */
+
 /* Documentation
  * https://josm.openstreetmap.de/wiki/Help/Validator/MapCSSTagChecker
  * https://josm.openstreetmap.de/wiki/Help/Styles/MapCSSImplementation
