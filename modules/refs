@@ -1,6 +1,7 @@
-@supports (min-josm-version: 15281) {
+/* TODO use the correct version */
+@supports (min-josm-version: 20000) {
   /* Check for ways that don't have the parent relation ref */
-  relation[type=route][ref] > way[ref][!regexp_test(concat("^(", join_list("|", split(";", join(";", tag("ref"), tag("int_ref"), tag("nat_ref")))), "|;?)+$"), join_list(";", sort_list(parent_tags("ref"))))] {
+  relation[type=route][ref] > way[ref][!regexp_test(concat("^(", join_list("|", uniq_list(split(";", join(";", tag_regex("ref")))), "|;?)+$"), join_list(";", uniq_list(sort_list(parent_tags("ref")))))] {
   /* We don't (currently) care about ways that are missing refs */
   /* relation[type=route][ref] > way[!ref] { */
     group: tr("kaart");
@@ -10,8 +11,7 @@
 
   /* Check for ways that have a ref that is not in a parent */
   /* Needs sort to work properly */
-  way[highway][ref][!int_ref][count(parent_tags("ref")) != 0 && join_list(";", sort_list(split(";", tag("ref")))) != join_list(";", sort_list(parent_tags("ref")))]!.parent_ref_not_in_child_ref,
-  way[highway][ref][int_ref][count(parent_tags("ref")) != 0 && join_list(";", sort_list(split(";", join(";", tag("ref"), tag("int_ref"))))) != join_list(";", sort_list(parent_tags("ref")))]!.parent_ref_not_in_child_ref {
+  way[highway][ref][count(parent_tags("ref")) != 0 && join_list(";", uniq_list(sort_list(split(";", join_list(";", tag_regex("^(ref|nat_ref|int_ref)$")))))) != join_list(";", uniq_list(sort_list(parent_tags("ref"))))]!.parent_ref_not_in_child_ref {
     group: tr("kaart");
     throwError: tr("A {0} on a way is not in a parent relation", "ref");
   }
