@@ -21,8 +21,13 @@ def getVersion(filename, prior_version = None):
     if (prior_version is not None):
         prior_version = prior_version.split("\"")[1]
         split_version = prior_version.split("_")
-    version = str(len(git_object.log(filename).split('\n')))
-    if (version == split_version[0]):
+    version = len(git_object.log(filename, oneline=True).split('\n'))
+    modified = git_object.diff_index('HEAD', filename, name_only=True)
+    if (filename in modified):
+        print(git_object.diff(filename))
+        version += 1
+    version = str(version)
+    if (len(split_version) >= 2 and version == split_version[0]):
         return split_version[0] + "_" + split_version[1]
     date = datetime.datetime.utcnow().strftime("%Y-%m-%d")
     return version + "_" + date
@@ -39,12 +44,13 @@ def writeHeader(filename, data):
                     prior_version = line.split(":")[1].strip()
                     break
                 line = f.readline()
+        current_version = getVersion(filename, prior_version = prior_version)
         with open(filename, 'w') as f:
             f.write("meta\n")
             f.write("{\n")
             for key in meta:
                 f.write("  " + str(key) + ": \"" + str(meta[key]) + "\";\n")
-            f.write("  version: \"" + getVersion(filename, prior_version = prior_version) + "\";\n")
+            f.write("  version: \"" + current_version + "\";\n")
             f.write("}\n")
         return True
     return False
