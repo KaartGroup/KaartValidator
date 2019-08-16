@@ -6,6 +6,7 @@
       "version" : "1_2019-08-14"
    },
    "modules" : [
-      "durazno"
+      "durazno",
+      "spanish"
    ]
 }

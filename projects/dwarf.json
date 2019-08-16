@@ -5,6 +5,7 @@
       "title" : "Validation rules for Kaart Group--Dwarf Team"
    },
    "modules" : [
-      "dwarf"
+      "dwarf",
+      "portuguese"
    ]
 }
