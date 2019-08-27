@@ -1,7 +1,6 @@
-
 /* Accent fixer */
 /* need testing/validity check */
-/* Andrew Piechota, Rd Clare */
+/* Andrew Piechota, Rd Clare, Farris Billy */
 way[highway][/^(name|alt_name)$/ =~ /(\s)(callej(o|ó)n|prolongaci(o|ó)n|orqu(í|i)dea|orqu(í|i)deas|cempas(ú|u)chil|tulip(á|a)n|villagr(á|a)n|pi(ñ|n)a|pi(ñ|n)as|pl(á|a)tano|pl(á|a)tanos|lim(ó)n|d(á|a)tiles|ar(á|a)ndono|ar(á|a)ndonos|maracuy(á|a)|cipr(é|e)s|(á|a)lamo|asi(á|a)tica|capul(í|i)n|(á|a)guila|gorri(ó|o)n|colibr(í|i)|halc(ó|o)n|cacat(ú|u)a|j(ú|u)piter|ne(ó|o)n|nitr(ó|o)geno|f(ó|o)sforo|per(ú|u)|(á|a)frica|m(é|e)xico|br(ó|o)coli|panam(á|a)|espa(ñ|n)a|ju(á|a)rez|tecom(á|a)n|michoac(á|a)n||an(í|i)s|mel(ó|o)n)(\s|$|;)/],
 way[highway][/^(name|alt_name)$/ =~ /(^|\s)(Callejon|Prolongacion|Orquidea|Orquideas|Cempasuchil|Tulipan|Villagran|Pina|Pinas|Platano|Platanos|Limon|Datiles|Arandono|Arandonos|Maracuya|Cipres|Alamo|Asiatica|Capulin|Aguila|Gorrion|Colibri|Halcon|Cacatua|Jupiter|Neon|Nitrogeno|Fosforo|Peru|Africa|Mexico|Brocoli|Panama|Espana|Juarez|Tecoman|Michoacan|Anis|Melon)(\s|$|;)/]{
   throwWarning: tr("Missing Accent, click ''fix''");
