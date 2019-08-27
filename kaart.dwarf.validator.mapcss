@@ -3,7 +3,7 @@ meta
   author: "Taylor Smock (vorpalblade77-kaart), Andrew Piechota(G_Fyyar), RD Clare(mr_et), Lucas Bingham(Traaker_L), Ryan Fleming(rytheking), Farris Billy(FarieBerrie)";
   description: "Validator tool for the Kaart Brazil Project";
   title: "Validation rules for Kaart Group--Dwarf Team";
-  version: "41_2019-08-14";
+  version: "10_2019-08-27";
 }
 /* Creates list of Current/Past Project Users */
 /* Taylor Smock. Edited by Andrew Piechota for BP */
@@ -627,8 +627,17 @@ way[highway][/((^(name))|(^.*_name))$/][alt_name][alt_name =~ /(\s|^|;)Cem(\s|$|
   group: tr(kaart_dwarf);
 }
 
+/* Check for duplicated words in names */
+/* Taylor Smock */
+way[highway][name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")],
+way[highway][name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")]
+way[highway][alt_name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("alt_name"), "(?i)")] {
+  throwWarning: tr("Possible duplicated words in {0}", "{0.key}");
+  group: tr(kaart_dwarf);
+  assertMatch: "way highway=residential name=\"Duplicate Duplicate\"";
+  assertNoMatch: "way highway=residential name=\"Nothing to see here\"";
+}
 
-/* TODO */
 /* ACCENTS GALORE */
 /* Andrew Piechota */
 way[highway][/^(name|alt_name)$/=~/(\s)(servid(a|ã)o|jos(e|é)|ant(o|ô)nio|pra(c|ç)a|gon(c|ç)alves|jo(a|ã)o|s(a|ã)o|tr(e|ê)s|tom(e|é)|lu(i|í)s|maranh(a|ã)o|capit(a|ã)o|gra(c|ç)a|marqu(e|ê)s|mar(c|ç)o|(a|à)gua|le(a|ã)o|galv(a|ã)o|esp(i|í)rito|assun(ca|çã|ça|cã)o|in(e|ê)s|lul(u|ú)|cristov(a|ã)o|j(u|ú)lio|c(e|é)sar|bel(e|é)m|nazar(e|é)|l(u|ú)cio|orqu(i|í)deas|ing(a|á)|macap(a|á)|caj(u|ú)|cupua(c|ç)u|l(a|á)zaro|sebasti(a|ã)o|concei(ca|çã|ça|cã)o|ipacara(i|í)|jerusal(e|é)m|m(a|á)rio|falc(a|ã)o|f(e|é)|pe(c|ç)anha|expedicion(a|á)rio|para(i|í)so|f(a|á)tima|d(e|é)cimo|d(e|é)cima|jer(o|ô)nimo|mendon(c|ç)a|(a|â)ngelo|cambar(a|á)|corn(e|é)lio|piau(i|í)|paran(a|á)|goi(a|á)s|(a|á)guias|gavi(a|ã)o|(a|á)reas|cl(a|á)udio|ot(a|á)vio|maranh(a|ã)es|feij(o|ó)|say(a|ã)o|cora(ca|ça|cã|çã)o)(\s|$|;)/],
@@ -1086,15 +1095,4 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "Coraçao", "Coração"),
   "Coracão", "Coração")
   );
-}
-
-/* Check for duplicated words in names */
-/* Taylor Smock */
-way[highway][name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")],
-way[highway][name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")]
-way[highway][alt_name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("alt_name"), "(?i)")] {
-  throwWarning: tr("Possible duplicated words in {0}", "{0.key}");
-  group: tr(kaart_dwarf);
-  assertMatch: "way highway=residential name=\"Duplicate Duplicate\"";
-  assertNoMatch: "way highway=residential name=\"Nothing to see here\"";
 }
