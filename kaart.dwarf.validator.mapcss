@@ -3,7 +3,7 @@ meta
   author: "Taylor Smock (vorpalblade77-kaart), Andrew Piechota(G_Fyyar), RD Clare(mr_et), Lucas Bingham(Traaker_L), Ryan Fleming(rytheking), Farris Billy(FarieBerrie)";
   description: "Validator tool for the Kaart Brazil Project";
   title: "Validation rules for Kaart Group--Dwarf Team";
-  version: "10_2019-08-27";
+  version: "11_2019-08-27";
 }
 /* Creates list of Current/Past Project Users */
 /* Taylor Smock. Edited by Andrew Piechota for BP */
