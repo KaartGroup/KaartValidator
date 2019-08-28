@@ -15,6 +15,7 @@
 		"destination",
 		"oneway",
 		"refs",
+		"connectivity",
 		"experimental"
 	]
 }
