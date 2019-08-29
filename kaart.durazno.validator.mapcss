@@ -3,7 +3,7 @@ meta
   title: "Validation rules for Kaart Group--Dwarf Team";
   description: "Validation tool for the Kaart Mexico Project";
   author: "Rd Clare(mr_et) Taylor Smock(vorpalblade77-kaart) Farris Billy(FarieBerrie)";
-  version: "5_2019-08-20";
+  version: "6_2019-08-29";
 }
 /* Creates list of current/past Project Users  */
 *[JOSM_search(“user:LSkalayo or user:Soccersweeper or user:ArleneC or user:3agleOne or user:\“Unicorn Ostrich\” or user:Goose6thAB or user:\“Chilly Chinchillas\” or user:Cinderblock or user:Dalekokarta or user:BlueRanger or user:MTG5093 or user:MappnMatt or user:MMantlo or user:rallynukab or user:jedimasterflint or user:RobinNoodles or user:Mel_1 or user:Sherbare or user:Smoothdog or user:ImjusBuddy or user:DreadPirateRoberts or user:EthanK or user:Yagni”)]{

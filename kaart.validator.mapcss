@@ -4,7 +4,7 @@ meta
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
   min-josm-version: "8087";
-  version: "20_2019-08-28";
+  version: "22_2019-08-29";
 }
 /****************
  ** Kaart Users *
@@ -1018,6 +1018,7 @@ way[/(motorcycle|moped|mofa|motor_vehicle|vehicle):(forward|backward)/] {
  * Connectivity relation checks *
  ********************************/
 relation[type=connectivity][/connectivity/!~/^([0-9]:([0-9],?)[|$]?)+/] {
+  group: tr("kaart");
   throwError: tr("{0} should not have multiple from lanes in the same statement or is otherwise malformed", "{0.key}");
   assertMatch: "relation type=connectivity connectivity=\"1,2:3|2:4\"";
   assertNoMatch: "relation type=connectivity connectivity=\"1:3|2:4\"";
@@ -1026,13 +1027,15 @@ relation[type=connectivity][/connectivity/!~/^([0-9]:([0-9],?)[|$]?)+/] {
 }
 
 relation[type=connectivity][connectivity][regexp_test("^(([0-9]):\\2(\\|?))+$", tag("connectivity"), "(?i)")] {
+  group: tr("kaart");
   throwError: tr("{0} is redundant and unnecessary, since it is a simple case", "{0.key}");
   assertMatch: "relation type=connectivity connectivity=\"1:1|2:2|3:3\"";
   assertNoMatch: "relation type=connectivity connectivity=\"1:1|2:2|3:2\"";
 }
 
 relation[type=connectivity][count_roles("via") < 1 || count_roles("from") != 1 || count_roles("to") != 1] {
-  throwError: tr("SOmething");
+  group: tr("kaart");
+  throwError: tr(“Check number of ‘from’, ‘via’, and ‘to’ members.”);
 }
 
 /** TODO list
