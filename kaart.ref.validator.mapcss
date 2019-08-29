@@ -4,7 +4,7 @@ meta
   description: "Check for road ref inconsistencies";
   author: "Taylor Smock";
   min-josm-version: "15282";
-  version: "4_2019-08-16";
+  version: "6_2019-08-28";
 }
 @supports (min-josm-version: 15323) {
   /* Check for ways that don't have the parent relation ref */
