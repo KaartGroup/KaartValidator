@@ -16,6 +16,8 @@
 		"oneway",
 		"refs",
 		"connectivity",
+		"invalid_tags",
+		"access",
 		"experimental"
 	]
 }

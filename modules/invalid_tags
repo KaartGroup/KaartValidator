@@ -1,0 +1,11 @@
+/****************
+ * Invalid Tags *
+ ****************/
+*[/.*/=~/^(?i)(null|.*Object object.*|.*\{.*\}.*|\*)$/] {
+  group: tr("kaart");
+  throwError: tr("Probable Invalid Tags - {0}", "{0.tag}");
+  /*fixRemoveKey:*/
+  assertMatch: "way name=null";
+  assertMatch: "way name=\"Object object\"";
+  assertMatch: "way name=\"object object\"";
+}

@@ -1,0 +1,11 @@
+/******************
+ * Access Tagging *
+ ******************/
+*[/^(.*access.*|(bus|psv|motorcar|motor_vehicle|mofa|motorcycle|pedestrian):lanes.*)$/][/^(.*access.*|(bus|psv|motorcar|motor_vehicle|mofa|motorcycle|pedestrian):lanes.*)$/!~/^((yes|no|private|permissive|destination|delivery|customers|designated|use_sidepath|dismount|agricultural|forestry|discouraged|unknown)?([|])?)*$/] {
+  group: tr("kaart-experimental");
+  throwWarning: tr("Probable bad access tag (check spelling)");
+  assertNoMatch: "way \"bus:lanes:forward=designated|\"";
+  assertMatch: "way \"bus:lanes:forward=desginated|\"";
+  assertMatch: "way \"access=desginated\"";
+  assertNoMatch: "node highway=crossing";
+}

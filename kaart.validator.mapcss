@@ -4,7 +4,7 @@ meta
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
   min-josm-version: "8087";
-  version: "22_2019-08-29";
+  version: "23_2019-09-03";
 }
 /****************
  ** Kaart Users *
@@ -1043,6 +1043,30 @@ relation[type=connectivity][count_roles("via") < 1 || count_roles("from") != 1 |
  * 2) Ensure that the traffic can actually go into the lanes (check for hgv:lanes=no|yes|no and hgv:lanes=no|no|yes with connectivity=1:1|2:2|3:3)
  * 3) Get splitting ways for this relation in JOSM working properly (src/org/openstreetmap/josm/command/SplitWayCommand.java +313)
  */
+
+/****************
+ * Invalid Tags *
+ ****************/
+*[/.*/=~/^(?i)(null|.*Object object.*|.*\{.*\}.*|\*)$/] {
+  group: tr("kaart");
+  throwError: tr("Probable Invalid Tags - {0}", "{0.tag}");
+  /*fixRemoveKey:*/
+  assertMatch: "way name=null";
+  assertMatch: "way name=\"Object object\"";
+  assertMatch: "way name=\"object object\"";
+}
+
+/******************
+ * Access Tagging *
+ ******************/
+*[/^(.*access.*|(bus|psv|motorcar|motor_vehicle|mofa|motorcycle|pedestrian):lanes.*)$/][/^(.*access.*|(bus|psv|motorcar|motor_vehicle|mofa|motorcycle|pedestrian):lanes.*)$/!~/^((yes|no|private|permissive|destination|delivery|customers|designated|use_sidepath|dismount|agricultural|forestry|discouraged|unknown)?([|])?)*$/] {
+  group: tr("kaart-experimental");
+  throwWarning: tr("Probable bad access tag (check spelling)");
+  assertNoMatch: "way \"bus:lanes:forward=designated|\"";
+  assertMatch: "way \"bus:lanes:forward=desginated|\"";
+  assertMatch: "way \"access=desginated\"";
+  assertNoMatch: "node highway=crossing";
+}
 
 /* Check for missing arabic characters */
 *[name][name:ar][name!=*"name:ar"][name=~/شارع/][name:ar!~/شارع/][inside("JO")],
