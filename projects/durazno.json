@@ -5,7 +5,6 @@
       "author" : "Rd Clare(mr_et) Taylor Smock(vorpalblade77-kaart) Farris Billy(FarieBerrie)"
    },
    "modules" : [
-      "durazno",
-      "spanish"
+      "durazno"
    ]
 }
