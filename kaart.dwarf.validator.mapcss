@@ -136,6 +136,7 @@ way[highway][/^(name|alt_name)$/=~/SD/],
 way[highway][/^(name|alt_name)$/=~/(?i)(?u)((sem (denomina(ç|c)(ã|a)o|nome|sa(i|í)da))|desconhecido|n(ã|a)o conhecido)/] {
   throwWarning: tr("Sem Nome (no name) in the name/alt_name");
   group: tr(kaart_dwarf);
+  fixRemove: "name";
   assertMatch: "way name=\"sem nome testing\"";
   assertMatch: "way name=\"SD\"";
   assertMatch: "way name=\"Sem D\"";
