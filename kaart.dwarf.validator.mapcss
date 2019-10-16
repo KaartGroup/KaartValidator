@@ -20,10 +20,11 @@ way[highway][note][note !~ /(?i)(Check)(.*)(Classification)/] {
 }
 
 /* Flags notes that say Check Classification */
-/* RD Clare, Lucas Bingham */
+/* RD Clare, Lucas Bingham, Farris Billy */
 way[highway !~ /^.*_link$/][note][note =~ /(?i)(Check)(.*)(Classification)/] {
   throwWarning: tr("Check Classification");
   group: tr(kaart_dwarf);
+  fixRemove: "note";
 }
 
 /* Checks for erroneous accents */
