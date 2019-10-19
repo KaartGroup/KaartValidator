@@ -20,7 +20,7 @@ way[highway][name =~ /(^(?i)(Calle|Cerrada|Privada|Callejón|Prolongación|Aveni
 
 /* abbreviation check */
 /* Farris Billy */
-way[highway][/^(name|alt_name)$/ =~ /(?i)(^|.* )(And|Arq|Av|Ave|Blvd|Blvrd|Blv|Blv|C|Calz|Cda|Cjon|Diag|Dr|Edo|Gral|Ing|Lic|Mz|Nte|Occ|Ote|Pre|Priv|Prof|Prol|Pte|Ret|Tte)\.? .*/]{
+way[highway][/^(name|alt_name)$/ =~ /(?i)(^|.* )(And|Arq|Av|Ave|Blvd|Blvrd|Blv|Blv|C|Calz|Cd|Cda|Cjon|Comp|Cto|Diag|Dr|Edo|Esq|Gral|Hda|Ing|Lic|Lit|Mz|Nte|Occ|Ote|Pbro|Pdte|Pre|Priv|Profa|Prof|Prol|Pte|Ret|Sn|Sta|Tte)\.? .*/]{
   group: tr(kaart_durazno);
   throwWarning: tr("Abbreviation in Name/Alt_name");
 }
