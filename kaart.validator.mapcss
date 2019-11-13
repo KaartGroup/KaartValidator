@@ -54,6 +54,12 @@ way[oneway=-1] {
     throwWarning: tr("Missing lanes on road");
   }
 
+  /* Check for bad lanes */
+  way[highway][lanes=0] {
+    group: tr("kaart");
+    throwError: tr("Bad tag: {0}", "{1.tag}");
+  }
+
   /* Check implied motorway tags */
   way[highway=~/^(motorway|motorway_link)$/][!oneway][!junction=roundabout][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
@@ -111,7 +117,8 @@ way[!/^(.*:)*(highway|railway)$/][/^(surface)$/][!/^amenity|leisure|aeroway|natu
   assertNoMatch: "way disused:highway=residential surface=asphalt";
 }
 
-node[/^.*(lanes|turn|surface).*$/],
+node[/^.*(lanes|turn).*$/],
+node[/^.*(surface)/][!/^(traffic_calming)$/],
 node[/^.*(maxspeed|maxweight|maxheight|maxwidth).*$/][!/^(traffic_sign|parking|barrier|traffic_calming)$/][!highway=speed_camera] {
   group: tr("kaart");
   throwError: tr("Nodes typically don''t have {0}", "{0.key}");
@@ -306,7 +313,7 @@ way[highway][highway=~/^(pedestrian|footway)$/] > node { set .in_pedestrian_high
 way[railway][railway=tram][inside("AL,BA,BG,MK,HR,GR,IT,RO,RS,SI,TR")] > node { set .in_balkans }
 
 @supports (min-josm-version: 14802) {
-  node[railway!=level_crossing][gpx_distance() < 30 || gpx_distance() >= 50000000].in_railway.in_highway!.in_railway_highway!.in_balkans {
+  node[railway!=level_crossing][railway!=crossing][gpx_distance() < 30 || gpx_distance() >= 50000000].in_railway.in_highway!.in_railway_highway!.in_balkans {
     group: tr("kaart");
     throwWarning: tr("There should be a crossing of some type here");
     suggestAlternative: "railway=level_crossing"
@@ -658,7 +665,7 @@ relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associa
 }
 
 /* Recommend removing associatedStreet relations when the houses have the addr:street tag */
-relation[type=associatedStreet][name] >[role=street] *[highway][!name],
+relation[type=associatedStreet][name] >[role=street] *[highway][!junction][!name],
 relation[type=associatedStreet][name] >[role=house] *[building][!addr:street] {
   group: tr("kaart");
   throwError: tr("{0} has no name and the {1} relation does have a name", "{0.key}", "associatedStreet");

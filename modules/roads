@@ -295,7 +295,7 @@ way[highway][highway=~/^(pedestrian|footway)$/] > node { set .in_pedestrian_high
 way[railway][railway=tram][inside("AL,BA,BG,MK,HR,GR,IT,RO,RS,SI,TR")] > node { set .in_balkans }
 
 @supports (min-josm-version: 14802) {
-  node[railway!=level_crossing][gpx_distance() < 30 || gpx_distance() >= 50000000].in_railway.in_highway!.in_railway_highway!.in_balkans {
+  node[railway!=level_crossing][railway!=crossing][gpx_distance() < 30 || gpx_distance() >= 50000000].in_railway.in_highway!.in_railway_highway!.in_balkans {
     group: tr("kaart");
     throwWarning: tr("There should be a crossing of some type here");
     suggestAlternative: "railway=level_crossing"
