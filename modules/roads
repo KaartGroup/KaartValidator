@@ -36,6 +36,12 @@ way[oneway=-1] {
     throwWarning: tr("Missing lanes on road");
   }
 
+  /* Check for bad lanes */
+  way[highway][lanes=0] {
+    group: tr("kaart");
+    throwError: tr("Bad tag: {0}", "{1.tag}");
+  }
+
   /* Check implied motorway tags */
   way[highway=~/^(motorway|motorway_link)$/][!oneway][!junction=roundabout][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
@@ -93,7 +99,8 @@ way[!/^(.*:)*(highway|railway)$/][/^(surface)$/][!/^amenity|leisure|aeroway|natu
   assertNoMatch: "way disused:highway=residential surface=asphalt";
 }
 
-node[/^.*(lanes|turn|surface).*$/],
+node[/^.*(lanes|turn).*$/],
+node[/^.*(surface)/][!/^(traffic_calming)$/],
 node[/^.*(maxspeed|maxweight|maxheight|maxwidth).*$/][!/^(traffic_sign|parking|barrier|traffic_calming)$/][!highway=speed_camera] {
   group: tr("kaart");
   throwError: tr("Nodes typically don''t have {0}", "{0.key}");
