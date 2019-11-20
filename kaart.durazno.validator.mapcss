@@ -41,6 +41,14 @@ way[highway][highway=~/^.*_link$/][!oneway]{
   fixAdd: "oneway=yes";
 }
 
+/* Checks oneway tag for yes or no */
+/* RD Clare */
+way[highway][oneway][oneway !~ /^(yes|no|(-1))$/]{
+  throwError: tr("oneway should be yes or no");
+  group: tr(kaart_durazno);
+
+}
+
 /* Checks for commas in name/alt_name */
 /* Andrew Piechota */
 way[highway][/^(name|alt_name)$/ =~ /,/] {
