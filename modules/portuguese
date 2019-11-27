@@ -1,7 +1,7 @@
 /* ACCENTS GALORE */
 /* Andrew Piechota */
-way[highway][/^(name|alt_name)$/=~/(\s)(servid(a|ã)o|jos(e|é)|ant(o|ô)nio|pra(c|ç)a|gon(c|ç)alves|jo(a|ã)o|s(a|ã)o|tr(e|ê)s|tom(e|é)|lu(i|í)s|maranh(a|ã)o|capit(a|ã)o|gra(c|ç)a|marqu(e|ê)s|mar(c|ç)o|(a|à)gua|le(a|ã)o|galv(a|ã)o|esp(i|í)rito|assun(ca|çã|ça|cã)o|in(e|ê)s|lul(u|ú)|cristov(a|ã)o|j(u|ú)lio|c(e|é)sar|bel(e|é)m|nazar(e|é)|l(u|ú)cio|orqu(i|í)deas|ing(a|á)|macap(a|á)|caj(u|ú)|cupua(c|ç)u|l(a|á)zaro|sebasti(a|ã)o|concei(ca|çã|ça|cã)o|ipacara(i|í)|jerusal(e|é)m|m(a|á)rio|falc(a|ã)o|f(e|é)|pe(c|ç)anha|expedicion(a|á)rio|para(i|í)so|f(a|á)tima|d(e|é)cimo|d(e|é)cima|jer(o|ô)nimo|mendon(c|ç)a|(a|â)ngelo|cambar(a|á)|corn(e|é)lio|piau(i|í)|paran(a|á)|goi(a|á)s|(a|á)guias|gavi(a|ã)o|(a|á)reas|cl(a|á)udio|ot(a|á)vio|maranh(a|ã)es|feij(o|ó)|say(a|ã)o|cora(ca|ça|cã|çã)o)(\s|$|;)/],
-way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|Joao|Sao|Tres|Tome|Luis|Maranhao|Capitao|Graca|Marques|Marco|Agua|Leao|Galvao|Espirito|Assun(ca|ça|cã)o|Ines|Lulu|Cristovao|Julio|Cesar|Belem|Nazare|Lucio|Orquideas|Inga|Macapa|Caju|Cupuacu|Lazaro|Sebastiao|Concei(ca|ça|cã)o|Ipacarai|Jerusalem|Mario|Falcao|Fe|Pecanha|Expedicionario|Paraiso|Fatima|Decimo|Decima|Jeronimo|Mendonca|Angelo|Cambara|Cornelio|Piaui|Parana|Goias|Aguias|Gaviao|Areas|Claudio|Otavio|Maranhaes|Feijo|Sayao|Cora(ca|ça|cã)o)(\s|$|;)/] {
+way[highway][/^(name|alt_name)$/=~/(\s)(servid(a|ã)o|jos(e|é)|ant(o|ô)nio|pra(c|ç)a|gon(c|ç)alves|jo(a|ã)o|s(a|ã)o|tr(e|ê)s|tom(e|é)|lu(i|í)s|maranh(a|ã)o|capit(a|ã)o|gra(c|ç)a|mar(c|ç)o|(a|à)gua|le(a|ã)o|galv(a|ã)o|esp(i|í)rito|assun(ca|çã|ça|cã)o|in(e|ê)s|lul(u|ú)|cristov(a|ã)o|j(u|ú)lio|c(e|é)sar|bel(e|é)m|nazar(e|é)|l(u|ú)cio|orqu(i|í)deas|ing(a|á)|macap(a|á)|caj(u|ú)|cupua(c|ç)u|l(a|á)zaro|sebasti(a|ã)o|concei(ca|çã|ça|cã)o|ipacara(i|í)|jerusal(e|é)m|m(a|á)rio|falc(a|ã)o|f(e|é)|pe(c|ç)anha|expedicion(a|á)rio|para(i|í)so|f(a|á)tima|d(e|é)cimo|d(e|é)cima|jer(o|ô)nimo|mendon(c|ç)a|(a|â)ngelo|cambar(a|á)|corn(e|é)lio|piau(i|í)|paran(a|á)|goi(a|á)s|(a|á)guias|gavi(a|ã)o|(a|á)reas|cl(a|á)udio|ot(a|á)vio|maranh(a|ã)es|feij(o|ó)|say(a|ã)o|cora(ca|ça|cã|çã)o)(\s|$|;)/],
+way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|Joao|Sao|Tres|Tome|Luis|Maranhao|Capitao|Graca|Marco|Agua|Leao|Galvao|Espirito|Assun(ca|ça|cã)o|Ines|Lulu|Cristovao|Julio|Cesar|Belem|Nazare|Lucio|Orquideas|Inga|Macapa|Caju|Cupuacu|Lazaro|Sebastiao|Concei(ca|ça|cã)o|Ipacarai|Jerusalem|Mario|Falcao|Fe|Pecanha|Expedicionario|Paraiso|Fatima|Decimo|Decima|Jeronimo|Mendonca|Angelo|Cambara|Cornelio|Piaui|Parana|Goias|Aguias|Gaviao|Areas|Claudio|Otavio|Maranhaes|Feijo|Sayao|Cora(ca|ça|cã)o)(\s|$|;)/] {
   throwWarning: tr("Accent, click ''fix''");
   group: tr(kaart_dwarf);
   fixAdd: concat("name=",
@@ -24,8 +24,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(
   tag("name"),
   "decima", "Décima"),
   "décima", "Décima"),
@@ -69,9 +68,6 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "graca", "Graça"),
   "graça", "Graça"),
   "Graca", "Graça"),
-  "marques", "Marquês"),
-  "marquês", "Marquês"),
-  "Marques", "Marquês"),
   "marco", "Março"),
   "março", "Março"),
   "Marco", "Março"),
@@ -250,8 +246,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-  replace(
+  replace(replace(replace(replace(replace(replace(replace(replace(
   tag("alt_name"),
   "decima", "Décima"),
   "décima", "Décima"),
@@ -295,9 +290,6 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|
   "graca", "Graça"),
   "graça", "Graça"),
   "Graca", "Graça"),
-  "marques", "Marquês"),
-  "marquês", "Marquês"),
-  "Marques", "Marquês"),
   "marco", "Março"),
   "março", "Março"),
   "Marco", "Março"),
