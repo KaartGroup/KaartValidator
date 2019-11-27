@@ -41,9 +41,9 @@ way[highway][name = *alt_name] {
   fixRemove: "alt_name";
 }
 
-/* Check for dos|das|do|da|e|de|ou|que|o|eu|tu|em|ele|ela|nos|elas|eles capitalization */
+/* Check for dos|das|do|da|e|de|ou|que|o|eu|tu|em|ele|ela|nos|elas|eles|para|sobre capitalization */
 /* Taylor Smock. Edited by RD Clare and Andrew Piechota for BP */
-way[highway][name][/^(name|alt_name)$/ =~ /^.* (D(o|a)s|D(o|a)|E|Em|De|Ou|Que|O|Eu|Tu|El(e|a)|El(a|e)s|Nos) .*$/][inside("BR")] {
+way[highway][name][/^(name|alt_name)$/ =~ /^.* (D(o|a)s|D(o|a)|E|Em|De|Ou|Que|O|Eu|Tu|El(e|a)|El(a|e)s|Nos|Para|Sobre) .*$/][inside("BR")] {
   throwWarning: tr("Check for capitalization issues");
   group: tr(kaart_dwarf);
 }
