@@ -34,7 +34,7 @@ way[highway][name = *alt_name] {
   fixRemove: "alt_name";
 }
 
-/* Check for dos|das|do|da|e|de|ou|que|o|eu|tu|em|ele|ela|nos|elas|eles capitalization */
+/* Check for dos|das|do|da|e|de|ou|que|o|eu|tu|em|ele|ela|nos|elas|eles|para|sobre capitalization */
 /* Taylor Smock. Edited by RD Clare and Andrew Piechota for BP */
 way[highway][name][/^(name|alt_name)$/ =~ /^.* (D(o|a)s|D(o|a)|E|Em|De|Ou|Que|O|Eu|Tu|El(e|a)|El(a|e)s|Nos|Para|Sobre) .*$/][inside("BR")] {
   throwWarning: tr("Check for capitalization issues");
@@ -174,13 +174,13 @@ way[highway][name][alt_name][name =~ /(^|\s)VI(\s|$)/][alt_name !~ /(^|\s|;)(Sex
 way[highway][name][alt_name][name =~ /(^|\s)VII(\s|$)/][alt_name !~ /(^|\s|;)(Setim(o|a|os|as))(\s|$|;)/],
 way[highway][name][alt_name][name =~ /(^|\s)VIII(\s|$)/][alt_name !~ /(^|\s|;)(Oitav(o|a|os|as))(\s|$|;)/],
 way[highway][name][alt_name][name =~ /(^|\s)IX(\s|$)/][alt_name !~ /(^|\s|;)(Non(o|a|os|as))(\s|$|;)/],
-way[highway][name][alt_name][name =~ /(^|\s)X(\s|$)/][alt_name !~ /(^|\s|;)(Decim(o|a|os|as))(\s|$|;)/]{
+way[highway][name][alt_name][name =~ /(^|\s)X(\s|$)/][alt_name !~ /(^|\s|;)(Décim(o|a|os|as))(\s|$|;)/]{
     throwWarning: tr("Roman Numeral in name");
     group: tr(kaart_dwarf);
 }
 /* First of month check, will add second when confirmed that it is the same */
 /* RD Clare */
-way[highway][name][name =~ /(^|\s)(Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro)($|\s)/][name =~ /(^|\s)Primeiro($|\s)/][alt_name !~ /(^|\s)(1º)($|\s)/]{
+way[highway][name][name =~ /(^|\s)(Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro)($|\s)/][name =~ /(^|\s)Primeiro($|\s)/][alt_name !~ /(^|\s)(1o)($|\s)/]{
   throwWarning: tr("1st of a Month");
   group: tr(kaart_dwarf);
 }
