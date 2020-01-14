@@ -18,6 +18,13 @@ way[highway][/^(name|alt_name)$/ =~ /(?i)(^|.* )(And|Arq|Av|Ave|Blvd|Blvrd|Blv|B
   throwWarning: tr("Abbreviation in Name/Alt_name");
 }
 
+/* incorrect copy and paste Check? */
+/* RD Clare */
+way[highway][/^(?i)(Ampliación|Andador|Avenida|Boulevard|Calle|Callejón|Calzada|Camino|Carretera|Cerrada|Circuito|Entrada|Entronque|Escalinata|Peotonal|Privada|Prolongación|Retorno)$/]{
+  group: tr(kaart_durazno);
+  throwWarning: tr("Incorrect tag");
+}
+
 /* Checks if name and alt_name are equivalent  */
 /* Andrew Piechota */
 way[highway][name = *alt_name] {
