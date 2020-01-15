@@ -10,3 +10,10 @@
   assertNoMatch: "node highway=crossing";
   assertNoMatch: "node internet_access=wlan";
 }
+
+/* Toll booths, entrances, and lift_gates default to access=yes */
+way[highway] > node[barrier][barrier !~ /^(toll_booth|entrance|lift_gate)$/] {
+  group: tr("kaart");
+  throwWarning: tr("Most barriers should have an access tag");
+  suggestAlternative: "access";
+}
