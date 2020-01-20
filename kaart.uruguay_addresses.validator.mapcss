@@ -1,0 +1,21 @@
+meta
+{
+  title: "Validation rules for Uruguay address import";
+  description: "Various checks that are useful for the Uruguay Address import";
+  author: "Taylor Smock";
+  min-josm-version: "8087";
+  version: "1_2020-01-20";
+}
+
+/****************
+ * Import Users *
+ ****************/
+*[addr:housenumber =~/^Km ([0-9.]+).*:(.*)$/][regexp_test("felipeedwards|JAAS|vorpalblade|kaartense|jptolosa87|vorpalblade-kaart", osm_user_name())][inside("UY")],
+*[addr:housenumber =~/^Km ([0-9.]+).*:(.*)$/][!regexp_test("felipeedwards|JAAS|vorpalblade|kaartense|jptolosa87|vorpalblade-kaart", osm_user_name())][inside("UY")]:selected {
+  throwError: tr("Address should use addr:milepost");
+  fixAdd: trim(concat("addr:milestone=", get(regexp_match("^Km ([0-9.]+).*:(.*)$", tag("addr:housenumber"), "i"), 1)));
+  fixAdd: concat("addr:housenumber=", trim(get(regexp_match("^Km ([0-9.]+).*:(.*)$", tag("addr:housenumber"), "i"), 2)));
+}
+*[addr:housenumber =~/^Km ([0-9.]+).*:(.*)$/][!regexp_test("felipeedwards|JAAS|vorpalblade|kaartense|jptolosa87|vorpalblade-kaart", osm_user_name())][inside("UY")] {
+  throwError: tr("Address should use addr:milepost");
+}
