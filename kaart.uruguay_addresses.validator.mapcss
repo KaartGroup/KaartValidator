@@ -17,5 +17,5 @@ meta
   fixAdd: concat("addr:housenumber=", trim(get(regexp_match("^Km ([0-9.]+).*:(.*)$", tag("addr:housenumber"), "i"), 2)));
 }
 *[addr:housenumber =~/^Km ([0-9.]+).*:(.*)$/][!regexp_test("felipeedwards|JAAS|vorpalblade|kaartense|jptolosa87|vorpalblade-kaart", osm_user_name())][inside("UY")] {
-  throwError: tr("Address should use addr:milepost");
+  throwError: tr("Address should use addr:milestone");
 }
