@@ -11,6 +11,20 @@ way[highway][name =~ /(^(?i)(Calle|Cerrada|Privada|Callejón|Prolongación|Aveni
   group: tr(kaart_durazno);
 }
 
+/*Check for a name enclosed within a parenthesis*/
+/* Rd Clare, Farris Billy */
+way[highway][name =~ /(?i)\(\w.*\)/]{
+throwWarning: tr("Parenthesis around the name");
+group: tr(kaart_durazno);
+}
+
+/* Check for Y/O in the name, possibly indicating an alt_name is needed*/
+/* Farris Billy */
+way[highway][name =~ /\s(?i)y\Wo/]{
+throwWarning: tr("Check for possible alt_name");
+group: tr(kaart_durazno);
+}
+
 /* abbreviation check */
 /* Farris Billy */
 way[highway][/^(name|alt_name)$/ =~ /(?i)(^|.* )(And|Arq|Av|Ave|Blvd|Blvrd|Blv|Blv|C|Calz|Cd|Cda|Cjon|Comp|Cto|Diag|Dr|Edo|Esq|Gral|Hda|Ing|Lic|Lit|Mz|Nte|Occ|Ote|Pbro|Pdte|Pre|Priv|Profa|Prof|Prol|Pte|Ret|Sn|Sta|Tte)\.? .*/]{
