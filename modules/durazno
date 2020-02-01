@@ -1,5 +1,5 @@
 /* Creates list of current/past Project Users  */
-*[JOSM_search(“user:LSkalayo or user:Soccersweeper or user:ArleneC or user:3agleOne or user:\“Unicorn Ostrich\” or user:Goose6thAB or user:\“Chilly Chinchillas\” or user:Cinderblock or user:Dalekokarta or user:BlueRanger or user:MTG5093 or user:MappnMatt or user:MMantlo or user:rallynukab or user:jedimasterflint or user:RobinNoodles or user:Mel_1 or user:Sherbare or user:Smoothdog or user:ImjusBuddy or user:DreadPirateRoberts or user:EthanK or user:Yagni”)]{
+*[JOSM_search(“user:LSkalayo or user:Soccersweeper or user:ArleneC or user:3agleOne or user:\“Unicorn Ostrich\” or user:Goose6thAB or user:\“Chilly Chinchillas\” or user:Cinderblock or user:Dalekokarta or user:BlueRanger or user:MTG5093 or user:MappnMatt or user:MMantlo or user:rallynukab or user:jedimasterflint or user:RobinNoodles or user:Mel_1 or user:Sherbare or user:Smoothdog or user:ImjusBuddy or user:DreadPirateRoberts or user:EthanK or user:Yagni or user:G_Fyyar or user:mr_et or user:FarieBerrie or user:rileywhite97 or user:ikohl or user:spititout or user:nickmettauer or user:The_Intern or user:Meowshane or user:RouteRob or user:Kyleta8 or user:\"El Pescador\" or user:rytheking or user:Ajaie or user:BobGod or user:csjupiter1 or user:GhostEye or user:ArleneC or user:leedlelee or user:\"Leonardo DeMAPrio\" or user:logans127 or user:mapcraft or user:Plutocrats or user:chuck97! or user:Senzubeandealer or user:swells5 or user:notmee-uh or user:Traaker_L or user:yodacodyone1 or user:Dillon9 or user:jacob_kubeczko or user:LSkalayo or user:Traaker_L or user:MTG5093 or user:Zebulonium or user:staysavy")]{
   set .kaart_user
 }
 
@@ -7,21 +7,21 @@
 /* Double prefix check */
 /* Rd Clare */
 way[highway][name =~ /(^(?i)(Calle|Cerrada|Privada|Callejón|Prolongación|Avenida|Retorno|Calzada|Circuito|Bulevar|Andador|Boulevard|Camino|Carretera)\s)((?i)(Calle|Cerrada|Privada|Callejón|Prolongación|Avenida|Retorno|Calzada|Circuito|Bulevar|Andador|Boulevard|Camino|Carretera))/]{
-  throwWarning: tr("2 or more prefixes found");
+  throwError: tr("2 or more prefixes found");
   group: tr(kaart_durazno);
 }
 
 /*Check for a name enclosed within a parenthesis*/
 /* Rd Clare, Farris Billy */
 way[highway][name =~ /(?i)\(\w.*\)/]{
-throwWarning: tr("Parenthesis around the name");
+throwError: tr("Parenthesis around the name");
 group: tr(kaart_durazno);
 }
 
 /* Check for Y/O in the name, possibly indicating an alt_name is needed*/
 /* Farris Billy */
 way[highway][name =~ /\s(?i)y\Wo/]{
-throwWarning: tr("Check for possible alt_name");
+throwError: tr("Check for possible alt_name");
 group: tr(kaart_durazno);
 }
 
@@ -29,20 +29,20 @@ group: tr(kaart_durazno);
 /* Farris Billy */
 way[highway][/^(name|alt_name)$/ =~ /(?i)(^|.* )(And|Arq|Av|Ave|Blvd|Blvrd|Blv|Blv|C|Calz|Cd|Cda|Cjon|Comp|Cto|Diag|Dr|Edo|Esq|Gral|Hda|Ing|Lic|Lit|Mz|Nte|Occ|Ote|Pbro|Pdte|Pre|Priv|Profa|Prof|Prol|Pte|Ret|Sn|Sta|Tte)\.? .*/]{
   group: tr(kaart_durazno);
-  throwWarning: tr("Abbreviation in Name/Alt_name");
+  throwError: tr("Abbreviation in Name/Alt_name");
 }
 
 /* incorrect copy and paste Check? */
 /* RD Clare */
 way[highway][/^(?i)(Ampliación|Andador|Avenida|Boulevard|Calle|Callejón|Calzada|Camino|Carretera|Cerrada|Circuito|Entrada|Entronque|Escalinata|Peotonal|Privada|Prolongación|Retorno)$/]{
   group: tr(kaart_durazno);
-  throwWarning: tr("Incorrect tag");
+  throwError: tr("Incorrect tag");
 }
 
 /* Checks if name and alt_name are equivalent  */
 /* Andrew Piechota */
 way[highway][name = *alt_name] {
-  throwWarning: tr("Name and alt_name are equivalent");
+  throwError: tr("Name and alt_name are equivalent");
   group: tr(kaart_durazno);
   fixRemove: "alt_name";
 }
@@ -50,7 +50,7 @@ way[highway][name = *alt_name] {
 /* Checks if links have oneway tag */
 /* Taylor Smock */
 way[highway][highway=~/^.*_link$/][!oneway]{
-  throwWarning: tr("_links are usually oneway ");
+  throwError: tr("_links are usually oneway ");
   group: tr(kaart_durazno);
   fixAdd: "oneway=yes";
 }
@@ -89,7 +89,7 @@ way[highway =~ /^.*_link$/][junction = roundabout] {
 /* Taylor Smock, Andrew Piechota, RD Clare */
 way[highway=~/^.*_link$/][name],
 way[highway=~/^.*_link$/][noname] {
-  throwWarning: tr("Links shouldn''t have name/noname tags");
+  throwError: tr("Links shouldn''t have name/noname tags");
   group: tr(kaart_durazno);
   fixRemove: "noname";
 }
@@ -97,7 +97,7 @@ way[highway=~/^.*_link$/][noname] {
 /* Checks for noname tag. Will flag if Kaart user is last author and tag exists */
 /* RD Clare */
 way[highway][noname].kaart_user {
-  throwWarning: tr("Check noname tag added by Kaart user");
+  throwError: tr("Check noname tag added by Kaart user");
   group: tr(kaart_durazno);
   fixRemove: "noname";
 }
