@@ -6,7 +6,7 @@
 
 /* Double prefix check */
 /* Rd Clare */
-way[highway][name =~ /(^(?i)(Calle|Cerrada|Privada|Callejón|Prolongación|Avenida|Retorno|Calzada|Circuito|Bulevar|Andador|Boulevard|Camino|Carretera)\s)((?i)(Calle|Cerrada|Privada|Callejón|Prolongación|Avenida|Retorno|Calzada|Circuito|Bulevar|Andador|Boulevard|Camino|Carretera))/]{
+way[highway][name =~ /(^(?i)(Ampliación|Calle|Cerrada|Privada|Callejón|Prolongación|Avenida|Retorno|Calzada|Circuito|Bulevar|Andador|Boulevard|Camino|Carretera)\s)((?i)(Ampliación|Calle|Cerrada|Privada|Callejón|Prolongación|Avenida|Retorno|Calzada|Circuito|Bulevar|Andador|Boulevard|Camino|Carretera))/]{
   throwError: tr("2 or more prefixes found");
   group: tr(kaart_durazno);
 }
