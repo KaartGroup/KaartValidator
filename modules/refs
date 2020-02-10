@@ -7,7 +7,7 @@
   }
 
   /* Check for ways that have a ref that is not in a parent */
-  way[highway][ref][count(parent_tags("ref")) != 0 && !regexp_test(join_list(";", uniq_list(sort_list(split(";", join_list(";", tag_regex("^(ref|nat_ref|int_ref|reg_ref)$")))))), join_list(";", uniq_list(sort_list(parent_tags("ref")))), "i")]!.parent_ref_not_in_child_ref {
+  relation[type=route][route=road] > way[highway][ref][count(parent_tags("ref")) != 0 && !regexp_test(join_list(";", uniq_list(sort_list(split(";", join_list(";", tag_regex("^(ref|nat_ref|int_ref|reg_ref)$")))))), join_list(";", uniq_list(sort_list(parent_tags("ref")))), "i")]!.parent_ref_not_in_child_ref {
     group: tr("kaart-experimental");
     throwWarning: tr("A {0} on a way is not in a parent relation", "ref");
     set .ref_not_in_relation
