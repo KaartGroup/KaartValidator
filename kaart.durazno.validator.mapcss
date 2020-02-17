@@ -20,7 +20,7 @@ way[highway][name =~ /(^(?i)(Ampliación|Calle|Cerrada|Privada|Callejón|Prolong
 
 /*Check for a name enclosed within a parenthesis*/
 /* Rd Clare, Farris Billy */
-way[highway][name =~ /(?i)\(\w.*\)/]{
+way[highway][name =~ /\s(?i)(y\/o)/]{
 throwError: tr("Parenthesis around the name");
 group: tr(kaart_durazno);
 }
