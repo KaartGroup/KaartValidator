@@ -20,7 +20,7 @@ group: tr(kaart_durazno);
 
 /* Check for Y/O in the name, possibly indicating an alt_name is needed*/
 /* Farris Billy */
-way[highway][name =~ /\s(?i)y\Wo/]{
+way[highway][name =~ /\s(?i)(y\/o)/]{
 throwError: tr("Check for possible alt_name");
 group: tr(kaart_durazno);
 }
