@@ -115,3 +115,9 @@ way[highway][noname].kaart_user {
   group: tr(kaart_durazno);
   fixRemove: "noname";
 }
+
+/* Check for separators with a space */
+way[highway][/^(name|alt_name)$/=~/.*;[\\n\\f\\v ]+.*/]:modified {
+  group: tr("kaart_durazno");
+  throwError: tr("There exists a tag with {0} separators and whitespace after the separator", ";");
+}
