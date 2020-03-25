@@ -34,7 +34,7 @@ group: tr(kaart_durazno);
 
 /* Check for Y/O in the name, possibly indicating an alt_name is needed*/
 /* Farris Billy */
-way[highway][name =~ /\s(?i)(y\/o)/]{
+way[highway][name =~ /\s(?i)(y\/o)]{
 throwError: tr("Check for possible alt_name");
 group: tr(kaart_durazno);
 }
@@ -71,8 +71,8 @@ way[highway][highway=~/^.*_link$/][!oneway]{
 
 /* Checks oneway tag for yes or no */
 /* RD Clare */
-way[highway][oneway][oneway !~ /^(yes|no|(-1))$/]{
-  throwError: tr("oneway should be yes or no");
+way[highway][oneway][oneway !~ /^(yes|no|(-1)|alternating|reversible)$/]{
+  throwError: tr("oneway should be yes, no, alternating or reversible");
   group: tr(kaart_durazno);
 
 }

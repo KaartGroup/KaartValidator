@@ -78,8 +78,8 @@ way[highway][highway=~/^.*_link$/][!oneway]{
 
 /* Checks oneway tag for yes or no */
 /* RD Clare */
-way[highway][oneway][oneway !~ /^(yes|no|(-1))$/]{
-  throwError: tr("oneway should be yes or no");
+way[highway][oneway][oneway !~ /^(yes|no|(-1)|alternating|reversible)$/]{
+  throwError: tr("oneway should be yes, no, alternating or reversible");
   group: tr(kaart_durazno);
 
 }
