@@ -325,16 +325,14 @@ way[highway][inside("ID")][alt_name =~ /^[a-z]/] {
 /* Check for known abbreviations that are capitalized and are followed by a . and space */
 /* Derek Bevan */
 
-way[highway][inside("ID")][name =~ /(^|\s)(Abd|Blk|Brgjen|Btn|Dl|Dlm|Dr|Drs|Gg|Gn|Glr|Gp|H|Hi|Hj|Hos|Ir|Jend|Kam|Kapt|Kpt|Kec|Kel|Kol|Kp|Kr|Krg|Lap|Letjen|Letjend|Lr|Lrg|Mayjend|Mns|Moh|Muh|Moch|Mr|Perum|Pol|Prof|Purn|RT|Sltn|Sp|Stp|Tgk|Tj|Uj)(\.\s)/] {
+way[highway][inside("ID")][name =~ /(^|\s)(Abd|Blk|Brgjen|Dlm|Dr|Drs|Gg|Gn|Glr|Gp|H|Hi|Hj|Hos|Ir|Jend|Kam|Kapt|Kpt|Kec|Kel|Kol|Kp|Kr|Krg|Lap|Letjen|Letjend|Lr|Lrg|Mayjend|Mns|Moh|Muh|Moch|Perum|Pol|Prof|Purn|Sltn|Sp|Stp|Tgk|Tj|Uj)(\.\s)/] {
   group: "Kaart-Indonesia names";
   throwError: "(6) Known abbreviations in name";
 
-  fixAdd: concat("name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  fixAdd: concat("name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
 tag("name"), "Abd.", "Abdul"),
 "Blk.", "Blok"),
 "Brgjen.", "Brigadir Jenderal"),
-"Btn.", "BTN"),
-"Dl.", "Donald Isaac"),
 "Dlm.", "Dalam"),
 "Dr.", "Dokter"),
 "Drs.", "Doktorandus"),
@@ -367,12 +365,10 @@ tag("name"), "Abd.", "Abdul"),
 "Moh.", "Mohammad"),
 "Muh.", "Muhammad"),
 "Moch.", "Mochammad"),
-"Mr.", "Meester in de Rechten"),
 "Perum.", "Perumahan"),
 "Pol.", "Polisi"),
 "Prof.", "Profesor"),
 "Purn.", "Purnawirawan"),
-"RT.", "Rekun Tetangga"),
 "Sltn.", "Sultan"),
 "Sp.", "Simpang"),
 "Stp.", "Setapak"),
@@ -382,16 +378,14 @@ tag("name"), "Abd.", "Abdul"),
 );
 }
 
-way[highway][inside("ID")][alt_name =~ /(^|\s)(Abd|Blk|Brgjen|Btn|Dl|Dlm|Dr|Drs|Gg|Gn|Glr|Gp|H|Hi|Hj|Hos|Ir|Jend|Kam|Kapt|Kpt|Kec|Kel|Kol|Kp|Kr|Krg|Lap|Letjen|Letjend|Lr|Lrg|Mayjend|Mns|Moh|Muh|Moch|Mr|Perum|Pol|Prof|Purn|RT|Sltn|Sp|Stp|Tgk|Tj|Uj)(\.\s)/] {
+way[highway][inside("ID")][alt_name =~ /(^|\s)(Abd|Blk|Brgjen|Dlm|Dr|Drs|Gg|Gn|Glr|Gp|H|Hi|Hj|Hos|Ir|Jend|Kam|Kapt|Kpt|Kec|Kel|Kol|Kp|Kr|Krg|Lap|Letjen|Letjend|Lr|Lrg|Mayjend|Mns|Moh|Muh|Moch|Perum|Pol|Prof|Purn|Sltn|Sp|Stp|Tgk|Tj|Uj)(\.\s)/] {
   group: "Kaart-Indonesia names";
   throwError: "(6) Known abbreviations in alt_name";
 
-  fixAdd: concat("alt_name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  fixAdd: concat("alt_name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
 tag("alt_name"), "Abd.", "Abdul"),
 "Blk.", "Blok"),
 "Brgjen.", "Brigadir Jenderal"),
-"Btn.", "BTN"),
-"Dl.", "Donald Isaac"),
 "Dlm.", "Dalam"),
 "Dr.", "Dokter"),
 "Drs.", "Doktorandus"),
@@ -424,12 +418,10 @@ tag("alt_name"), "Abd.", "Abdul"),
 "Moh.", "Mohammad"),
 "Muh.", "Muhammad"),
 "Moch.", "Mochammad"),
-"Mr.", "Meester in de Rechten"),
 "Perum.", "Perumahan"),
 "Pol.", "Polisi"),
 "Prof.", "Profesor"),
 "Purn.", "Purnawirawan"),
-"RT.", "Rekun Tetangga"),
 "Sltn.", "Sultan"),
 "Sp.", "Simpang"),
 "Stp.", "Setapak"),
@@ -444,16 +436,14 @@ tag("alt_name"), "Abd.", "Abdul"),
 /* Check for known abbreviations that are capitalized and not followed by a . */
 /* Derek Bevan */
 
-way[highway][inside("ID")][name =~ /(\s|^)(Abd|Blk|Brgjen|Btn|Dl|Dlm|Dr|Drs|Gg|Gn|Glr|Gp|H|Hi|Hj|Hos|Ir|Jend|Kam|Kapt|Kpt|Kec|Kel|Kol|Kp|Kr|Krg|Lap|Letjen|Letjend|Lr|Lrg|Mayjend|Mns|Moh|Muh|Moch|Mr|Perum|Pol|Prof|Purn|RT|Sltn|Sp|Stp|Tgk|Tj|Uj)\s/] {
+way[highway][inside("ID")][name =~ /(\s|^)(Abd|Blk|Brgjen|Dlm|Dr|Drs|Gg|Gn|Glr|Gp|H|Hi|Hj|Hos|Ir|Jend|Kam|Kapt|Kpt|Kec|Kel|Kol|Kp|Kr|Krg|Lap|Letjen|Letjend|Lr|Lrg|Mayjend|Mns|Moh|Muh|Moch|Perum|Pol|Prof|Purn|Sltn|Sp|Stp|Tgk|Tj|Uj)\s/] {
   group: "Kaart-Indonesia names";
   throwError: "(6) Known abbreviations w/o . in name";
 
-  fixAdd: concat("name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  fixAdd: concat("name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
 tag("name"), "Abd ", "Abdul "),
 "Blk ", "Blok "),
 "Brgjen ", "Brigadir Jenderal "),
-"Btn ", "BTN "),
-"Dl ", "Donald Isaac "),
 "Dlm ", "Dalam "),
 "Dr ", "Dokter "),
 "Drs ", "Doktorandus "),
@@ -486,12 +476,10 @@ tag("name"), "Abd ", "Abdul "),
 "Moh ", "Mohammad "),
 "Muh ", "Muhammad "),
 "Moch ", "Mochammad "),
-"Mr ", "Meester in de Rechten "),
 "Perum ", "Perumahan "),
 "Pol ", "Polisi "),
 "Prof ", "Profesor "),
 "Purn ", "Purnawirawan "),
-"RT ", "Rekun Tetangga "),
 "Sltn ", "Sultan "),
 "Sp ", "Simpang "),
 "Stp ", "Setapak "),
@@ -501,16 +489,14 @@ tag("name"), "Abd ", "Abdul "),
 );
 }
 
-way[highway][inside("ID")][alt_name =~ /(\s|^)(Abd|Blk|Brgjen|Btn|Dl|Dlm|Dr|Drs|Gg|Gn|Glr|Gp|H|Hi|Hj|Hos|Ir|Jend|Kam|Kapt|Kpt|Kec|Kel|Kol|Kp|Kr|Krg|Lap|Letjen|Letjend|Lr|Lrg|Mayjend|Mns|Moh|Muh|Moch|Mr|Perum|Pol|Prof|Purn|RT|Sltn|Sp|Stp|Tgk|Tj|Uj)\s/] {
+way[highway][inside("ID")][alt_name =~ /(\s|^)(Abd|Blk|Brgjen|Dlm|Dr|Drs|Gg|Gn|Glr|Gp|H|Hi|Hj|Hos|Ir|Jend|Kam|Kapt|Kpt|Kec|Kel|Kol|Kp|Kr|Krg|Lap|Letjen|Letjend|Lr|Lrg|Mayjend|Mns|Moh|Muh|Moch|Perum|Pol|Prof|Purn|Sltn|Sp|Stp|Tgk|Tj|Uj)\s/] {
   group: "Kaart-Indonesia names";
   throwError: "(6) Known abbreviations w/o . in alt_name";
 
-  fixAdd: concat("alt_name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+  fixAdd: concat("alt_name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
 tag("alt_name"), "Abd ", "Abdul "),
 "Blk ", "Blok "),
 "Brgjen ", "Brigadir Jenderal "),
-"Btn ", "BTN "),
-"Dl ", "Donald Isaac "),
 "Dlm ", "Dalam "),
 "Dr ", "Dokter "),
 "Drs ", "Doktorandus "),
@@ -543,12 +529,10 @@ tag("alt_name"), "Abd ", "Abdul "),
 "Moh ", "Mohammad "),
 "Muh ", "Muhammad "),
 "Moch ", "Mochammad "),
-"Mr ", "Meester in de Rechten "),
 "Perum ", "Perumahan "),
 "Pol ", "Polisi "),
 "Prof ", "Profesor "),
 "Purn ", "Purnawirawan "),
-"RT ", "Rekun Tetangga "),
 "Sltn ", "Sultan "),
 "Sp ", "Simpang "),
 "Stp ", "Setapak "),
