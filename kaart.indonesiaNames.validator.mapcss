@@ -24,6 +24,9 @@ throwError: tr("Parenthesis around a name");
 }
 */
 
+
+
+
 /* Jalan abbreviation check and fix(separated by abbreviation length so fixing can be automated; case insensitive; name then alt_name below, 4 tests each) */
 /* Derek Bevan */
 
@@ -90,9 +93,9 @@ way[highway][inside("ID")][alt_name =~ /(?i)^jln\s\.\s\w*/] {
 /* Check for , or / or () or ; in names */
 /* Derek Bevan */
 
-way[highway][inside("ID")][name =~ /(?i),|\/|\(\w.*\)|;/] {
+way[highway][inside("ID")][name =~ /(?i),|"|\/|\(\w.*\)|;/] {
   group: "Kaart-Indonesia names";
-  throwError: "(1) Name contains , or / or () or ; -- may have an alt_name";
+  throwError: "(1) Name contains , or \" or / or () or ; -- may have an alt_name";
 }
 
 
