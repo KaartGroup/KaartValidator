@@ -24,9 +24,6 @@ throwError: tr("Parenthesis around a name");
 }
 */
 
-
-
-
 /* Jalan abbreviation check and fix(separated by abbreviation length so fixing can be automated; case insensitive; name then alt_name below, 4 tests each) */
 /* Derek Bevan */
 
@@ -175,7 +172,7 @@ way[highway][inside("ID")][alt_name =~ /\s\.\s/] {
 /* Check abbreviations of Jalan that aren't covered */
 /* Derek Bevan */
 
-way[highway][inside("ID")][/(name|alt_name)/ =~ /(?i)((jln|jl)|(gn|gg)|(lr|lrg))/] {
+way[highway][inside("ID")][/(name|alt_name)/ =~ /(?i)((jln|jl)|((\s|^)gn|(\s|^)gg)|(lr|lrg))/] {
   group: "Kaart-Indonesia names";
   throwError: "(3) Remaining abbreviations of \"Jalan\" \"Gang\" or \"Lorong\" in name or alt_name (manual fix)";
 }
