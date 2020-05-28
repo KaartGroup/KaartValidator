@@ -172,17 +172,6 @@ way[highway][inside("ID")][alt_name =~ /\s\.\s/] {
 
 
 
-/* Check abbreviations of Jalan that aren't covered */
-/* Derek Bevan */
-
-way[highway][inside("ID")][/(name|alt_name)/ =~ /(?i)((jln|jl)|((\s|^)gn|(\s|^)gg)|(lr|lrg))/] {
-  group: "Kaart-Indonesia names";
-  throwError: "(3) Remaining abbreviations of \"Jalan\" \"Gang\" or \"Lorong\" in name or alt_name (manual fix)";
-}
-
-
-
-
 /* Check multiple alt_name separation syntax */
 /* Derek Bevan */
 
@@ -330,51 +319,51 @@ way[highway][inside("ID")][name =~ /(^|\s)(Abd|Blk|Brgjen|Dlm|Dr|Drs|Gg|Gn|Glr|G
   throwError: "(6) Known abbreviations in name";
 
   fixAdd: concat("name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-tag("name"), "Abd.", "Abdul"),
-"Blk.", "Blok"),
-"Brgjen.", "Brigadir Jenderal"),
-"Dlm.", "Dalam"),
-"Dr.", "Dokter"),
-"Drs.", "Doktorandus"),
-"Gg.", "Gang"),
-"Gn.", "Gang"),
-"Glr.", "Gelar"),
-"Gp.", "Gampong"),
-"H.", "Haji"),
-"Hi.", "Haji"),
-"Hj.", "Haji"),
-"Hos.", "Haji Oemar Said"),
-"Ir.", "Insinyur"),
-"Jend.", "Jenderal"),
-"Kam.", "Kampong"),
-"Kapt.", "Kapten"),
-"Kpt.", "Kapten"),
-"Kec.", "Kecamatan"),
-"Kel.", "Kelurahan"),
-"Kol.", "Kolonel"),
-"Kp.", "Kampung"),
-"Kr.", "Karaeng"),
-"Krg.", "Karaeng"),
-"Lap.", "Lapangan"),
-"Letjen.", "Letnan Jenderal"),
-"Letjend.", "Letnan Jenderal"),
-"Lr.", "Lorong"),
-"Lrg.", "Lorong"),
-"Mayjend.", "Mayor Jenderal"),
-"Mns.", "Meunasah"),
-"Moh.", "Mohammad"),
-"Muh.", "Muhammad"),
-"Moch.", "Mochammad"),
-"Perum.", "Perumahan"),
-"Pol.", "Polisi"),
-"Prof.", "Profesor"),
-"Purn.", "Purnawirawan"),
-"Sltn.", "Sultan"),
-"Sp.", "Simpang"),
-"Stp.", "Setapak"),
-"Tgk.", "Teungku"),
-"Tj.", "Tanjung"),
-"Uj.", "Ujung")
+tag("name"), "Abd. ", "Abdul "),
+"Blk. ", "Blok "),
+"Brgjen. ", "Brigadir Jenderal "),
+"Dlm. ", "Dalam "),
+"Dr. ", "Dokter "),
+"Drs. ", "Doktorandus "),
+"Gg. ", "Gang "),
+"Gn. ", "Gang "),
+"Glr. ", "Gelar "),
+"Gp. ", "Gampong "),
+" H. ", " Haji "),
+"Hi. ", "Haji "),
+"Hj. ", "Haji "),
+"Hos. ", "Haji Oemar Said "),
+"Ir. ", "Insinyur "),
+"Jend. ", "Jenderal "),
+"Kam. ", "Kampong "),
+"Kapt. ", "Kapten "),
+"Kpt. ", "Kapten "),
+"Kec. ", "Kecamatan "),
+"Kel. ", "Kelurahan "),
+"Kol. ", "Kolonel "),
+"Kp. ", "Kampung "),
+"Kr. ", "Karaeng "),
+"Krg. ", "Karaeng "),
+"Lap. ", "Lapangan "),
+"Letjen. ", "Letnan Jenderal "),
+"Letjend. ", "Letnan Jenderal "),
+"Lr. ", "Lorong "),
+"Lrg. ", "Lorong "),
+"Mayjend. ", "Mayor Jenderal "),
+"Mns. ", "Meunasah "),
+"Moh. ", "Mohammad "),
+"Muh. ", "Muhammad "),
+"Moch. ", "Mochammad "),
+"Perum. ", "Perumahan "),
+"Pol. ", "Polisi "),
+"Prof. ", "Profesor "),
+"Purn. ", "Purnawirawan "),
+"Sltn. ", "Sultan "),
+"Sp. ", "Simpang "),
+"Stp. ", "Setapak "),
+"Tgk. ", "Teungku "),
+"Tj. ", "Tanjung "),
+"Uj. ", "Ujung ")
 );
 }
 
@@ -383,51 +372,51 @@ way[highway][inside("ID")][alt_name =~ /(^|\s)(Abd|Blk|Brgjen|Dlm|Dr|Drs|Gg|Gn|G
   throwError: "(6) Known abbreviations in alt_name";
 
   fixAdd: concat("alt_name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-tag("alt_name"), "Abd.", "Abdul"),
-"Blk.", "Blok"),
-"Brgjen.", "Brigadir Jenderal"),
-"Dlm.", "Dalam"),
-"Dr.", "Dokter"),
-"Drs.", "Doktorandus"),
-"Gg.", "Gang"),
-"Gn.", "Gang"),
-"Glr.", "Gelar"),
-"Gp.", "Gampong"),
-"H.", "Haji"),
-"Hi.", "Haji"),
-"Hj.", "Haji"),
-"Hos.", "Haji Oemar Said"),
-"Ir.", "Insinyur"),
-"Jend.", "Jenderal"),
-"Kam.", "Kampong"),
-"Kapt.", "Kapten"),
-"Kpt.", "Kapten"),
-"Kec.", "Kecamatan"),
-"Kel.", "Kelurahan"),
-"Kol.", "Kolonel"),
-"Kp.", "Kampung"),
-"Kr.", "Karaeng"),
-"Krg.", "Karaeng"),
-"Lap.", "Lapangan"),
-"Letjen.", "Letnan Jenderal"),
-"Letjend.", "Letnan Jenderal"),
-"Lr.", "Lorong"),
-"Lrg.", "Lorong"),
-"Mayjend.", "Mayor Jenderal"),
-"Mns.", "Meunasah"),
-"Moh.", "Mohammad"),
-"Muh.", "Muhammad"),
-"Moch.", "Mochammad"),
-"Perum.", "Perumahan"),
-"Pol.", "Polisi"),
-"Prof.", "Profesor"),
-"Purn.", "Purnawirawan"),
-"Sltn.", "Sultan"),
-"Sp.", "Simpang"),
-"Stp.", "Setapak"),
-"Tgk.", "Teungku"),
-"Tj.", "Tanjung"),
-"Uj.", "Ujung")
+tag("alt_name"), "Abd. ", "Abdul "),
+"Blk. ", "Blok "),
+"Brgjen. ", "Brigadir Jenderal "),
+"Dlm. ", "Dalam "),
+"Dr. ", "Dokter "),
+"Drs. ", "Doktorandus "),
+"Gg. ", "Gang "),
+"Gn. ", "Gang "),
+"Glr. ", "Gelar "),
+"Gp. ", "Gampong "),
+" H. ", " Haji "),
+"Hi. ", "Haji "),
+"Hj. ", "Haji "),
+"Hos. ", "Haji Oemar Said "),
+"Ir. ", "Insinyur "),
+"Jend. ", "Jenderal "),
+"Kam. ", "Kampong "),
+"Kapt. ", "Kapten "),
+"Kpt. ", "Kapten "),
+"Kec. ", "Kecamatan "),
+"Kel. ", "Kelurahan "),
+"Kol. ", "Kolonel "),
+"Kp. ", "Kampung "),
+"Kr. ", "Karaeng "),
+"Krg. ", "Karaeng "),
+"Lap. ", "Lapangan "),
+"Letjen. ", "Letnan Jenderal "),
+"Letjend. ", "Letnan Jenderal "),
+"Lr. ", "Lorong "),
+"Lrg. ", "Lorong "),
+"Mayjend. ", "Mayor Jenderal "),
+"Mns. ", "Meunasah "),
+"Moh. ", "Mohammad "),
+"Muh. ", "Muhammad "),
+"Moch. ", "Mochammad "),
+"Perum. ", "Perumahan "),
+"Pol. ", "Polisi "),
+"Prof. ", "Profesor "),
+"Purn. ", "Purnawirawan "),
+"Sltn. ", "Sultan "),
+"Sp. ", "Simpang "),
+"Stp. ", "Setapak "),
+"Tgk. ", "Teungku "),
+"Tj. ", "Tanjung "),
+"Uj. ", "Ujung ")
 );
 }
 
@@ -451,7 +440,7 @@ tag("name"), "Abd ", "Abdul "),
 "Gn ", "Gang "),
 "Glr ", "Gelar "),
 "Gp ", "Gampong "),
-"H ", "Haji "),
+" H ", " Haji "),
 "Hi ", "Haji "),
 "Hj ", "Haji "),
 "Hos ", "Haji Oemar Said "),
@@ -504,7 +493,7 @@ tag("alt_name"), "Abd ", "Abdul "),
 "Gn ", "Gang "),
 "Glr ", "Gelar "),
 "Gp ", "Gampong "),
-"H ", "Haji "),
+" H ", " Haji "),
 "Hi ", "Haji "),
 "Hj ", "Haji "),
 "Hos ", "Haji Oemar Said "),
@@ -545,12 +534,23 @@ tag("alt_name"), "Abd ", "Abdul "),
 
 
 
+/* Check abbreviations of Jalan that aren't covered */
+/* Derek Bevan */
+
+way[highway][inside("ID")][/(name|alt_name)/ =~ /(?i)((jln|jl)|((\s|^)gn|(\s|^)gg)|(lr|lrg))/] {
+  group: "Kaart-Indonesia names";
+  throwError: "(7) Remaining abbreviations of \"Jalan\" \"Gang\" or \"Lorong\" in name or alt_name (manual fix)";
+}
+
+
+
+
 /* Check for remaining abbreviations */
 /* Derek Bevan */
 
 way[highway][inside("ID")][/(name|alt_name)/ =~ /([A-Za-z]*\.)|(\s([A-Z]{2})|[A-Z]\.?[A-Z]\.\s)/] {
   group: "Kaart-Indonesia names";
-  throwError: "(7) Name may still contain an abbreviation. Do we know the full form?";
+  throwError: "(8) Name may still contain an abbreviation. Do we know the full form?";
 }
 
 
@@ -560,7 +560,7 @@ way[highway][inside("ID")][/(name|alt_name)/ =~ /([A-Za-z]*\.)|(\s([A-Z]{2})|[A-
 /* Derek Bevan */
 
 way[highway][inside("ID")][name =~ /(\sKe\s)|(\sIn\sDe\sRechten)/] {
-  throwError: tr("(8) \"Ke\" and \"In De\" (Meester in de Rechten) should be lowercase in Indonesia");
+  throwError: tr("(9) \"Ke\" and \"In De\" (Meester in de Rechten) should be lowercase in Indonesia");
   group: "Kaart-Indonesia names";
 
   fixAdd: concat("name=", replace(replace(
@@ -570,7 +570,7 @@ tag("name"), " Ke ", " ke "),
 }
 
 way[highway][inside("ID")][alt_name =~ /(\sKe\s)|(\sIn\sDe\sRechten)/] {
-  throwError: tr("(8) \"Ke\" and \"In De\" (Meester in de Rechten) should be lowercase in Indonesia");
+  throwError: tr("(9) \"Ke\" and \"In De\" (Meester in de Rechten) should be lowercase in Indonesia");
   group: "Kaart-Indonesia names";
 
   fixAdd: concat("alt_name=", replace(replace(
@@ -586,7 +586,7 @@ tag("alt_name"), " Ke ", " ke "),
 /* Derek Bevan */
 way[highway][inside("ID")][alt_name =~ /;/] {
   group: "Kaart-Indonesia names";
-  throwError: "(8) alt_name contains \";\" -- check word immediately following \";\"";
+  throwError: "(9) alt_name contains \";\" -- check word immediately following \";\"";
 }
 
 
@@ -597,7 +597,7 @@ way[highway][inside("ID")][alt_name =~ /;/] {
 
 way[highway][inside("ID")][name =~ /\s[A-Z]\s/] {
   group: "Kaart-Indonesia names";
-  throwError: "(8) Lone uppercase letter in the middle of a name. Should it be followed by a \".\"?";
+  throwError: "(9) Lone uppercase letter in the middle of a name. Should it be followed by a \".\"?";
 
   fixAdd: concat("name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
 tag("name"), " A ", " A. "),
@@ -631,7 +631,7 @@ tag("name"), " A ", " A. "),
 
 way[highway][inside("ID")][alt_name =~ /\s[A-Z]\s/] {
   group: "Kaart-Indonesia names";
-  throwError: "(8) Lone uppercase letter in the middle of an alt_name. Should it be followed by a \".\"?";
+  throwError: "(9) Lone uppercase letter in the middle of an alt_name. Should it be followed by a \".\"?";
 
   fixAdd: concat("alt_name=", replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
 tag("alt_name"), " A ", " A. "),
