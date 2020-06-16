@@ -41,7 +41,7 @@ group: tr(kaart_durazno);
 
 /* Check for Y/O in the name, possibly indicating an alt_name is needed*/
 /* Farris Billy */
-way[highway][name =~ /\s(?i)(y\/o)]{
+way[highway][name =~ /\s(?i)(y\/o)/]{
 throwError: tr("Check for possible alt_name");
 group: tr(kaart_durazno);
 }
@@ -141,7 +141,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(agust(i|í)n|(a|á)lamo|alb(a|á)n|alc
 way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Aleman|Alvarez|Alvaro|America|Andres|Angel|Angelica|Bahia|Bambu|Bartolome|Benjamin|Cabanas|Callejon|Canon|Cardenas|Carreteria|Catolica|Cesar|Cipres|Comondu|Cordova|Cortes|Cristobal|Cuauhtemoc|Cuautemoc|Decima|Decimo|Diaz|Dguez|Dominguez|Donaji|Ejercito|Elias|Esteban|Esq|Farias|Fco|Fdo.|Fernado|FF.CC.|FF. CC.|Garcia|Gomez|Gonzales|Gonzalez|Gutierrez|Guzman|Hernandez|Heroe|Heroico|Hindira|Huamuchil|Ibañez|Ibarguen|Jazmin|Jasminez)(\s|$|;)/]{
     throwWarning: tr("Misspelled word or accent missing, try ''fix''");
     group: tr(kaart_Colombia);
-    fixAdd: concat("name=", 
+    fixAdd: concat("name=",
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
@@ -331,7 +331,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     "jasminez", "Jazmines"),
     "Jasminez", "Jazmines")
     );
-    fixAdd: concat("alt_name=", 
+    fixAdd: concat("alt_name=",
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
@@ -526,7 +526,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(jer(o|ó)nimo|jerusal(e|é)n|jerusalem
 way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jerusalem|Jesus|Jimenez|Joaquin|Jose|Juarez|Juchitan|Lazaro|Leon|Lopez|Maiz|Magon|Maria|Marques|Marquez|Marquéz|Martinez|Marti|Martir|Matamores|Matias|Maximo|Medico|Mejia|Mendez|Merida|Mexico|Miron|Murgia|Murguia|Najera|Nezahualcoyotl|Nicolas|Oceano|Orquidea|Ortíz)(\s|$|;)/]{
     throwWarning: tr("Misspelled word or accent missing, try ''fix''");
     group: tr(kaart_Colombia);
-    fixAdd: concat("name=", 
+    fixAdd: concat("name=",
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
@@ -651,7 +651,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jerusalem|Jesus|Jim
     "ortíz", "Ortiz"),
     "Ortíz", "Ortiz")
     );
-    fixAdd: concat("alt_name=", 
+    fixAdd: concat("alt_name=",
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
@@ -781,7 +781,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(pac(i|í)fico|pante(o|ó)n|para(i|í)s
 way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñon|Periferico|Pipila|Pitalua|Prof|Quetzalcoatl|Rafael|Revolucion|Rayon|Republica|Rio|Rodriguez|Roman|Romeria|Ruíz|Septima|Serdan|Simbolo|Simbolos|Teran|Tomas|Tonantzin|Topografos|Trebol|Tulipan|Vasquez|Velasquez|Velazquez|Via|Victor|Vigesima|Virgenes|Vizcainas|Volcan|Yucatan|Xochitl)(\s|$|;)/]{
     throwWarning: tr("Misspelled word or accent missing, try ''fix''");
     group: tr(kaart_Colombia);
-    fixAdd: concat("name=", 
+    fixAdd: concat("name=",
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
@@ -919,7 +919,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     "xóchitl", "Xóchitl"),
     "Xochitl", "Xóchitl")
     );
-    fixAdd: concat("alt_name=", 
+    fixAdd: concat("alt_name=",
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
