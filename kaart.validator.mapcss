@@ -4,7 +4,7 @@ meta
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
   min-josm-version: "8087";
-  version: "28_2020-02-10";
+  version: "30_2020-06-16";
 }
 /****************
  ** Kaart Users *
@@ -97,7 +97,7 @@ way[oneway=-1] {
   way[highway][turn:lanes:backward][!lanes:backward][count(split("|", key("turn:lanes:backward"))) != key("lanes") / 2][gpx_distance() < 30 || gpx_distance() >= 50000000],
   way[highway][turn:lanes:backward][!lanes][!lanes:backward][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
-    throwwarning: tr("{0} do not match lanes:backward", "{1.key}");
+    throwWarning: tr("{0} do not match lanes:backward", "{1.key}");
   }
 }
 
