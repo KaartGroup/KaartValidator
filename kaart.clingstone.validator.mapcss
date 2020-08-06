@@ -380,7 +380,7 @@ way[highway][!bridge] > node {set .non_bridge_node}
 
 node.bridge_end_node.non_bridge_node!.highway_end_node, node[JOSM_search("type:node child(highway bridge) child(highway -bridge) ways:3-")] {
   group: tr("kaart");
-  throwWarning: tr("Bridges should not end in intersections (May be caused by landuse, borders, etc.)");
+  throwWarning: tr("Bridges should not end in intersections (False positives may be caused by landuse, borders, buildings, etc.)");
 }
 
 
@@ -717,6 +717,12 @@ relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associa
   group: tr("kaart");
   throwError: tr("Addresses should have a street");
   suggestAlternative: tr("{0}, {1}, or a {2} relation", "addr:street", "addr:place", "associatedStreet");
+}
+
+/* Check for house numbers in addr:street tag */
+*[addr:street =~ /[0-9]/] {
+  group: tr("kaart");
+  throwOther: tr("Addr:street tag may contain a housenumber");
 }
 
 /* Recommend removing associatedStreet relations when the houses have the addr:street tag */
