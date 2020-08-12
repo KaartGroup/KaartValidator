@@ -162,7 +162,7 @@ way[highway][/turn:lanes/][/turn:lanes/!~/^(none[|;]?)*((reverse|merge_to_right|
 
 @supports (min-josm-version: 14802) {
 /* Check *_links to see if they have a oneway tag */
-  way[highway=~/^.*_link$/][!oneway][gpx_distance() < 30 || gpx_distance() >= 50000000] {
+  way[highway=~/^.*_link$/][!oneway]/*[gpx_distance() < 30 || gpx_distance() >= 50000000]*/ {
     group: tr("kaart");
     throwWarning: tr("Links are usually oneway. Please verify");
     /* suggestAlternative: "oneway"; */
@@ -793,8 +793,7 @@ way[highway][oneway=yes]!:closed >[index=-1] node:in-downloaded-area!:connection
 
 /* Check for converging oneways with no exit */
 way[highway][oneway=yes] >[index=-1] node:in-downloaded-area:connection {set .end_oneway}
-way[highway][oneway=yes] >[index!=-1] node:in-downloaded-area:connection {set .way_out}
-way[highway][oneway!=yes] > node:in-downloaded-area:connection, way[highway][oneway!=yes] > node:in-downloaded-area:connection {set .way_out}
+way[highway][oneway=yes] >[index!=-1] node:in-downloaded-area:connection, way[highway][oneway!=yes] > node:in-downloaded-area:connection {set .way_out}
 
 node.end_oneway!.way_out {
   group: tr("kaart");
