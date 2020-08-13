@@ -1,3 +1,7 @@
+/*************
+* Oneway *****
+*************/
+
 /* Check for common backward/forward tagging */
 way[motor_vehicle:backward=no] {
   throwWarning: tr("Try to use oneway tags");
@@ -33,4 +37,22 @@ way[mofa:backward=yes] {
 
 way[/(motorcycle|moped|mofa|motor_vehicle|vehicle):(forward|backward)/] {
   throwOther: tr("Try to use oneway tags");
+}
+
+
+/* Check for dead-end oneways */
+/* Derek Bevan */
+way[highway][oneway=yes]!:closed >[index=-1] node:in-downloaded-area!:connection, way[highway][oneway=yes]!:closed >[index=1] node:in-downloaded-area!:connection {
+  group: tr("kaart");
+  throwError: tr("Dead-end oneways");
+}
+
+/* Check for converging oneways with no exit */
+/* Derek Bevan */
+way[highway][oneway=yes] >[index=-1] node:in-downloaded-area:connection {set .end_oneway}
+way[highway][oneway=yes] >[index!=-1] node:in-downloaded-area:connection, way[highway][oneway!=yes] > node:in-downloaded-area:connection {set .way_out}
+
+node.end_oneway!.way_out {
+  group: tr("kaart");
+  throwError: tr("Converging oneways with no exit");
 }

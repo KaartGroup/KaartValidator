@@ -16,6 +16,7 @@ way[amenity][amenity=~/fuel/][!building]:closed {
   group: tr("kaart");
   throwWarning: tr("Area may be a building");
 }
+
 /* Check for pedestrian ways */
 node[crossing] { set .crossing_node }
 way[highway=~/^(cycleway|footway|pedestrian)$/][footway=crossing] > node { set .footway_crossing }
@@ -25,14 +26,15 @@ way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible
   way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing,
   way[!highway][waylength() < 30][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing {
     group: tr("kaart");
-    throwWarning: tr("Possible pedestrian crossing");
-    suggestAlternative: tr("highway=footway, footway=crossing");
+    throwWarning: tr("Possible divided-highway pedestrian crossing. Should there be a footway?");
+    /* suggestAlternative: tr("highway=footway, footway=crossing") */;
   }
+/*
   node[!inside("GR")][gpx_distance() < 30 || gpx_distance() >= 50000000].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
     group: tr("kaart");
     throwWarning: tr("Maybe add a pedestrian crossing here");
     suggestAlternative: tr("highway=footway, footway=crossing");
-  }
+  } */
 }
 
 /* Check for traffic signals with directions */
@@ -61,6 +63,7 @@ node[highway=traffic_signals][!direction][!traffic_signals:direction][count(pare
   throwWarning: tr("{0} should have a direction when not on a oneway or an intersection", "{0.value}");
   suggestAlternative: "traffic_signals:direction";
 }
+/*
 node[highway=traffic_signals][direction=~/^(forward|backward)$/] {
   group: tr("kaart");
   throwWarning: tr("{0} should use traffic_signals:direction instead of direction for {1}", "{0.value}", "{1.value}");
@@ -69,15 +72,16 @@ node[highway=traffic_signals][direction=~/^(forward|backward)$/] {
   assertMatch: "node highway=traffic_signals direction=backward";
   assertNoMatch: "node highway=traffic_signals traffic_signals:direction=backward";
   assertNoMatch: "node highway=traffic_signals direction=359.9";
-}
+} */
 
 /* Check for traffic sign issues */
+/*
 node[traffic_sign][direction=~/^(forward|backward)$/] {
   group: tr("kaart");
   throwWarning: tr("{0} should use traffic_sign:{1}=yes", "{0.key}", tag("direction"));
   fixAdd: concat("traffic_sign:", tag("direction"), "=yes");
   fixRemove: "direction";
-}
+} */
 
 relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associatedStreet }
 
@@ -86,6 +90,13 @@ relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associa
   group: tr("kaart");
   throwError: tr("Addresses should have a street");
   suggestAlternative: tr("{0}, {1}, or a {2} relation", "addr:street", "addr:place", "associatedStreet");
+}
+
+/* Check for house numbers in addr:street tag */
+/* Derek Bevan */
+*[addr:street =~ /[0-9]/] {
+  group: tr("kaart");
+  throwOther: tr("Addr:street tag may contain a housenumber");
 }
 
 /* Recommend removing associatedStreet relations when the houses have the addr:street tag */
