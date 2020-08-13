@@ -4,7 +4,7 @@ meta
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock;Derek Bevan";
   min-josm-version: "8087";
-  version: "31_2020-08-04";
+  version: "33_2020-08-13";
 }
 /****************
  ** Kaart Users *
@@ -656,8 +656,8 @@ way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible
   way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing,
   way[!highway][waylength() < 30][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing {
     group: tr("kaart");
-    throwWarning: tr("Possible pedestrian crossing");
-    suggestAlternative: tr("highway=footway, footway=crossing");
+    throwWarning: tr("Possible divided-highway pedestrian crossing. Should there be a footway?");
+    /* suggestAlternative: tr("highway=footway, footway=crossing") */;
   }
 /*
   node[!inside("GR")][gpx_distance() < 30 || gpx_distance() >= 50000000].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
@@ -789,24 +789,6 @@ node:new < *[/landuse|boundary/]:modified!:new {
 }
 
 
-/* Check for dead-end oneways */
-/* Derek Bevan */
-way[highway][oneway=yes]!:closed >[index=-1] node:in-downloaded-area!:connection, way[highway][oneway=yes]!:closed >[index=1] node:in-downloaded-area!:connection {
-  group: tr("kaart");
-  throwError: tr("Dead-end oneways");
-}
-
-/* Check for converging oneways with no exit */
-/* Derek Bevan */
-way[highway][oneway=yes] >[index=-1] node:in-downloaded-area:connection {set .end_oneway}
-way[highway][oneway=yes] >[index!=-1] node:in-downloaded-area:connection, way[highway][oneway!=yes] > node:in-downloaded-area:connection {set .way_out}
-
-node.end_oneway!.way_out {
-  group: tr("kaart");
-  throwError: tr("Converging oneways with no exit");
-}
-
-
 /******************
  ** Golf Courses **
  ******************/
@@ -881,9 +863,11 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
   assertNoMatch: "way fixme=\"destination:lang:int\"";
 }
 
+
 /**************************************
  ***** Destination Tagging ************
  **************************************/
+
 /* Check for destination_sign relations where there shouldn't be destination_sign relations */
 /*
 relation[type=destination_sign][!distance][!time] > way[highway=motorway],
@@ -933,8 +917,6 @@ way|z21-[JOSM_search("inview")][highway=~/^.*_link$/][ref][!destination:ref][one
   throwWarning: tr("Link has ref but no destination:ref");
   fixChangeKey: "ref => destination:ref";
 }
-
-
 
 
 /* Check if *_links are appropriately ref'd */
@@ -1075,6 +1057,11 @@ relation[type=destination_sign][count_roles("from") == 0] {
   throwWarning: tr("{0} should have a {1} role", "destination_sign", "from");
 } */
 
+
+/*************
+* Oneway *****
+*************/
+
 /* Check for common backward/forward tagging */
 way[motor_vehicle:backward=no] {
   throwWarning: tr("Try to use oneway tags");
@@ -1112,6 +1099,29 @@ way[/(motorcycle|moped|mofa|motor_vehicle|vehicle):(forward|backward)/] {
   throwOther: tr("Try to use oneway tags");
 }
 
+
+/* Check for dead-end oneways */
+/* Derek Bevan */
+way[highway][oneway=yes]!:closed >[index=-1] node:in-downloaded-area!:connection, way[highway][oneway=yes]!:closed >[index=1] node:in-downloaded-area!:connection {
+  group: tr("kaart");
+  throwError: tr("Dead-end oneways");
+}
+
+/* Check for converging oneways with no exit */
+/* Derek Bevan */
+way[highway][oneway=yes] >[index=-1] node:in-downloaded-area:connection {set .end_oneway}
+way[highway][oneway=yes] >[index!=-1] node:in-downloaded-area:connection, way[highway][oneway!=yes] > node:in-downloaded-area:connection {set .way_out}
+
+node.end_oneway!.way_out {
+  group: tr("kaart");
+  throwError: tr("Converging oneways with no exit");
+}
+
+
+/*************
+* refs *******
+*************/
+
 /*
 @supports (min-josm-version: 15323) {
   /* Check for ways that don't have the parent relation ref */
@@ -1131,12 +1141,11 @@ way[/(motorcycle|moped|mofa|motor_vehicle|vehicle):(forward|backward)/] {
   }
 } */
 
-
 /* Find ways that are missing the parent relation ref or have a different ref than the parent relation */
-
+/* Derek Bevan */
 way[highway =~ /(tertiary|secondary|primary|trunk|motorway)/][JOSM_search("type:way child(type:relation route=road ref)")][(parent_tag("ref") != tag("ref")) || JOSM_search("-ref")] {
   group: tr("kaart");
-  throwOther: tr("Route relation may hint at missing highway refs");
+  throwOther: tr("Ref on route relation may hint at missing highway refs");
 }
 
 
