@@ -162,7 +162,8 @@ way[highway][/turn:lanes/][/turn:lanes/!~/^(none[|;]?)*((reverse|merge_to_right|
 
 @supports (min-josm-version: 14802) {
 /* Check *_links to see if they have a oneway tag */
-  way[highway=~/^.*_link$/][!oneway]/*[gpx_distance() < 30 || gpx_distance() >= 50000000]*/ {
+/* Taylor Smock, Derek Bevan */
+  way[highway=~/^.*_link$/][!oneway] {
     group: tr("kaart");
     throwWarning: tr("Links are usually oneway. Please verify");
     /* suggestAlternative: "oneway"; */
@@ -373,11 +374,12 @@ way|z21-[JOSM_search("inview")][highway][bridge][!layer] {
   fixAdd: "layer=1";
 }
 
-
+/* Derek Bevan */
 way[highway][bridge] >[index=1] node, way[highway][bridge] >[index=-1] node {set .bridge_end_node}
 way[highway][!bridge] >[index=1] node, way[highway][!bridge] >[index=-1] node {set .highway_end_node}
 way[highway][!bridge] > node {set .non_bridge_node}
 
+/* Derek Bevan */
 node.bridge_end_node.non_bridge_node!.highway_end_node, node[JOSM_search("type:node child(highway bridge) child(highway -bridge) ways:3-")] {
   group: tr("kaart");
   throwWarning: tr("Bridges should not end in intersections (False positives may be caused by landuse, borders, buildings, etc.)");
@@ -412,13 +414,14 @@ way|z21-[JOSM_search("inview")][highway][maxheight=~/^\d+'\s\d+"$/] {
   fixAdd: tr("{0}={1}", "maxheight", replace(tag("maxheight"), " ", ""));
 }
 
+/*
 @supports (min-josm-version: 14802) {
   way[highway][tunnel][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwOther: tr("Tunnels may have a maxheight");
     suggestAlternative: "maxheight";
   }
-}
+} */
 
 /* Check mini-roundabouts for the correct direction */
 node[highway=mini_roundabout][direction!=clockwise][JOSM_search("-inview")]!:righthandtraffic:in-downloaded-area,
@@ -453,6 +456,7 @@ node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwi
 way[junction=roundabout]:in-downloaded-area > node {set .is_in_roundabout}
 node[traffic_calming=island]:in-downloaded-area { set .is_traffic_calming_island}
 
+/* Taylor Smock, Derek Bevan */
 way[highway][highway!~/^(pedestrian|footway|cycleway)$/][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout!.is_traffic_calming_island {
   group: tr("kaart");
   throwWarning: tr("Highway connecting to roundabout is NOT a oneway -- should there be a Y-junction?");
@@ -490,11 +494,10 @@ node.roundabout_way_ends {
   throwWarning: tr("Way {0} does not end at roundabout", parent_tags("name"));
 }
 
+/* Derek Bevan */
 @supports (min-josm-version: 15353) {
  /* Check that roundabout names are different from the names of incoming ways */
-
  way[highway][name][!junction] >[index=1] node, way[highway][name][!junction] >[index=-1] node {set .named_way_end_node}
-
 
  node.is_in_named_roundabout.named_way_end_node[count(uniq_list(parent_tags("name"))) == 1] {
    group: tr("kaart");
@@ -720,6 +723,7 @@ relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associa
 }
 
 /* Check for house numbers in addr:street tag */
+/* Derek Bevan */
 *[addr:street =~ /[0-9]/] {
   group: tr("kaart");
   throwOther: tr("Addr:street tag may contain a housenumber");
@@ -786,12 +790,14 @@ node:new < *[/landuse|boundary/]:modified!:new {
 
 
 /* Check for dead-end oneways */
+/* Derek Bevan */
 way[highway][oneway=yes]!:closed >[index=-1] node:in-downloaded-area!:connection, way[highway][oneway=yes]!:closed >[index=1] node:in-downloaded-area!:connection {
   group: tr("kaart");
   throwError: tr("Dead-end oneways");
 }
 
 /* Check for converging oneways with no exit */
+/* Derek Bevan */
 way[highway][oneway=yes] >[index=-1] node:in-downloaded-area:connection {set .end_oneway}
 way[highway][oneway=yes] >[index!=-1] node:in-downloaded-area:connection, way[highway][oneway!=yes] > node:in-downloaded-area:connection {set .way_out}
 
@@ -949,15 +955,15 @@ node[count(parent_tags("destination:ref")) != count(parent_tags("destination:ref
   /*fixAdd: concat("destination:ref=", parent_tag("ref"));*//*
 } */
 
+/* Check for connected links with different destination:ref tags */
+/* Derek Bevan */
 way[highway =~ /_link/] > node[count(uniq_list(parent_tags("destination:ref"))) > 1] {
   group: tr("kaart");
   throwWarning: tr("Connected links have different destination:ref tags. Are both tags correct?");
 }
 
-
 /* Check if link has destination:ref */
 way[highway=~/.*_link$/][!destination:ref] >[index=-1] node { set .link_no_ref }
-
 
 node.link_no_ref.has_ref {
   group: tr("kaart");
@@ -1190,6 +1196,7 @@ relation[type=connectivity][count_roles("via") < 1 || count_roles("from") != 1 |
 }
 
 /* Toll booths, entrances, and lift_gates default to access=yes */
+/* Taylor Smock, Derek Bevan */
 way[highway] > node[barrier][barrier =~ /^(gate)$/][!access] {
   group: tr("kaart");
   throwWarning: tr("Gates missing access tags");
