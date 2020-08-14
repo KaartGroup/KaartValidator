@@ -10,6 +10,28 @@ meta
   set .kaart_user
 }
 
+
+/* Double prefix check */
+/* Rd Clare */
+way[highway][name =~ /(^(?i)(Ampliación)\s)((?i)(Ampliación))(\s)/],
+way[highway][name =~ /(^(?i)(Calle)\s)((?i)(Calle))(\s)/],
+way[highway][name =~ /(^(?i)(Cerrada)\s)((?i)(Cerrada))(\s)/],
+way[highway][name =~ /(^(?i)(Privada)\s)((?i)(Privada))(\s)/],
+way[highway][name =~ /(^(?i)(Callejón)\s)((?i)(Callejón))(\s)/],
+way[highway][name =~ /(^(?i)(Prolongación)\s)((?i)(Prolongación))(\s)/],
+way[highway][name =~ /(^(?i)(Avenida)\s)((?i)(Avenida))(\s)/],
+way[highway][name =~ /(^(?i)(Retorno)\s)((?i)(Retorno))(\s)/],
+way[highway][name =~ /(^(?i)(Calzada)\s)((?i)(Calzada))(\s)/],
+way[highway][name =~ /(^(?i)(Circuito)\s)((?i)(Circuito))(\s)/],
+way[highway][name =~ /(^(?i)(Bulevar)\s)((?i)(Bulevar))(\s)/],
+way[highway][name =~ /(^(?i)(Andador)\s)((?i)(Andador))(\s)/],
+way[highway][name =~ /(^(?i)(Boulevard)\s)((?i)(Boulevard))(\s)/],
+way[highway][name =~ /(^(?i)(Camino)\s)((?i)(Camino))(\s)/],
+way[highway][name =~ /(^(?i)(Carretera)\s)((?i)(Carretera))(\s)/]{
+  throwError: tr("2 or more prefixes found");
+  group: tr(kaart_durazno);
+}
+
 /*Check for a name enclosed within a parenthesis*/
 /* Rd Clare, Farris Billy */
 way[highway][name =~ /(?i)\(\w.*\)/]{
