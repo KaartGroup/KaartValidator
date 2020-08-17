@@ -71,11 +71,12 @@ way[oneway=-1] {
     throwWarning: tr("{0} is typically {1}", "{0.tag}", "{1.key}");
     suggestAlternative: "oneway=yes";
   }
+  /*
   way[highway=~/^(motorway|motorway_link)$/][!access][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwOther: tr("{0} is typically reserved for motor_vehicles", "{0.tag}");
     suggestAlternative: "access=no with motor_vehicle=yes";
-  }
+  } */
   /* Check that turn:lanes/:forward/:backward */
   way[highway][turn:lanes][!/^(oneway|junction)$/][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
@@ -688,11 +689,12 @@ node[highway=traffic_signals][direction].onewaynode {
   fixRemove: "{1.key}";
 }
 
+/*
 node[highway=traffic_signals][!direction][!traffic_signals:direction][count(parent_tags("name")) <= 1 && count(parent_tags("ref")) <= 1 && count(parent_tags("highway")) <= 1][!crossing]!.onewaynode:in-downloaded-area {
   group: tr("kaart");
   throwWarning: tr("{0} should have a direction when not on a oneway or an intersection", "{0.value}");
   suggestAlternative: "traffic_signals:direction";
-}
+} */
 /*
 node[highway=traffic_signals][direction=~/^(forward|backward)$/] {
   group: tr("kaart");
@@ -724,7 +726,7 @@ relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associa
 
 /* Check for house numbers in addr:street tag */
 /* Derek Bevan */
-*[addr:street =~ /[0-9]/] {
+*[addr:street =~ /[0-9](?![0-9]*\s[Dd]e)/] {
   group: tr("kaart");
   throwOther: tr("Addr:street tag may contain a housenumber");
 }
