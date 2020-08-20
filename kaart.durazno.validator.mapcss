@@ -29,34 +29,34 @@ way[highway][name =~ /(^(?i)(Boulevard)\s)((?i)(Boulevard))(\s)/],
 way[highway][name =~ /(^(?i)(Camino)\s)((?i)(Camino))(\s)/],
 way[highway][name =~ /(^(?i)(Carretera)\s)((?i)(Carretera))(\s)/]{
   throwError: tr("2 or more prefixes found");
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
 }
 
 /*Check for a name enclosed within a parenthesis*/
 /* Rd Clare, Farris Billy */
 way[highway][name =~ /(?i)\(\w.*\)/]{
 throwError: tr("Parenthesis around the name");
-group: tr(kaart_durazno);
+group: tr(kaart_Sanitas);
 }
 
 /* Check for Y/O in the name, possibly indicating an alt_name is needed*/
 /* Farris Billy */
 way[highway][name =~ /\s(?i)(y\/o)/]{
 throwError: tr("Check for possible alt_name");
-group: tr(kaart_durazno);
+group: tr(kaart_Sanitas);
 }
 
 /* abbreviation check */
 /* Farris Billy */
 way[highway][/^(name|alt_name)$/ =~ /(?i)(^|.* )(And|Arq|Av|Ave|Blvd|Blvrd|Blv|Blv|C|Calz|Cd|Cda|Cjon|Comp|Cto|Diag|Dr|Edo|Esq|Gral|Hda|Ing|Lic|Lit|Mz|Nte|Occ|Ote|Pbro|Pdte|Pre|Priv|Profa|Prof|Prol|Pte|Ret|Rtno|Sn|Sta|Tte)\.? .*/]{
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
   throwError: tr("Abbreviation in Name or Alt_name");
 }
 
 /* incorrect copy and paste Check? */
 /* RD Clare */
 way[highway][/^(?i)(Ampliación|Andador|Avenida|Boulevard|Calle|Callejón|Calzada|Camino|Carretera|Cerrada|Circuito|Entrada|Entronque|Escalinata|Peotonal|Privada|Prolongación|Retorno)$/]{
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
   throwError: tr("Incorrect tag");
 }
 
@@ -64,7 +64,7 @@ way[highway][/^(?i)(Ampliación|Andador|Avenida|Boulevard|Calle|Callejón|Calzad
 /* Andrew Piechota */
 way[highway][name = *alt_name] {
   throwError: tr("Name and alt_name are equivalent");
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
   fixRemove: "alt_name";
 }
 
@@ -72,7 +72,7 @@ way[highway][name = *alt_name] {
 /* Taylor Smock */
 way[highway][highway=~/^.*_link$/][!oneway]{
   throwError: tr("_links are usually oneway ");
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
   fixAdd: "oneway=yes";
 }
 
@@ -80,7 +80,7 @@ way[highway][highway=~/^.*_link$/][!oneway]{
 /* RD Clare */
 way[highway][oneway][oneway !~ /^(yes|no|(-1)|alternating|reversible)$/]{
   throwError: tr("oneway should be yes, no, alternating or reversible");
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
 
 }
 
@@ -88,21 +88,21 @@ way[highway][oneway][oneway !~ /^(yes|no|(-1)|alternating|reversible)$/]{
 /* Andrew Piechota */
 way[highway][/^(name|alt_name)$/ =~ /,/] {
   throwError: tr("Name/alt_name with comma");
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
 }
 
 /* Checks bridges/tunnels for layer tag */
 /* Andrew Piechota */
 way[/^(tunnel|bridge)$/][/^(tunnel|bridge)$/!~/^no$/][!layer] {
   throwWarning: tr("Bridge/tunnel missing layer tag");
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
 }
 
 /* Checks if roundabouts have the highway = _link tag */
 /* RD Clare */
 way[highway =~ /^.*_link$/][junction = roundabout] {
   throwWarning: tr("roundabouts are not links");
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
   suggestAlternative: "non _link or add note";
 }
 
@@ -111,7 +111,7 @@ way[highway =~ /^.*_link$/][junction = roundabout] {
 way[highway=~/^.*_link$/][name],
 way[highway=~/^.*_link$/][noname] {
   throwError: tr("Links shouldn''t have name/noname tags");
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
   fixRemove: "noname";
 }
 
@@ -119,20 +119,20 @@ way[highway=~/^.*_link$/][noname] {
 /* RD Clare */
 way[highway][noname].kaart_user {
   throwError: tr("Check noname tag added by Kaart user");
-  group: tr(kaart_durazno);
+  group: tr(kaart_Sanitas);
   fixRemove: "noname";
 }
 
 /* Check for separators with a space */
 way[highway][/^(name|alt_name)$/=~/.*;[\\n\\f\\v ]+.*/]:modified {
-  group: tr("kaart_durazno");
+  group: tr("kaart_Sanitas");
   throwError: tr("There exists a tag with {0} separators and whitespace after the separator", ";");
 }
 
 /* Uppercase article check */
-way[highway][/^(name|alt_name)$/=~/(^|\s)(De|Del|De El|De La|De Las|Los|Las|De Los|El|La)(\s|$|;)/]{
+way[highway][/^(name|alt_name)$/=~/(^|\s)(De|Del|De El|De La|De Las|De Los)(\s|$|;)/]{
   throwWarning: tr("Uppercase article");
-  group: tr(kaart_Colombia);
+  group: tr(kaart_Sanitas);
 }
 
 /* Spell check */
@@ -140,7 +140,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(De|Del|De El|De La|De Las|Los|Las|De L
 way[highway][/^(name|alt_name)$/=~/(^|\s)(agust(i|í)n|(a|á)lamo|alb(a|á)n|alcal(a|á)|alduc(i|í)n|alem(a|á)n|(a|á)lvarez|(a|á)lvaro|am(e|é)rica|andr(e|é)s|(a|á)ngel|ang(e|é)lica|bah(i|í)a|bamb(u|ú)|bartolom(e|é)|benjam(i|í)n|caba(n|ñ)as|callej(o|ó)n|ca(n|ñ)(o|ó)n|c(a|á)rdenas|carreteria|cat(o|ó)lica|c(e|é)sar|comond(u|ú)|cion|cipr(e|é)s|c(o|ó)rdova|cort(e|é)s|crist(o|ó)bal|cuauhtemoc|cuaut(e|é)moc|d(e|é)cima|d(e|é)cimo|d(i|í)az|dguez|dom(i|í)nguez|donaj(i|í)|ej(e|é)rcito|el(i|í)as|est(e|é)ban|esq|far(i|í)as|fco|fdo.|fernado|garc(i|í)a|gomez|gonzales|gonz(a|á)lez|guti(e|é)rrez|guzm(a|á)n|hern(a|á)ndez|h(e|é)roe|her(o|ó)ico|hindira|huamuchil|ib(a|á)ñez|ibarg(u|ü)en|jazm(i|í)n|jasminez)(\s|$|;)/],
 way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Aleman|Alvarez|Alvaro|America|Andres|Angel|Angelica|Bahia|Bambu|Bartolome|Benjamin|Cabanas|Callejon|Canon|Cardenas|Carreteria|Catolica|Cesar|Cipres|Comondu|Cordova|Cortes|Cristobal|Cuauhtemoc|Cuautemoc|Decima|Decimo|Diaz|Dguez|Dominguez|Donaji|Ejercito|Elias|Esteban|Esq|Farias|Fco|Fdo.|Fernado|FF.CC.|FF. CC.|Garcia|Gomez|Gonzales|Gonzalez|Gutierrez|Guzman|Hernandez|Heroe|Heroico|Hindira|Huamuchil|Ibañez|Ibarguen|Jazmin|Jasminez)(\s|$|;)/]{
     throwWarning: tr("Misspelled word or accent missing, try ''fix''");
-    group: tr(kaart_Colombia);
+    group: tr(kaart_Sanitas);
     fixAdd: concat("name=",
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
@@ -525,7 +525,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
 way[highway][/^(name|alt_name)$/=~/(^|\s)(jer(o|ó)nimo|jerusal(e|é)n|jerusalem|jes(u|ú)s|jim(e|é)nez|joaqu(i|í)n|jos(e|é)|ju(a|á)rez|juchit(a|á)n|l(a|)zaro|le(o|ó)n|l(o|ó)pez|ma(i|í)z|mag(o|ó)n|mar(i|í)a|marqu(e|é)s|m(a|á)rquez|marquéz|mart(i|í)nez|mart(i|í)|m(a|á)rtir|matamores|mat(i|í)as|m(a|á)ximo|m(e|é)dico|mej(i|í)a|m(e|é)ndez|m(e|é)rida|m(e|é)xico|mir(o|ó)n|murgia|murgu(i|í)a|n(a|á)jera|nezahualcoy(o|ó)tl|nicol(a|á)s|oc(e|é)ano|orqu(i|í)dea|ortíz)(\s|$|;)/],
 way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jerusalem|Jesus|Jimenez|Joaquin|Jose|Juarez|Juchitan|Lazaro|Leon|Lopez|Maiz|Magon|Maria|Marques|Marquez|Marquéz|Martinez|Marti|Martir|Matamores|Matias|Maximo|Medico|Mejia|Mendez|Merida|Mexico|Miron|Murgia|Murguia|Najera|Nezahualcoyotl|Nicolas|Oceano|Orquidea|Ortíz)(\s|$|;)/]{
     throwWarning: tr("Misspelled word or accent missing, try ''fix''");
-    group: tr(kaart_Colombia);
+    group: tr(kaart_Sanitas);
     fixAdd: concat("name=",
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
@@ -780,7 +780,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jerusalem|Jesus|Jim
 way[highway][/^(name|alt_name)$/=~/(^|\s)(pac(i|í)fico|pante(o|ó)n|para(i|í)so|pe(n|ñ)aloza|peñ(o|ó)n|perif(e|é)rico|p(i|í)pila|pital(u|ú)a|prof|quetzalc(o|ó)atl|rafa(e|é)l|ray(o|ó)n|rep(u|ú)blica|r(i|í)o|rodr(i|í)guez|rom(a|á)n|romer(i|í)a|ruíz|s(e|é)ptima|serd(a|á)n|s(i|í)mbolos|s(i|í)mbolo|ter(a|á)n|tom(a|á)s|tonantz(i|í)n|top(o|ó)grafos|tr(e|é)bol|tulip(a|á)n|v(a|á)squez|vel(a|á)squez|vel(a|á)zquez|v(i|í)a|v(i|í)ctor|vig(e|é)sima|v(i|í)rgenes|vizca(i|í)nas|volc(a|á)n|yucat(a|á)n|x(o|ó)chitl)(\s|$|;)/],
 way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñon|Periferico|Pipila|Pitalua|Prof|Quetzalcoatl|Rafael|Revolucion|Rayon|Republica|Rio|Rodriguez|Roman|Romeria|Ruíz|Septima|Serdan|Simbolo|Simbolos|Teran|Tomas|Tonantzin|Topografos|Trebol|Tulipan|Vasquez|Velasquez|Velazquez|Via|Victor|Vigesima|Virgenes|Vizcainas|Volcan|Yucatan|Xochitl)(\s|$|;)/]{
     throwWarning: tr("Misspelled word or accent missing, try ''fix''");
-    group: tr(kaart_Colombia);
+    group: tr(kaart_Sanitas);
     fixAdd: concat("name=",
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
