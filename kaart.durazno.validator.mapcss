@@ -48,7 +48,7 @@ group: tr(kaart_Sanitas);
 
 /* abbreviation check */
 /* Farris Billy */
-way[highway][/^(name|alt_name)$/ =~ /(?i)(^|.* )(And|Arq|Av|Ave|Blvd|Blvrd|Blv|Blv|C|Calz|Cd|Cda|Cjon|Comp|Cto|Diag|Dr|Edo|Esq|Gral|Hda|Ing|Lic|Lit|Mz|Nte|Occ|Ote|Pbro|Pdte|Pre|Priv|Profa|Prof|Prol|Pte|Ret|Rtno|Sn|Sta|Tte)\.? .*/]{
+way[highway][/^(name|alt_name)$/ =~ /(?i)(^|\s+)(And|Arq|Av|Ave|Blvd|Blvrd|Blv|Blv|C|Calz|Cd|Cda|Cjon|Comp|Cto|Diag|Dr|Edo|Esq|Gral|Hda|Ing|Lic|Lit|Mz|Nte|Occ|Ote|Pbro|Pdte|Pre|Priv|Profa|Prof|Prol|Pte|Ret|Rtno|Sn|Sta|Tte)(\s+|\.|$)/]{
   group: tr(kaart_Sanitas);
   throwError: tr("Abbreviation in Name or Alt_name");
 }
