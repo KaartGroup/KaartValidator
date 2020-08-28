@@ -149,7 +149,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-    replace(replace(replace(replace(
+    replace(replace(replace(replace(replace(replace(replace(replace(replace(
     tag("name"),
     "agustin", "Agustín"),
     "agustín", "Agustín"),
@@ -180,7 +180,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     "America", "América"),
     "andres", "Andrés"),
     "andrés", "Andrés"),
-    "andres", "Andrés"),
+    "Andres", "Andrés"),
     "angel", "Ángel"),
     "ángel", "Ángel"),
     "Angel", "Ángel"),
@@ -227,6 +227,9 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     "comondu", "Comondú"),
     "comondú", "Comondú"),
     "Comondu", "Comondú"),
+    "concepcion", "Concepción"),
+    "concepción", "Concepción"),
+    "Concepcion", "Concepción"),
     "cesar", "César"),
     "césar", "César"),
     "Cesar", "César"),
@@ -279,7 +282,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     "Fco", "Francisco"),
     "fdo.", "Fernando"),
     "Fdo.", "Fernando"),
-     "fernado", "Fernando"),
+    "fernado", "Fernando"),
     "Fernado", "Fernando"),
     "FF.CC.", "Ferrocarril"),
     "FF. CC.", "Ferrocarril"),
@@ -288,6 +291,8 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     "Garcia", "García"),
     "gomez", "Gómeza"),
     "Gomez", "Gómeza"),
+    "gómeza", "Gómeza"),
+    "Gomeza", "Gómeza"),
     "gonzalez", "González"),
     "gonzález", "González"),
     "Gonzalez", "González"),
@@ -339,7 +344,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-    replace(replace(replace(replace(
+    replace(replace(replace(replace(replace(replace(replace(replace(replace(
     tag("alt_name"),
     "agustin", "Agustín"),
     "agustín", "Agustín"),
@@ -370,7 +375,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     "America", "América"),
     "andres", "Andrés"),
     "andrés", "Andrés"),
-    "andres", "Andrés"),
+    "Andres", "Andrés"),
     "angel", "Ángel"),
     "ángel", "Ángel"),
     "Angel", "Ángel"),
@@ -417,6 +422,9 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     "comondu", "Comondú"),
     "comondú", "Comondú"),
     "Comondu", "Comondú"),
+    "concepcion", "Concepción"),
+    "concepción", "Concepción"),
+    "Concepcion", "Concepción"),
     "cesar", "César"),
     "césar", "César"),
     "Cesar", "César"),
@@ -469,7 +477,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     "Fco", "Francisco"),
     "fdo.", "Fernando"),
     "Fdo.", "Fernando"),
-     "fernado", "Fernando"),
+    "fernado", "Fernando"),
     "Fernado", "Fernando"),
     "FF.CC.", "Ferrocarril"),
     "FF. CC.", "Ferrocarril"),
@@ -478,6 +486,8 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Ale
     "Garcia", "García"),
     "gomez", "Gómeza"),
     "Gomez", "Gómeza"),
+    "gómeza", "Gómeza"),
+    "Gomeza", "Gómeza"),
     "gonzalez", "González"),
     "gonzález", "González"),
     "Gonzalez", "González"),
