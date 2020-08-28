@@ -130,7 +130,7 @@ way[highway][/^(name|alt_name)$/=~/.*;[\\n\\f\\v ]+.*/]:modified {
 }
 
 /* Uppercase article check */
-way[highway][/^(name|alt_name)$/=~/(^|\s)(A|Al|De|Del|De El|De La|De Las|De Los)(\s|$|;)/]{
+way[highway][/^(name|alt_name)$/=~/(^|\s)(A|Al|De|Del|De El|De La|De Las|De Los|O|Y)(\s|$|;)/]{
   throwWarning: tr("Uppercase article");
   group: tr(kaart_Sanitas);
 }
