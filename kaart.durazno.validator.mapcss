@@ -702,7 +702,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jerusalem|Jesus|Jim
     "juarez", "Juárez"),
     "juárez", "Juárez"),
     "Juarez", "Juárez"),
-     "juchitan", "Juchitán"),
+    "juchitan", "Juchitán"),
     "juchitán", "Juchitán"),
     "Juchitan", "Juchitán"),
     "lazaro", "Lázaro"),
@@ -811,7 +811,6 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-    replace(
     tag("name"),
     "pacifico", "Pacífico"),
     "pacífico", "Pacífico"),
@@ -959,7 +958,6 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-    replace(
     tag("alt_name"),
     "pacifico", "Pacífico"),
     "pacífico", "Pacífico"),
@@ -1007,7 +1005,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     "republica", "República"),
     "república", "República"),
     "Republica", "República"),
-     "revolucion", "Revolución"),
+    "revolucion", "Revolución"),
     "revolución", "Revolución"),
     "Revolucion", "Revolución"),
     "rio", "Río"),
