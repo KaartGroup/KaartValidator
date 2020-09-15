@@ -566,7 +566,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jerusalem|Jesus|Jim
     "juarez", "Juárez"),
     "juárez", "Juárez"),
     "Juarez", "Juárez"),
-   "juchitan", "Juchitán"),
+    "juchitan", "Juchitán"),
     "juchitán", "Juchitán"),
     "Juchitan", "Juchitán"),
     "lazaro", "Lázaro"),
@@ -668,7 +668,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jerusalem|Jesus|Jim
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-   replace(replace(replace(replace(replace(replace(replace(replace(
+    replace(replace(replace(replace(replace(replace(replace(replace(
     tag("alt_name"),
     "jeronimo", "Jerónimo"),
     "jerónimo", "Jerónimo"),
@@ -695,7 +695,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jerusalem|Jesus|Jim
     "juarez", "Juárez"),
     "juárez", "Juárez"),
     "Juarez", "Juárez"),
-    "juchitan", "Juchitán"),
+     "juchitan", "Juchitán"),
     "juchitán", "Juchitán"),
     "Juchitan", "Juchitán"),
     "lazaro", "Lázaro"),
@@ -788,8 +788,8 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jerusalem|Jesus|Jim
     "Ortíz", "Ortiz")
     );
 }
-way[highway][/^(name|alt_name)$/=~/(^|\s)(pac(i|í)fico|pante(o|ó)n|para(i|í)so|pe(n|ñ)aloza|peñ(o|ó)n|perif(e|é)rico|p(i|í)pila|pital(u|ú)a|prof|quetzalc(o|ó)atl|rafa(e|é)l|ray(o|ó)n|rep(u|ú)blica|r(i|í)o|rodr(i|í)guez|rom(a|á)n|romer(i|í)a|ruíz|s(e|é)ptima|serd(a|á)n|s(i|í)mbolos|s(i|í)mbolo|ter(a|á)n|tom(a|á)s|tonantz(i|í)n|top(o|ó)grafos|tr(e|é)bol|tulip(a|á)n|v(a|á)squez|vel(a|á)squez|vel(a|á)zquez|v(i|í)a|v(i|í)ctor|vig(e|é)sima|v(i|í)rgenes|vizca(i|í)nas|volc(a|á)n|yucat(a|á)n|x(o|ó)chitl)(\s|$|;)/],
-way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñon|Periferico|Pipila|Pitalua|Prof|Quetzalcoatl|Rafael|Revolucion|Rayon|Republica|Rio|Rodriguez|Roman|Romeria|Ruíz|Septima|Serdan|Simbolo|Simbolos|Teran|Tomas|Tonantzin|Topografos|Trebol|Tulipan|Vasquez|Velasquez|Velazquez|Via|Victor|Vigesima|Virgenes|Vizcainas|Volcan|Yucatan|Xochitl)(\s|$|;)/]{
+way[highway][/^(name|alt_name)$/=~/(^|\s)(pac(i|í)fico|pante(o|ó)n|para(i|í)so|pe(n|ñ)aloza|peñ(o|ó)n|perif(e|é)rico|p(i|í)pila|pital(u|ú)a|prof|prolongaci(o|ó)n|quetzalc(o|ó)atl|rafa(e|é)l|ray(o|ó)n|rep(u|ú)blica|r(i|í)o|rodr(i|í)guez|rom(a|á)n|revoluci(ó|o)n|romer(i|í)a|ruíz|s(e|é)ptima|serd(a|á)n|s(i|í)mbolos|s(i|í)mbolo|ter(a|á)n|tom(a|á)s|tonantz(i|í)n|top(o|ó)grafos|tr(e|é)bol|tulip(a|á)n|v(a|á)squez|tenochitl(a|à)n|vel(a|á)squez|vel(a|á)zquez|v(i|í)a|v(i|í)ctor|vig(e|é)sima|v(i|í)rgenes|vizca(i|í)nas|volc(a|á)n|yucat(a|á)n|x(o|ó)chitl)(\s|$|;)/],
+way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñon|Periferico|Pipila|Pitalua|Prof|Quetzalcoatl|Rafael|Revolucion|Rayon|Republica|Rio|Rodriguez|Roman|Romeria|Ruíz|Septima|Serdan|Simbolo|Simbolos|Teran|Tomas|Tonantzin|Topografos|Trebol|Tulipan|Vasquez|Velasquez|Velazquez|Via|Victor|Vigesima|Virgenes|Vizcainas|Volcan|Yucatan|Xochitl|Tenochitlan)(\s|$|;)/]{
     throwWarning: tr("Misspelled word or accent missing, try ''fix''");
     group: tr(kaart_Sanitas);
     fixAdd: concat("name=",
@@ -804,6 +804,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+    replace(
     tag("name"),
     "pacifico", "Pacífico"),
     "pacífico", "Pacífico"),
@@ -951,6 +952,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+    replace(
     tag("alt_name"),
     "pacifico", "Pacífico"),
     "pacífico", "Pacífico"),
@@ -998,7 +1000,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     "republica", "República"),
     "república", "República"),
     "Republica", "República"),
-    "revolucion", "Revolución"),
+     "revolucion", "Revolución"),
     "revolución", "Revolución"),
     "Revolucion", "Revolución"),
     "rio", "Río"),
