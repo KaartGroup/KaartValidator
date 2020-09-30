@@ -4,7 +4,7 @@ meta
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock;Derek Bevan";
   min-josm-version: "8087";
-  version: "34_2020-08-18";
+  version: "35_2020-08-25";
 }
 /****************
  ** Kaart Users *
@@ -383,7 +383,27 @@ way[highway][!bridge] > node {set .non_bridge_node}
 /* Derek Bevan */
 node.bridge_end_node.non_bridge_node!.highway_end_node, node[JOSM_search("type:node child(highway bridge) child(highway -bridge) ways:3-")] {
   group: tr("kaart");
-  throwWarning: tr("Bridges should not end in intersections (False positives may be caused by landuse, borders, buildings, etc.)");
+  throwWarning: tr("Bridges should not end in intersections");
+}
+
+
+/* Check tunnels */
+/* Derek Bevan */
+way[highway][tunnel] >[index=1] node, way[highway][tunnel] >[index=-1] node {set .tunnel_end_node}
+way[highway][!tunnel] >[index=1] node, way[highway][!tunnel] >[index=-1] node {set .non_tunnel_end_node}
+way[highway][!tunnel] > node {set .non_tunnel_node}
+
+node.tunnel_end_node.non_tunnel_node!.non_tunnel_end_node, node[JOSM_search("type:node child(highway tunnel) child(highway -tunnel) ways:3-")] {
+  group: tr("kaart");
+  throwWarning: tr("Tunnels should not end in intersections");
+}
+
+
+/* Check for intersections with multiple layers */
+/* Derek Bevan */
+node!.bridge_end_node!.tunnel_end_node[JOSM_search("type:node ((child(highway -layer) child(highway layer -layer=0)) OR (child(highway layer=1) child(highway -layer=1)) OR (child(highway layer=-1) child(highway -layer=-1)))")] {
+  group: tr("kaart");
+  throwWarning: tr("Intersections with multiple layers");
 }
 
 
@@ -682,12 +702,13 @@ node[traffic_signal:direction] {
 way[/^highway|railway$/][oneway=yes] > node,
 way[/^highway|railway$/][junction=roundabout] > node { set .onewaynode }
 
+/*
 node[highway=traffic_signals][traffic_signals:direction].onewaynode,
 node[highway=traffic_signals][direction].onewaynode {
   group: tr("kaart");
   throwWarning: tr("There should not be {0} for {1} on a oneway", "{1.key}", "{0.key}");
   fixRemove: "{1.key}";
-}
+} */
 
 /*
 node[highway=traffic_signals][!direction][!traffic_signals:direction][count(parent_tags("name")) <= 1 && count(parent_tags("ref")) <= 1 && count(parent_tags("highway")) <= 1][!crossing]!.onewaynode:in-downloaded-area {
