@@ -3,7 +3,7 @@ meta
   title: "Validation rules for Kaart Group--Dwarf Team";
   description: "Validation tool for the Kaart Mexico Project";
   author: "Rd Clare(mr_et) Taylor Smock(vorpalblade77-kaart) Farris Billy(FarieBerrie)";
-  version: "35_2020-09-16";
+  version: "37_2020-09-30";
 }
 /* Creates list of current/past Project Users  */
 *[JOSM_search("user:LSkalayo or user:Soccersweeper or user:ArleneC or user:3agleOne or user:\"Unicorn Ostrich\" or user:Goose6thAB or user:\"Chilly Chinchillas\" or user:Cinderblock or user:Dalekokarta or user:BlueRanger or user:MTG5093 or user:MappnMatt or user:MMantlo or user:rallynukab or user:jedimasterflint or user:RobinNoodles or user:Mel_1 or user:Sherbare or user:Smoothdog or user:ImjusBuddy or user:DreadPirateRoberts or user:EthanK or user:Yagni or user:G_Fyyar or user:mr_et or user:FarieBerrie or user:rileywhite97 or user:ikohl or user:spititout or user:nickmettauer or user:The_Intern or user:Meowshane or user:RouteRob or user:Kyleta8 or user:\"El Pescador\" or user:rytheking or user:Ajaie or user:BobGod or user:csjupiter1 or user:GhostEye or user:ArleneC or user:leedlelee or user:\"Leonardo DeMAPrio\" or user:logans127 or user:mapcraft or user:Plutocrats or user:chuck97! or user:Senzubeandealer or user:swells5 or user:notmee-uh or user:Traaker_L or user:yodacodyone1 or user:Dillon9 or user:jacob_kubeczko or user:LSkalayo or user:Traaker_L or user:MTG5093 or user:Zebulonium or user:staysavy")]{
@@ -137,8 +137,8 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(A|Al|De|Del|De El|De La|De Las|De Los|
 
 /* Spell check */
 /* RD Clare */
-way[highway][/^(name|alt_name)$/=~/(^|\s)(agust(i|í)n|(a|á)lamo|alb(a|á)n|alcal(a|á)|alduc(i|í)n|alem(a|á)n|(a|á)lvarez|(a|á)lvaro|am(e|é)rica|andr(e|é)s|(a|á)ngel|ang(e|é)lica|bah(i|í)a|bamb(u|ú)|bartolom(e|é)|benjam(i|í)n|caba(n|ñ)as|callej(o|ó)n|ca(n|ñ)(o|ó)n|c(a|á)rdenas|carreteria|cat(o|ó)lica|c(e|é)sar|comond(u|ú)|cion|cipr(e|é)s|c(o|ó)rdova|cort(e|é)s|crist(o|ó)bal|cuauhtemoc|cuaut(e|é)moc|d(e|é)cima|d(e|é)cimo|d(i|í)az|dguez|dom(i|í)nguez|donaj(i|í)|ej(e|é)rcito|el(i|í)as|estéban|esq|far(i|í)as|fco|fdo.|fernado|garc(i|í)a|gomez|gonzales|gonz(a|á)lez|guti(e|é)rrez|guzm(a|á)n|hern(a|á)ndez|h(e|é)roe|her(o|ó)ico|hindira|ib(a|á)ñez|ibarg(u|ü)en|jazm(i|í)n|jasminez)(\s|$|;)/],
-way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Aleman|Alvarez|Alvaro|America|Andres|Angel|Angelica|Bahia|Bambu|Bartolome|Benjamin|Cabanas|Callejon|Canon|Cardenas|Carreteria|Catolica|Cesar|Cipres|Comondu|Cordova|Cortes|Cristobal|Cuauhtemoc|Cuautemoc|Decima|Decimo|Diaz|Dguez|Dominguez|Donaji|Ejercito|Elias|Esteban|Esq|Farias|Fco|Fdo.|Fernado|FF.CC.|FF. CC.|Garcia|Gomez|Gonzales|Gonzalez|Gutierrez|Guzman|Hernandez|Heroe|Heroico|Hindira|Huamuchil|Ibañez|Ibarguen|Jazmin|Jasminez)(\s|$|;)/]{
+way[highway][/^(name|alt_name)$/=~/(^|\s)(agust(i|í)n|(a|á)lamo|alb(a|á)n|alcal(a|á)|alduc(i|í)n|alem(a|á)n|(a|á)lvarez|(a|á)lvaro|am(e|é)rica|andr(e|é)s|(a|á)ngel|ang(e|é)lica|bah(i|í)a|bamb(u|ú)|bartolom(e|é)|benjam(i|í)n|caba(n|ñ)as|callej(o|ó)n|ca(n|ñ)(o|ó)n|c(a|á)rdenas|carreteria|cat(o|ó)lica|c(e|é)sar|comond(u|ú)|cion|cipr(e|é)s|c(o|ó)rdova|cort(e|é)s|crist(o|ó)bal|cuauhtemoc|cuaut(e|é)moc|d(e|é)cima|d(e|é)cimo|d(i|í)az|dguez|dom(i|í)nguez|donaj(i|í)|ej(e|é)rcito|el(i|í)as|est(e|é)ban|esq|far(i|í)as|fco|fdo.|fernado|garc(i|í)a|gomez|gonzalez|gonz(a|á)lez|guti(e|é)rrez|guzm(a|á)n|hern(a|á)ndez|h(e|é)roe|her(o|ó)ico|hindira|ib(a|á)ñez|ibarg(u|ü)en|jazm(i|í)n|jasminez)(\s|$|;)/],
+way[highway][/^(name|alt_name)$/=~/(^|\s)(Agustin|Alamo|Alban|Alcala|Alducin|Aleman|Alvarez|Alvaro|America|Andres|Angel|Angelica|Bahia|Bambu|Bartolome|Benjamin|Cabanas|Callejon|Canon|Cardenas|Carreteria|Catolica|Cesar|Cipres|Comondu|Cordova|Cortes|Cristobal|Cuauhtemoc|Cuautemoc|Decima|Decimo|Diaz|Dguez|Dominguez|Donaji|Ejercito|Elias|Estéban|Esq|Farias|Fco|Fdo.|Fernado|FF.CC.|FF. CC.|Garcia|Gomez|Gonzalez|Gutierrez|Guzman|Hernandez|Heroe|Heroico|Hindira|Ibañez|Ibarguen|Jazmin|Jasminez)(\s|$|;)/]{
     throwWarning: tr("Misspelled word or accent missing, try ''fix''");
     group: tr(kaart_Sanitas);
     fixAdd: concat("name=",
@@ -795,7 +795,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jerusalem|Jesus|Jim
     "Ortíz", "Ortiz")
     );
 }
-way[highway][/^(name|alt_name)$/=~/(^|\s)(pac(i|í)fico|pante(o|ó)n|para(i|í)so|pe(n|ñ)aloza|peñ(o|ó)n|perif(e|é)rico|p(i|í)pila|pital(u|ú)a|prof|prolongaci(o|ó)n|quetzalc(o|ó)atl|rafa(e|é)l|ray(o|ó)n|rep(u|ú)blica|r(i|í)o|rodr(i|í)guez|rom(a|á)n|revoluci(ó|o)n|romer(i|í)a|ruíz|s(e|é)ptima|serd(a|á)n|s(i|í)mbolos|s(i|í)mbolo|ter(a|á)n|tom(a|á)s|tonantz(i|í)n|top(o|ó)grafos|tr(e|é)bol|tulip(a|á)n|v(a|á)squez|tenochitl(a|à)n|vel(a|á)squez|vel(a|á)zquez|v(i|í)a|v(i|í)ctor|vig(e|é)sima|v(i|í)rgenes|vizca(i|í)nas|volc(a|á)n|yucat(a|á)n|x(o|ó)chitl)(\s|$|;)/],
+way[highway][/^(name|alt_name)$/=~/(^|\s)(pac(i|í)fico|pante(o|ó)n|para(i|í)so|pe(n|ñ)aloza|peñ(o|ó)n|perif(e|é)rico|p(i|í)pila|pital(u|ú)a|prof|prolongaci(o|ó)n|quetzalc(o|ó)atl|rafa(e|é)l|ray(o|ó)n|rep(u|ú)blica|r(i|í)o|rodr(i|í)guez|rom(a|á)n|revoluci(ó|o)n|romer(i|í)a|ru(i|í)z|s(e|é)ptima|serd(a|á)n|s(i|í)mbolos|s(i|í)mbolo|ter(a|á)n|tom(a|á)s|tonantz(i|í)n|top(o|ó)grafos|tr(e|é)bol|tulip(a|á)n|v(a|á)squez|tenochitl(a|à)n|vel(a|á)squez|vel(a|á)zquez|v(i|í)a|v(i|í)ctor|vig(e|é)sima|v(i|í)rgenes|vizca(i|í)nas|volc(a|á)n|yucat(a|á)n|x(o|ó)chitl)(\s|$|;)/],
 way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñon|Periferico|Pipila|Pitalua|Prof|Quetzalcoatl|Rafael|Revolucion|Rayon|Republica|Rio|Rodriguez|Roman|Romeria|Ruíz|Septima|Serdan|Simbolo|Simbolos|Teran|Tomas|Tonantzin|Topografos|Trebol|Tulipan|Vasquez|Velasquez|Velazquez|Via|Victor|Vigesima|Virgenes|Vizcainas|Volcan|Yucatan|Xochitl|Tenochitlan)(\s|$|;)/]{
     throwWarning: tr("Misspelled word or accent missing, try ''fix''");
     group: tr(kaart_Sanitas);
@@ -1007,7 +1007,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     "republica", "República"),
     "república", "República"),
     "Republica", "República"),
-     "revolucion", "Revolución"),
+    "revolucion", "Revolución"),
     "revolución", "Revolución"),
     "Revolucion", "Revolución"),
     "rio", "Río"),
