@@ -27,7 +27,7 @@ way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible
   way[!highway][waylength() < 30][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing {
     group: tr("kaart");
     throwWarning: tr("Possible divided-highway pedestrian crossing. Should there be a footway?");
-    /* suggestAlternative: tr("highway=footway, footway=crossing") */;
+    /* suggestAlternative: tr("highway=footway, footway=crossing"); */
   }
 /*
   node[!inside("GR")][gpx_distance() < 30 || gpx_distance() >= 50000000].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {

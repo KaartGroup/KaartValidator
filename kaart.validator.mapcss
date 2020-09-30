@@ -4,12 +4,13 @@ meta
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
   min-josm-version: "8087";
-  version: "30_2020-06-16";
+  version: "37_2020-09-16";
 }
 /****************
  ** Kaart Users *
  ****************/
-relation[JOSM_search("user:vorpalblade77-kaart or user:vespax or user:TheJAwesome1 or user:CapAhab or user:\"Leonardo DeMAPrio\" or user:Soccersweeper or user:alyssamaps or user:G_Fyyar or user:EarthAngel or user:And_12 or user:ArleneC or user:orca_horka or user:\"El Pescador\" or user:\"Unicorn Ostrich\" or user:Street_Shark or user:peacewaya or user:chuck97! or user:chancethewrapper or user:CartographicChels or user:mama_bear or user:Corban8 or user:Te-Ika or user:dhic or user:krinkov76239 or user:Dillon9 or user:Anoesis or user:RedBot or user:ebraplmap or user:VigotheCarpathian or user:TigerTamer or user:GOwin or user:Evandering or user:FarieBerrie or user:Copernicus529 or user:Velocimaptor or user:theArchDruid or user:Hoordinates or user:Baconcrisp or user:CoolGuyJake or user:jacob_kubeczko o ruser:Hulk_Maps or user:AnonJason or user:Red_Ranger or user:geoJenn or user:yjn3n or user:_Poliwrath_ or user:JonKrato or user:spuddy93 or user:Gr8fulDead or user:JAAS or user:pizzagal or user:Kyleta8 or user:birdeatscake or user:LSkalayo or user:geografer or user:BlueBot or user:Traaker_L or user:Ids68W or user:medrano93 or user:MTG5093 or user:MappnMatt or user:notmee-uh or user:MichNicole or user:trigeo or user:MMantio or user:rallynukab or user:Ned_Stark or user:MoonDragon or user:daFisch or user:jedimasterflint or user:n1y0m1 or user:Georafas or user:Rally or user:Rasterfarian89 or user:whatmeinfallible or user:RobinNoodles or user:Mel_1 or user:EptingR or user:\"Whimsical Otter\" or user:rytheking or user:Kaarti_B or user:BobGod or user:TheAnimappor or user:happy-camper or user:Sherbare or user:mapcraft or user:Avocadough! or user:Smoothdog or user:LiuTwo or user:\"Владимир К\" or user:ImjusBuddy or user:the_node_less_traveled or user:Zebulonium")] { set .kaart_user }
+
+relation[JOSM_search("user:JAAS or user:DowntownAbby or user:sbburg or user:RConnorsCarte19 or user:ProfessorLupin or user:ReedtheRiver or user:GhostEye or user:Buddy-the-Elf or user:Corban8 or user:tomincolorado or user:hairyhaggis or user:AnonJason or user:CoolGuyJake or user:\"Whimsical Otter\" or user:theArchDruid or user:Baconcrisp or user:DRM150 or user:birdeatscake or user:Kaarti_B or user:DerekBev or user:nutchayahongvilai or user:InnerPace")]{ set .kaart_user }
 
 relation[type=route].kaart_user {
   group: tr("kaart");
@@ -33,6 +34,7 @@ way[oneway=-1] {
 }
 @supports (min-josm-version: 14802) {
 /* Check that roads have surfaces */
+  /*
   way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$/][!surface][gpx_distance() < 30 || gpx_distance() >= 50000000],
   way[highway=~/^.*_link$/][!surface][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
@@ -41,18 +43,21 @@ way[oneway=-1] {
   way[highway=~/^(service|living_street)$/][!surface][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwOther: tr("Missing surface on a minor road");
-  }
+  } */
+
   way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][surface=paved][gpx_distance() < 30 || gpx_distance() >= 50000000],
   way[highway=~/^(pedestrian)$/][name][surface=paved][gpx_distance() < 30 || gpx_distance() >= 50000000],
   way[highway=~/^.*_link$/][surface=paved][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwWarning: tr("Generic paved surface on road");
   }
+
   /* Check that roads have lanes */
+  /*
   way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$/][!lanes][surface!~/^(gravel|ground)$/][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwWarning: tr("Missing lanes on road");
-  }
+  } */
 
   /* Check for bad lanes */
   way[highway][lanes=0] {
@@ -157,10 +162,11 @@ way[highway][/turn:lanes/][/turn:lanes/!~/^(none[|;]?)*((reverse|merge_to_right|
 
 @supports (min-josm-version: 14802) {
 /* Check *_links to see if they have a oneway tag */
-  way[highway=~/^.*_link$/][!oneway][gpx_distance() < 30 || gpx_distance() >= 50000000] {
+/* Taylor Smock, Derek Bevan */
+  way[highway=~/^.*_link$/][!oneway] {
     group: tr("kaart");
-    throwError: tr("_links are usually {0}", "{1.key}");
-    suggestAlternative: "oneway";
+    throwWarning: tr("Links are usually oneway. Please verify");
+    /* suggestAlternative: "oneway"; */
   }
 }
 
@@ -206,17 +212,20 @@ way[highway][ref] > node { set .nodeHasRef }
   }
 
   /* Check for erroneous maxspeed */
+  /*
   way[highway][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5]( mph| knots)?)|none|walk|signals|\p{Lu}{2}:(\p{Ll}|:)*)$/][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwError: tr("Unknown maxspeed -- check the maxspeeds");
   }
+
   way[highway][inside("US")][/^(?!maxspeed:type|maxspeed:variable)maxspeed/][/^maxspeed/!~/^((\d{0,2}[0,5] mph)|none|walk|signals|\p{Lu}{2}:(\p{Ll}|:)*)$/][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwError: tr("{0} should be in mph in the US, try adding mph to {0}", "{3.key}");
-  }
+  } */
 }
 
 /* Traffic sign checks */
+/*
 node[traffic_sign][maxspeed][tag("maxspeed") != parent_tag("maxspeed")][!/^(direction|traffic_sign:(forward|backward))$/],
 node[traffic_sign][maxspeed][tag("maxspeed") != parent_tag("maxspeed:forward") || count(parent_tags("maxspeed:forward")) == 0 && tag("maxspeed") != parent_tag("maxspeed")][traffic_sign:forward?],
 node[traffic_sign][maxspeed][tag("maxspeed") != parent_tag("maxspeed:backward") || count(parent_tags("maxspeed:backward")) == 0 && tag("maxspeed") != parent_tag("maxspeed")][traffic_sign:backward?],
@@ -234,8 +243,9 @@ node[traffic_sign][overtaking][tag("overtaking") != parent_tag("overtaking:forwa
 node[traffic_sign][overtaking][tag("overtaking") != parent_tag("overtaking:backward") || count(parent_tags("overtaking:backward")) == 0 && tag("overtaking") != parent_tag("overtaking")][traffic_sign:backward?] {
   group: tr("kaart");
   throwWarning: tr("{0} on {1} does not match {2} on parent way", "{1.key}", "{0.key}", "{1.key}");
-}
+} */
 
+/*
 node[traffic_sign][maxspeed][count(parent_tags("maxspeed")) == 0][!/^(direction|traffic_sign:(forward|backward))$/],
 node[traffic_sign][maxspeed][count(parent_tags("maxspeed:forward")) == 0 && count(parent_tags("maxspeed")) == 0][traffic_sign:forward?],
 node[traffic_sign][maxspeed][count(parent_tags("maxspeed:backward")) == 0 && count(parent_tags("maxspeed")) == 0][traffic_sign:backward?],
@@ -253,14 +263,15 @@ node[traffic_sign][overtaking][count(parent_tags("overtaking:forward")) == 0 && 
 node[traffic_sign][overtaking][count(parent_tags("overtaking:backward")) == 0 && count(parent_tags("overtaking")) == 0][traffic_sign:backward?] {
   group: tr("kaart");
   throwWarning: tr("{0} on {1} does not exist on parent way", "{1.key}", "{0.key}");
-}
+} */
 
 /* Check for areas that should have units on maxweight */
+/*
 *[maxweight][maxweight=~/^[0-9.]+$/][inside("US")],
 *[maxaxleload][maxaxleload=~/^[0-9.]+$/][inside("US")] {
   group: tr("kaart");
   throwError: tr("{0} is always in short tons (st)", "{0.key}");
-}
+} */
 
 /* Check *_links to see if they have a name/noname tag */
 way[highway=~/^.*_link$/][name],
@@ -270,10 +281,12 @@ way[highway=~/^.*_link$/][noname] {
 }
 @supports (min-josm-version: 14802) {
   /* Bring pedestrian crossings forward */
+  /*
   node[highway=crossing][!crossing][gpx_distance() < 30 || gpx_distance() >= 50000000]:in-downloaded-area {
     group: tr("kaart");
     throwWarning: tr("A highway crossing does not have a crossing type");
-  }
+  } */
+  /*
   node[highway=crossing][crossing][crossing!~/^(traffic_signals|uncontrolled|no|unmarked|zebra|pelican|tiger|toucan|pegasus|island)$/][gpx_distance() < 30 || gpx_distance() >= 50000000]:in-downloaded-area {
     group: tr("kaart");
     throwWarning: tr("A highway crossing is using an unknown crossing type ({0})", tag("crossing"));
@@ -281,22 +294,22 @@ way[highway=~/^.*_link$/][noname] {
     assertNoMatch: "node highway=crossing crossing=uncontrolled";
     assertNoMatch: "node highway=crossing crossing=unmarked";
     assertNoMatch: "node highway=crossing crossing=no";
-    /* assertMatch: "node highway=crossing crossing=bad_crossing"; TODO figure out why this errors */
-  }
-
+    /* assertMatch: "node highway=crossing crossing=bad_crossing"; TODO figure out why this errors *//*
+  } */
+  /*
   node[highway=crossing][crossing=island][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwWarning: tr("{0} is no longer recommended, due to conflicting with unmarked/uncontrolled/traffic_signals", "{1.tag}");
     suggestAlternative: "crossing:island=yes";
     fixRemove: "crossing";
     fixAdd: "crossing:island=yes";
-  }
-
+  } */
+  /*
   node[highway=crossing][crossing=~/^(zebra|pelican|tiger|toucan|pegasus)$/][gpx_distance() < 30 || gpx_distance() >= 50000000]:in-downloaded-area {
     group: tr("kaart");
     throwWarning: tr("A highway crossing is using an unclear crossing type that should be in crossing_ref");
     fixChangeKey: "crossing => crossing_ref";
-  }
+  } */
 }
 
 /* Look for intersections of railways and highways */
@@ -346,30 +359,49 @@ way[highway=~/^.*_link$/] > node {set .is_in_link}
 way[highway =~ /^(bus_guideway|living_street|motorway|motorway_link|pedestrian|primary|primary_link|raceway|residential|road|secondary|secondary_link|service|tertiary|tertiary_link|track|trunk|trunk_link|unclassified)$/] > node { set .is_in_major_road }
 way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
 
+
+
 /* Check bridge tagging */
+
 way[highway][bridge][!layer] {
   group: tr("kaart");
   throwWarning: tr("Bridges should have a layer");
 }
+
 way|z21-[JOSM_search("inview")][highway][bridge][!layer] {
   group: tr("kaart");
   throwWarning: tr("Bridges should have a layer");
   fixAdd: "layer=1";
 }
 
+/* Derek Bevan */
+way[highway][bridge] >[index=1] node, way[highway][bridge] >[index=-1] node {set .bridge_end_node}
+way[highway][!bridge] >[index=1] node, way[highway][!bridge] >[index=-1] node {set .highway_end_node}
+way[highway][!bridge] > node {set .non_bridge_node}
+
+/* Derek Bevan */
+node.bridge_end_node.non_bridge_node!.highway_end_node, node[JOSM_search("type:node child(highway bridge) child(highway -bridge) ways:3-")] {
+  group: tr("kaart");
+  throwWarning: tr("Bridges should not end in intersections (False positives may be caused by landuse, borders, buildings, etc.)");
+}
+
+
 @supports (min-josm-version: 14802) {
   /* Check for potential road restrictions */
+  /*
   way[highway][bridge][!maxweight][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwOther: tr("Bridges may have a maxweight");
     suggestAlternative: "maxweight";
-  }
+  } */
+
   /* TODO fix */
+  /*
   way[highway][bridge] ⧉ way[highway][!bridge][!maxheight][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwOther: tr("Ways under bridges occassionally have a maxheight attribute. Check on ground for the information (or OpenStreetCam/Mapillary)");
     suggestAlternative: "maxheight";
-  }
+  } */
 }
 
 way[highway][maxheight=~/^\d+'\s\d+"$/] {
@@ -382,13 +414,14 @@ way|z21-[JOSM_search("inview")][highway][maxheight=~/^\d+'\s\d+"$/] {
   fixAdd: tr("{0}={1}", "maxheight", replace(tag("maxheight"), " ", ""));
 }
 
+/*
 @supports (min-josm-version: 14802) {
   way[highway][tunnel][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwOther: tr("Tunnels may have a maxheight");
     suggestAlternative: "maxheight";
   }
-}
+} */
 
 /* Check mini-roundabouts for the correct direction */
 node[highway=mini_roundabout][direction!=clockwise][JOSM_search("-inview")]!:righthandtraffic:in-downloaded-area,
@@ -419,21 +452,30 @@ node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwi
  * Roundabouts ***
  *****************/
 /* Checks for roundabouts */
+
 way[junction=roundabout]:in-downloaded-area > node {set .is_in_roundabout}
 node[traffic_calming=island]:in-downloaded-area { set .is_traffic_calming_island}
+
+/* Taylor Smock, Derek Bevan */
 way[highway][highway!~/^(pedestrian|footway|cycleway)$/][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout!.is_traffic_calming_island {
   group: tr("kaart");
-  throwWarning: tr("Highway connecting to roundabout is NOT a oneway -- check if there is a traffic_calming=island nearby");
-  suggestAlternative: "split ways to have roundabout flares or add traffic_calming=island to a node using imagery"
+  throwWarning: tr("Highway connecting to roundabout is NOT a oneway -- should there be a Y-junction?");
+  /* suggestAlternative: "split ways to have roundabout flares or add traffic_calming=island to a node using imagery" */
 }
+
 way[highway][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout.is_traffic_calming_island {
   group: tr("kaart");
   throwWarning: tr("The node where a roundabout and a way connect should NOT be a traffic_calming=island (the island should be on the approach, not in the roundabout)");
 }
 
+
+
 /* Check for roundabouts with MORE than 1 road entering at the same location */
+
 way[junction=roundabout][name] > node {set .is_in_named_roundabout}
+
 /* TODO remove the one with parent_tags as soon as parent_osm_ids is in josm-tested */
+
 node.is_in_roundabout!.is_in_named_roundabout[count(parent_tags("name")) - count(parent_tags("landuse")) > 1]:in-downloaded-area,
 node.is_in_roundabout.is_in_named_roundabout[count(parent_tags("name")) - count(parent_tags("landuse")) > 2]:in-downloaded-area {
   group: tr("kaart");
@@ -444,11 +486,23 @@ node.is_in_roundabout[count(parent_osm_ids("highway")) - count(parent_osm_ids("j
   throwError: tr("Roundabouts should not have more than two additional ways at any node");
 }
 
+
 /* Ways entering the roundabout should start/end there */
 way[name][highway][!junction] > node.is_in_roundabout!.end_of_way!.start_of_way { set .roundabout_way_ends }
 node.roundabout_way_ends {
   group: tr("kaart");
   throwWarning: tr("Way {0} does not end at roundabout", parent_tags("name"));
+}
+
+/* Derek Bevan */
+@supports (min-josm-version: 15353) {
+ /* Check that roundabout names are different from the names of incoming ways */
+ way[highway][name][!junction] >[index=1] node, way[highway][name][!junction] >[index=-1] node {set .named_way_end_node}
+
+ node.is_in_named_roundabout.named_way_end_node[count(uniq_list(parent_tags("name"))) == 1] {
+   group: tr("kaart");
+   throwWarning: tr("Name of roundabout and incoming way are the same");
+ }
 }
 
 way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
@@ -487,7 +541,6 @@ node[barrier=kerb] < way[highway][highway=~/(service|residential|unclassified|te
   group: tr("kaart");
   throwWarning: tr("There is a {0} on the road", "kerb");
 }
-
 /***********************
  ** Country Specific ***
  ***********************/
@@ -592,6 +645,7 @@ way[amenity][amenity=~/fuel/][!building]:closed {
   group: tr("kaart");
   throwWarning: tr("Area may be a building");
 }
+
 /* Check for pedestrian ways */
 node[crossing] { set .crossing_node }
 way[highway=~/^(cycleway|footway|pedestrian)$/][footway=crossing] > node { set .footway_crossing }
@@ -601,14 +655,15 @@ way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible
   way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing,
   way[!highway][waylength() < 30][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing {
     group: tr("kaart");
-    throwWarning: tr("Possible pedestrian crossing");
-    suggestAlternative: tr("highway=footway, footway=crossing");
+    throwWarning: tr("Possible divided-highway pedestrian crossing. Should there be a footway?");
+    /* suggestAlternative: tr("highway=footway, footway=crossing"); */
   }
+/*
   node[!inside("GR")][gpx_distance() < 30 || gpx_distance() >= 50000000].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
     group: tr("kaart");
     throwWarning: tr("Maybe add a pedestrian crossing here");
     suggestAlternative: tr("highway=footway, footway=crossing");
-  }
+  } */
 }
 
 /* Check for traffic signals with directions */
@@ -637,6 +692,7 @@ node[highway=traffic_signals][!direction][!traffic_signals:direction][count(pare
   throwWarning: tr("{0} should have a direction when not on a oneway or an intersection", "{0.value}");
   suggestAlternative: "traffic_signals:direction";
 }
+/*
 node[highway=traffic_signals][direction=~/^(forward|backward)$/] {
   group: tr("kaart");
   throwWarning: tr("{0} should use traffic_signals:direction instead of direction for {1}", "{0.value}", "{1.value}");
@@ -645,15 +701,16 @@ node[highway=traffic_signals][direction=~/^(forward|backward)$/] {
   assertMatch: "node highway=traffic_signals direction=backward";
   assertNoMatch: "node highway=traffic_signals traffic_signals:direction=backward";
   assertNoMatch: "node highway=traffic_signals direction=359.9";
-}
+} */
 
 /* Check for traffic sign issues */
+/*
 node[traffic_sign][direction=~/^(forward|backward)$/] {
   group: tr("kaart");
   throwWarning: tr("{0} should use traffic_sign:{1}=yes", "{0.key}", tag("direction"));
   fixAdd: concat("traffic_sign:", tag("direction"), "=yes");
   fixRemove: "direction";
-}
+} */
 
 relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associatedStreet }
 
@@ -662,6 +719,13 @@ relation[type=associatedStreet] >[role=house] *[addr:housenumber] { set .associa
   group: tr("kaart");
   throwError: tr("Addresses should have a street");
   suggestAlternative: tr("{0}, {1}, or a {2} relation", "addr:street", "addr:place", "associatedStreet");
+}
+
+/* Check for house numbers in addr:street tag */
+/* Derek Bevan */
+*[addr:street =~ /[0-9]/] {
+  group: tr("kaart");
+  throwOther: tr("Addr:street tag may contain a housenumber");
 }
 
 /* Recommend removing associatedStreet relations when the houses have the addr:street tag */
@@ -800,21 +864,24 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
 /**************************************
  ***** Destination Tagging ************
  **************************************/
+
 /* Check for destination_sign relations where there shouldn't be destination_sign relations */
+/*
 relation[type=destination_sign][!distance][!time] > way[highway=motorway],
 relation[type=destination_sign][!distance][!time] > way[highway=trunk][oneway=yes] {
   group: tr("kaart");
   throwError: tr("{0} relations should not be used on {1}", "destination_sign", tag("highway"));
   suggestAlternative: "destination:lanes";
-}
+} */
 
 /* Check destination lane tagging */
 /* Check toll roads */
+/*
 *[destination:ref:lanes=~/(.*)toll(.*)$/] {
   group: tr("kaart");
   throwWarning: tr("Toll roads in destination:ref:lanes are lower case, instead of upper case");
   fixAdd: concat("destination:ref:lanes=", replace(tag("destination:ref:lanes"), "toll", "Toll"));
-}
+} */
 
 *[destination:ref=~/(.*)toll(.*)$/] {
   group: tr("kaart");
@@ -822,27 +889,32 @@ relation[type=destination_sign][!distance][!time] > way[highway=trunk][oneway=ye
   fixAdd: concat("destination:ref=", replace(tag("destination:ref"), "toll", "Toll"));
 }
 
+/*
 *[destination:lanes:ref] {
   group: tr("kaart");
   throwWarning: tr("destination:lanes:ref should be destination:ref:lanes");
   fixChangeKey: "destination:lanes:ref => destination:ref:lanes";
-}
+} */
 
+/*
 *[destination:lanes:ref:to] {
   group: tr("kaart");
   throwWarning: tr("destination:lanes:ref:to should be destination:ref:to:lanes");
   fixChangeKey: "destination:lanes:ref:to => destination:ref:to:lanes";
-}
+} */
+
 /* Check *_links to make certain they have destination:ref */
-way[highway=~/^.*_link$/][ref][!destination:ref] {
+way[highway=~/^.*_link$/][ref][!destination:ref][oneway=yes] {
   group: tr("kaart");
   throwWarning: tr("Link has ref but no destination:ref");
 }
-way|z21-[JOSM_search("inview")][highway=~/^.*_link$/][ref][!destination:ref] {
+
+way|z21-[JOSM_search("inview")][highway=~/^.*_link$/][ref][!destination:ref][oneway=yes] {
   group: tr("kaart");
   throwWarning: tr("Link has ref but no destination:ref");
   fixChangeKey: "ref => destination:ref";
 }
+
 
 /* Check if *_links are appropriately ref'd */
 way[highway!~/^.*_link$/][ref] > node.end_of_link { set .has_ref }
@@ -855,22 +927,30 @@ node[count(parent_tags("ref")) > 0 && parent_tag("destination:ref") != parent_ta
   throwWarning: tr("The destination:ref tag does not match the ref tag");
   /*fixAdd: concat("destination:ref=", parent_tag("ref"));*/
 }
+/**** not working ***
 node[count(parent_tags("destination:ref")) != count(parent_tags("destination:ref"))].end_of_link.has_destination_ref {
   group: tr("kaart");
   throwWarning: tr("The destination:ref tag does not match the next links'' destination:ref tag");
-  /*fixAdd: concat("destination:ref=", parent_tag("ref"));*/
-}
+  /*fixAdd: concat("destination:ref=", parent_tag("ref"));*//*
+} */
 
-/* Check if link has destination:{ref|street} */
-way[highway][highway=~/.*_link$/][!destination:street][!destination:ref][oneway=yes] > node { set .link_no_ref }
-
-node[!destination:street][!destination:ref].link_no_ref.has_ref,
-node[!destination:street][!destination:ref].link_no_ref.has_destination_ref {
+/* Check for connected links with different destination:ref tags */
+/* Derek Bevan */
+way[highway =~ /_link/] > node[count(uniq_list(parent_tags("destination:ref"))) > 1] {
   group: tr("kaart");
-  throwWarning: tr("_link does not have {0} or {1}", "{0.key}", "{1.key}");
-  suggestAlternative: tr("{0} or {1}", "{0.key}", "{1.key}");
+  throwWarning: tr("Connected links have different destination:ref tags. Are both tags correct?");
 }
 
+/* Check if link has destination:ref */
+way[highway=~/.*_link$/][!destination:ref] >[index=-1] node { set .link_no_ref }
+
+node.link_no_ref.has_ref {
+  group: tr("kaart");
+  throwWarning: tr("Link may be missing a destination:ref tag");
+  /* suggestAlternative: tr("{0} or {1}", "{0.key}", "{1.key}"); */
+} 
+
+/*
 way[highway][highway=~/.*_link$/][!/destination:street:(forward|backward)/][!/destination:ref:(forward|backward)/][oneway=no] {
   group: tr("kaart");
   throwWarning: tr("_link does not have {0} or {1}", "{2.key}", "{3.key}");
@@ -882,7 +962,7 @@ way[highway][highway=~/.*_link$/][!/destination:street:(forward|backward)/][!/de
   assertMatch: "way highway=motorway_link destination:street=M22 oneway=no";
   assertNoMatch: "way highway=motorway_link destination:street:forward=M22 oneway=no";
   assertNoMatch: "way highway=motorway_link oneway=yes";
-}
+} */
 
 /* Check for destination:street that is the same as the name of the street */
 way[highway][name][destination:street][tag("name") == tag("destination:street")] {
@@ -892,6 +972,7 @@ way[highway][name][destination:street][tag("name") == tag("destination:street")]
 }
 
 /* Ensure that the destination:lanes/:forward/:backward match the number of lanes on the road */
+/*
 way[highway][!lanes][destination:lanes] {
   group: tr("kaart");
   throwWarning: tr("There should be a lanes tag when there is a destination:lanes tag");
@@ -908,7 +989,8 @@ way[highway][lanes:backward][destination:ref:lanes:backward][oneway][count(split
 way[highway][!lanes:backward][destination:ref:lanes:backward][count(split("|", tag("destination:ref:lanes:backward"))) != tag("lanes") / 2] {
   group: tr("kaart");
   throwWarning: tr("The implied lanes in {0} do not match the lanes in {1}", "{2.tag}", "{1.key}");
-}
+} */
+
 *[destination=~/^(?i)(ave|blvd|str) .*$/],
 *[destination=~/^.* (?i)(ave|blvd|str)$/],
 *[destination:to=~/^(?i)(ave|blvd|str) .*$/],
@@ -934,24 +1016,27 @@ tr("{0}", "{0.key}"),
 }
 
 /* Check for bad destination_sign relations */
+/*
 way[highway] > node { set .road_node; }
 relation[type=destination_sign] >[role=sign] node.road_node {
   group: tr("kaart");
   throwWarning: tr("The {0} role should typically be where the {0} is, not on the road way itself", "sign");
-}
+} */
 
 /* Check for via roles in destination_sign relations */
+/*
 relation[type=destination_sign] >[role=via] * {
   group: tr("kaart");
   throwError: tr("{0} is not a valid role in {1} relations", "via", "destination_sign");
   suggestAlternative: "intersection";
-}
+} */
 
 /* Check for from/to roles that are nodes */
+/*
 relation[type=destination_sign] >[role=to] node {
   group: tr("kaart");
   throwWarning: tr("{0} should be a way", "to/from");
-}
+} */
 
 /* Ensure tagging consistency for destination:<INTERIOR>:forward/:backward */
 *[/destination:(forward|backward):(.*)/] {
@@ -963,10 +1048,14 @@ relation[type=destination_sign] >[role=to] node {
 }
 
 /* Ensure that destination_sign relations have a from role */
+/*
 relation[type=destination_sign][count_roles("from") == 0] {
   group: tr("kaart-experimental");
   throwWarning: tr("{0} should have a {1} role", "destination_sign", "from");
-}
+} */
+/*************
+* Oneway *****
+*************/
 
 /* Check for common backward/forward tagging */
 way[motor_vehicle:backward=no] {
@@ -1005,8 +1094,31 @@ way[/(motorcycle|moped|mofa|motor_vehicle|vehicle):(forward|backward)/] {
   throwOther: tr("Try to use oneway tags");
 }
 
+
+/* Check for dead-end oneways */
+/* Derek Bevan */
+way[highway][oneway=yes]!:closed >[index=-1] node:in-downloaded-area!:connection, way[highway][oneway=yes]!:closed >[index=1] node:in-downloaded-area!:connection {
+  group: tr("kaart");
+  throwError: tr("Dead-end oneways");
+}
+
+/* Check for converging oneways with no exit */
+/* Derek Bevan */
+way[highway][oneway=yes] >[index=-1] node:in-downloaded-area:connection {set .end_oneway}
+way[highway][oneway=yes] >[index!=-1] node:in-downloaded-area:connection, way[highway][oneway!=yes] > node:in-downloaded-area:connection {set .way_out}
+
+node.end_oneway!.way_out {
+  group: tr("kaart");
+  throwError: tr("Converging oneways with no exit");
+}
+/*************
+* refs *******
+*************/
+
+/*
 @supports (min-josm-version: 15323) {
   /* Check for ways that don't have the parent relation ref */
+/*
   relation[type=route][route=road][ref] > way[ref][!regexp_test(concat("^(", join_list("|", uniq_list(split(";", join(";", tag_regex("ref"))))), "|;?)+$"), join_list(";", uniq_list(sort_list(parent_tags("ref")))), "i")] {
     group: tr("kaart-experimental");
     throwWarning: tr("Parent ref not in child ref");
@@ -1014,11 +1126,19 @@ way[/(motorcycle|moped|mofa|motor_vehicle|vehicle):(forward|backward)/] {
   }
 
   /* Check for ways that have a ref that is not in a parent */
+/*
   relation[type=route][route=road] > way[highway][ref][count(parent_tags("ref")) != 0 && !regexp_test(join_list(";", uniq_list(sort_list(split(";", join_list(";", tag_regex("^(ref|nat_ref|int_ref|reg_ref)$")))))), join_list(";", uniq_list(sort_list(parent_tags("ref")))), "i")]!.parent_ref_not_in_child_ref {
     group: tr("kaart-experimental");
-    throwWarning: tr("A {0} on a way is not in a parent relation", "ref");
+    throwWarning: tr("A ref on a way is not in a parent relation");
     set .ref_not_in_relation
   }
+} */
+
+/* Find ways that are missing the parent relation ref or have a different ref than the parent relation */
+/* Derek Bevan */
+way[highway =~ /(tertiary|secondary|primary|trunk|motorway)/][JOSM_search("type:way child(type:relation route=road ref)")][(parent_tag("ref") != tag("ref")) || JOSM_search("-ref")] {
+  group: tr("kaart");
+  throwOther: tr("Ref on route relation may hint at missing highway refs");
 }
 
 /********************************
@@ -1077,10 +1197,11 @@ relation[type=connectivity][count_roles("via") < 1 || count_roles("from") != 1 |
 }
 
 /* Toll booths, entrances, and lift_gates default to access=yes */
-way[highway] > node[barrier][barrier !~ /^(toll_booth|entrance|lift_gate)$/][!access] {
+/* Taylor Smock, Derek Bevan */
+way[highway] > node[barrier][barrier =~ /^(gate)$/][!access] {
   group: tr("kaart");
-  throwWarning: tr("Most barriers should have an access tag");
-  suggestAlternative: "access";
+  throwWarning: tr("Gates missing access tags");
+  /* suggestAlternative: "access"; */
 }
 
 /* Check for missing arabic characters */
