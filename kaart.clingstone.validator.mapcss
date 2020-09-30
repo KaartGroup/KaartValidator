@@ -4,7 +4,7 @@ meta
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
   min-josm-version: "8087";
-  version: "36_2020-09-30";
+  version: "40_2020-09-30";
 }
 /****************
  ** Kaart Users *
@@ -382,7 +382,7 @@ way[highway][!bridge] > node {set .non_bridge_node}
 /* Derek Bevan */
 node.bridge_end_node.non_bridge_node!.highway_end_node, node[JOSM_search("type:node child(highway bridge) child(highway -bridge) ways:3-")] {
   group: tr("kaart");
-  throwWarning: tr("Bridges should not end in intersections");
+  throwWarning: tr("Bridges should not end in intersections (False positives may be caused by landuse, borders, buildings, etc.)");
 }
 
 
@@ -561,6 +561,7 @@ node[barrier=kerb] < way[highway][highway=~/(service|residential|unclassified|te
   group: tr("kaart");
   throwWarning: tr("There is a {0} on the road", "kerb");
 }
+
 /***********************
  ** Country Specific ***
  ***********************/
@@ -700,13 +701,12 @@ node[traffic_signal:direction] {
 way[/^highway|railway$/][oneway=yes] > node,
 way[/^highway|railway$/][junction=roundabout] > node { set .onewaynode }
 
-/*
 node[highway=traffic_signals][traffic_signals:direction].onewaynode,
 node[highway=traffic_signals][direction].onewaynode {
   group: tr("kaart");
   throwWarning: tr("There should not be {0} for {1} on a oneway", "{1.key}", "{0.key}");
   fixRemove: "{1.key}";
-} */
+}
 
 node[highway=traffic_signals][!direction][!traffic_signals:direction][count(parent_tags("name")) <= 1 && count(parent_tags("ref")) <= 1 && count(parent_tags("highway")) <= 1][!crossing]!.onewaynode:in-downloaded-area {
   group: tr("kaart");
