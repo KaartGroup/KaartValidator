@@ -367,6 +367,26 @@ node.bridge_end_node.non_bridge_node!.highway_end_node, node[JOSM_search("type:n
 }
 
 
+/* Check tunnels */
+/* Derek Bevan */
+way[highway][tunnel] >[index=1] node, way[highway][tunnel] >[index=-1] node {set .tunnel_end_node}
+way[highway][!tunnel] >[index=1] node, way[highway][!tunnel] >[index=-1] node {set .non_tunnel_end_node}
+way[highway][!tunnel] > node {set .non_tunnel_node}
+
+node.tunnel_end_node.non_tunnel_node!.non_tunnel_end_node, node[JOSM_search("type:node child(highway tunnel) child(highway -tunnel) ways:3-")] {
+  group: tr("kaart");
+  throwWarning: tr("Tunnels should not end in intersections");
+}
+
+
+/* Check for intersections with multiple layers */
+/* Derek Bevan */
+node!.bridge_end_node!.tunnel_end_node[JOSM_search("type:node ((child(highway -layer) child(highway layer -layer=0)) OR (child(highway layer=1) child(highway -layer=1)) OR (child(highway layer=-1) child(highway -layer=-1)))")] {
+  group: tr("kaart");
+  throwWarning: tr("Intersections with multiple layers");
+}
+
+
 @supports (min-josm-version: 14802) {
   /* Check for potential road restrictions */
   /*
