@@ -3,7 +3,7 @@ meta
   title: "Validation rules for Kaart Group--Dwarf Team";
   description: "Validation tool for the Kaart Mexico Project";
   author: "Rd Clare(mr_et) Taylor Smock(vorpalblade77-kaart) Farris Billy(FarieBerrie)";
-  version: "37_2020-09-30";
+  version: "37_2020-10-07";
 }
 /* Creates list of current/past Project Users  */
 *[JOSM_search("user:LSkalayo or user:Soccersweeper or user:ArleneC or user:3agleOne or user:\"Unicorn Ostrich\" or user:Goose6thAB or user:\"Chilly Chinchillas\" or user:Cinderblock or user:Dalekokarta or user:BlueRanger or user:MTG5093 or user:MappnMatt or user:MMantlo or user:rallynukab or user:jedimasterflint or user:RobinNoodles or user:Mel_1 or user:Sherbare or user:Smoothdog or user:ImjusBuddy or user:DreadPirateRoberts or user:EthanK or user:Yagni or user:G_Fyyar or user:mr_et or user:FarieBerrie or user:rileywhite97 or user:ikohl or user:spititout or user:nickmettauer or user:The_Intern or user:Meowshane or user:RouteRob or user:Kyleta8 or user:\"El Pescador\" or user:rytheking or user:Ajaie or user:BobGod or user:csjupiter1 or user:GhostEye or user:ArleneC or user:leedlelee or user:\"Leonardo DeMAPrio\" or user:logans127 or user:mapcraft or user:Plutocrats or user:chuck97! or user:Senzubeandealer or user:swells5 or user:notmee-uh or user:Traaker_L or user:yodacodyone1 or user:Dillon9 or user:jacob_kubeczko or user:LSkalayo or user:Traaker_L or user:MTG5093 or user:Zebulonium or user:staysavy")]{

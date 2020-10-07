@@ -381,7 +381,7 @@ node.tunnel_end_node.non_tunnel_node!.non_tunnel_end_node, node[JOSM_search("typ
 
 /* Check for intersections with multiple layers */
 /* Derek Bevan */
-node!.bridge_end_node!.tunnel_end_node[JOSM_search("type:node ((child(highway -layer) child(highway layer -layer=0)) OR (child(highway layer=1) child(highway -layer=1)) OR (child(highway layer=-1) child(highway -layer=-1)))")] {
+node!.bridge_end_node!.tunnel_end_node[JOSM_search("type:node ((child((highway|railway) -layer) child(highway layer -layer=0)) OR (child((highway|railway) layer=1) child(highway -layer=1)) OR (child((highway|railway) layer=2) child(highway -layer=2)) OR (child((highway|railway) layer=-1) child(highway -layer=-1)))")] {
   group: tr("kaart");
   throwWarning: tr("Intersections with multiple layers");
 }
@@ -424,30 +424,52 @@ way|z21-[JOSM_search("inview")][highway][maxheight=~/^\d+'\s\d+"$/] {
   }
 } */
 
-/* Check mini-roundabouts for the correct direction */
-node[highway=mini_roundabout][direction!=clockwise][JOSM_search("-inview")]!:righthandtraffic:in-downloaded-area,
-node|z-20[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:in-downloaded-area {
+
+/* Check for motor_vehicle=no tag -- it may not be necessary */
+/* Derek Bevan */
+way[highway =~ /^(service|residential|unclassified|tertiary|secondary|primary|trunk|motorway)(_link)?$/][motor_vehicle=no] {
   group: tr("kaart");
-  throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
+  throwWarning: tr("Highway contains motor_vehicle=no tag. Remove tag, reclassify way, or add access tag?");
+
+  assertMatch: "way highway=residential motor_vehicle=no";
+  assertNoMatch: "way highway=footway";
+  assertNoMatch: "way highway=steps";
+  assertNoMatch: "way highway=pedestrian";
 }
 
-node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:in-downloaded-area {
+relation[type=restriction][!/^restriction/] {
   group: tr("kaart");
-  throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
-  /*fixAdd: "direction=clockwise";*/
+  throwError: tr("Restriction relations should have the type of restriction");
+  assertMatch: "relation type=restriction";
+  assertNoMatch: "relation type=restriction restriction=no_u_turn";
+  assertNoMatch: "relation type=restriction restriction:hgv=no_u_turn";
 }
 
-node[highway=mini_roundabout][direction!=anticlockwise][JOSM_search("-inview")]:righthandtraffic:in-downloaded-area,
-node|z-20[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:in-downloaded-area {
+/* Check for ref and name being equal */
+way[highway][name][ref][name = *ref] {
+  throwWarning: tr("{0} and {1} are the same", "name", "ref");
   group: tr("kaart");
-  throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
+  assertMatch: "way highway=tertiary name=22 ref=22";
+  assertNoMatch: "way highway=tertiary name=22 ref=23";
 }
 
-node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:in-downloaded-area {
+/* Check for barrier=kerb on roads */
+way[highway][barrier=kerb][highway!~/(pedestrian|footway)/] {
   group: tr("kaart");
-  throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
-  /*fixAdd: "direction=anticlockwise";*/
+  throwWarning: tr("There is a {0} on the road", "{1.value}");
 }
+
+node[barrier=kerb] < way[highway][highway=~/(service|residential|unclassified|tertiary|secondary|primary|trunk|motorway)/] {
+  group: tr("kaart");
+  throwWarning: tr("There is a {0} on the road", "kerb");
+}
+
+
+way[highway=~/^.*_link$/][junction] {
+  group: tr("kaart");
+  throwWarning: tr("{0} should not be a {1} if any of the connecting roads are not {1}s", tag("junction"), "_link");
+}
+
 
 /*****************
  * Roundabouts ***
@@ -468,7 +490,6 @@ way[highway][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_
   group: tr("kaart");
   throwWarning: tr("The node where a roundabout and a way connect should NOT be a traffic_calming=island (the island should be on the approach, not in the roundabout)");
 }
-
 
 
 /* Check for roundabouts with MORE than 1 road entering at the same location */
@@ -511,34 +532,27 @@ way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residentia
   throwWarning: tr("Possible roundabout or circular junction");
 }
 
-way[highway=~/^.*_link$/][junction] {
+/* Check mini-roundabouts for the correct direction */
+node[highway=mini_roundabout][direction!=clockwise][JOSM_search("-inview")]!:righthandtraffic:in-downloaded-area,
+node|z-20[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:in-downloaded-area {
   group: tr("kaart");
-  throwWarning: tr("{0} should not be a {1} if any of the connecting roads are not {1}s", tag("junction"), "_link");
+  throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
 }
 
-relation[type=restriction][!/^restriction/] {
+node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:in-downloaded-area {
   group: tr("kaart");
-  throwError: tr("Restriction relations should have the type of restriction");
-  assertMatch: "relation type=restriction";
-  assertNoMatch: "relation type=restriction restriction=no_u_turn";
-  assertNoMatch: "relation type=restriction restriction:hgv=no_u_turn";
+  throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
+  /*fixAdd: "direction=clockwise";*/
 }
 
-/* Check for ref and name being equal */
-way[highway][name][ref][name = *ref] {
-  throwWarning: tr("{0} and {1} are the same", "name", "ref");
+node[highway=mini_roundabout][direction!=anticlockwise][JOSM_search("-inview")]:righthandtraffic:in-downloaded-area,
+node|z-20[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:in-downloaded-area {
   group: tr("kaart");
-  assertMatch: "way highway=tertiary name=22 ref=22";
-  assertNoMatch: "way highway=tertiary name=22 ref=23";
+  throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
 }
 
-/* Check for barrier=kerb on roads */
-way[highway][barrier=kerb][highway!~/(pedestrian|footway)/] {
+node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:in-downloaded-area {
   group: tr("kaart");
-  throwWarning: tr("There is a {0} on the road", "{1.value}");
-}
-
-node[barrier=kerb] < way[highway][highway=~/(service|residential|unclassified|tertiary|secondary|primary|trunk|motorway)/] {
-  group: tr("kaart");
-  throwWarning: tr("There is a {0} on the road", "kerb");
+  throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
+  /*fixAdd: "direction=anticlockwise";*/
 }
