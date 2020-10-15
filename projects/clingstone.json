@@ -19,5 +19,6 @@
 		"invalid_tags",
 		"access",
 		"experimental"
-	]
+	],
+	"group": "kaart"
 }

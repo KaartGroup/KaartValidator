@@ -6,5 +6,6 @@
    },
    "modules" : [
       "durazno"
-   ]
+   ],
+	"group": "kaart_Sanitas"
 }

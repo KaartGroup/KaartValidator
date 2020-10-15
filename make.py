@@ -10,6 +10,8 @@ import re
 PROJECT_DIRECTORY = "projects"
 MODULE_DIRECTORY = "modules"
 
+GROUP_PATTERN = re.compile(r"group\(.*\);")
+
 
 def projectData(project):
     with open(project) as f:
@@ -44,9 +46,7 @@ def writeHeader(filename, data):
                     prior_version = line.split(":")[1].strip()
                     break
                 line = f.readline()
-        current_version = getVersion(
-            filename, prior_version=prior_version
-        )
+        current_version = getVersion(filename, prior_version=prior_version)
         with open(filename, "w") as f:
             f.write("meta\n")
             f.write("{\n")
@@ -58,18 +58,23 @@ def writeHeader(filename, data):
     return False
 
 
-def writeTests(filename, module):
+def writeTests(filename, module, group: str = None):
     with open(filename, "a") as f, open(module, "r") as m:
         for line in m:
+            if GROUP_PATTERN.match(line) and group:
+                line = "  group(tr({0}));".format(group)
             f.write(line)
 
 
 def addTests(filename, data):
     if "modules" not in data:
         return False
+    group = data["group"] if "group" in data else None
     modules = data["modules"]
     for module in modules:
-        writeTests(filename, os.path.join(MODULE_DIRECTORY, module))
+        writeTests(
+            filename, os.path.join(MODULE_DIRECTORY, module), group=group
+        )
         if modules.index(module) == len(modules) - 1:
             break
         with open(filename, "a") as f:

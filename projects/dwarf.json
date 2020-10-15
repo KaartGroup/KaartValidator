@@ -7,5 +7,6 @@
    "modules" : [
       "dwarf",
       "portuguese"
-   ]
+   ],
+	"group": "kaart"
 }

@@ -7,5 +7,6 @@
 	},
 	"modules": [
 		"refs"
-	]
+	],
+	"group": "kaart"
 }
