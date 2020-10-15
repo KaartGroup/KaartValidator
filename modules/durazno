@@ -91,31 +91,6 @@ way[/^(tunnel|bridge)$/][/^(tunnel|bridge)$/!~/^no$/][!layer] {
   group: tr(kaart_Sanitas);
 }
 
-/* Check for intersections with multiple layers */
-/* Derek Bevan */
-node!.bridge_end_node!.tunnel_end_node[JOSM_search("type:node ((child((highway|railway) layer=1) child(highway -layer=1)) OR (child((highway|railway) layer=2) child(highway -layer=2)) OR (child((highway|railway) layer=-1) child(highway -layer=-1)))")] {
-  group: tr("kaart_Sanitas");
-  throwWarning: tr("Intersections with multiple layers");
-}
-
-/* Derek Bevan */
-way[highway][bridge] >[index=1] node, way[highway][bridge] >[index=-1] node {set .bridge_end_node}
-way[highway][!bridge] >[index=1] node, way[highway][!bridge] >[index=-1] node {set .highway_end_node}
-way[highway][!bridge] > node {set .non_bridge_node}
-
-/* Derek Bevan */
-node.bridge_end_node.non_bridge_node!.highway_end_node, node[JOSM_search("type:node child(highway bridge) child(highway -bridge) ways:3-")] {
-  group: tr("kaart_Sanitas");
-  throwWarning: tr("Bridges should not end in intersections (False positives may be caused by landuse, borders, buildings, etc.)");
-}
-
-/* Look for highway=* that is not service but has service=* */
-*[highway][highway!=service][service] {
-  group: tr("kaart_Sanitas");
-  throwError: tr("Non-service roads should not have a service tag in most cases");
-  suggestAlternative: tr("{0} or remove the {1} tag", "highway=service", "service");
-}
-
 /* Checks if roundabouts have the highway = _link tag */
 /* RD Clare */
 way[highway =~ /^.*_link$/][junction = roundabout] {
