@@ -87,13 +87,6 @@ way[oneway=-1] {
   }
 }
 
-/* Look for highway=* that is not service but has service=* */
-*[highway][highway!=service][service] {
-  group: tr("kaart");
-  throwError: tr("Non-service roads should not have a service tag in most cases");
-  suggestAlternative: tr("{0} or remove the {1} tag", "highway=service", "service");
-}
-
 /* Look for possible highways without highway tags */
 way[!/^(.*:)*(highway|railway)$/][/^.*(lanes|maxspeed|maxweight|maxheight|maxwidth|turn).*$/][!/^aeroway$/],
 way[!/^(.*:)*(highway|railway)$/][/^(surface)$/][!/^amenity|leisure|aeroway|natural$/][place!=square] {
@@ -341,52 +334,6 @@ way[highway =~ /^(bus_guideway|living_street|motorway|motorway_link|pedestrian|p
 way[highway =~ /^(service)$/] > node { set .is_in_minor_road }
 
 
-
-/* Check bridge tagging */
-
-way[highway][bridge][!layer] {
-  group: tr("kaart");
-  throwWarning: tr("Bridges should have a layer");
-}
-
-way|z21-[JOSM_search("inview")][highway][bridge][!layer] {
-  group: tr("kaart");
-  throwWarning: tr("Bridges should have a layer");
-  fixAdd: "layer=1";
-}
-
-/* Derek Bevan */
-way[highway][bridge] >[index=1] node, way[highway][bridge] >[index=-1] node {set .bridge_end_node}
-way[highway][!bridge] >[index=1] node, way[highway][!bridge] >[index=-1] node {set .highway_end_node}
-way[highway][!bridge] > node {set .non_bridge_node}
-
-/* Derek Bevan */
-node.bridge_end_node.non_bridge_node!.highway_end_node, node[JOSM_search("type:node child(highway bridge) child(highway -bridge) ways:3-")] {
-  group: tr("kaart");
-  throwWarning: tr("Bridges should not end in intersections (False positives may be caused by landuse, borders, buildings, etc.)");
-}
-
-
-/* Check tunnels */
-/* Derek Bevan */
-way[highway][tunnel] >[index=1] node, way[highway][tunnel] >[index=-1] node {set .tunnel_end_node}
-way[highway][!tunnel] >[index=1] node, way[highway][!tunnel] >[index=-1] node {set .non_tunnel_end_node}
-way[highway][!tunnel] > node {set .non_tunnel_node}
-
-node.tunnel_end_node.non_tunnel_node!.non_tunnel_end_node, node[JOSM_search("type:node child(highway tunnel) child(highway -tunnel) ways:3-")] {
-  group: tr("kaart");
-  throwWarning: tr("Tunnels should not end in intersections");
-}
-
-
-/* Check for intersections with multiple layers */
-/* Derek Bevan */
-node!.bridge_end_node!.tunnel_end_node[JOSM_search("type:node ((child((highway|railway) -layer) child(highway layer -layer=0)) OR (child((highway|railway) layer=1) child(highway -layer=1)) OR (child((highway|railway) layer=2) child(highway -layer=2)) OR (child((highway|railway) layer=-1) child(highway -layer=-1)))")] {
-  group: tr("kaart");
-  throwWarning: tr("Intersections with multiple layers");
-}
-
-
 @supports (min-josm-version: 14802) {
   /* Check for potential road restrictions */
   /*
@@ -470,89 +417,3 @@ way[highway=~/^.*_link$/][junction] {
   throwWarning: tr("{0} should not be a {1} if any of the connecting roads are not {1}s", tag("junction"), "_link");
 }
 
-
-/*****************
- * Roundabouts ***
- *****************/
-/* Checks for roundabouts */
-
-way[junction=roundabout]:in-downloaded-area > node {set .is_in_roundabout}
-node[traffic_calming=island]:in-downloaded-area { set .is_traffic_calming_island}
-
-/* Taylor Smock, Derek Bevan */
-way[highway][highway!~/^(pedestrian|footway|cycleway)$/][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout!.is_traffic_calming_island {
-  group: tr("kaart");
-  throwWarning: tr("Highway connecting to roundabout is NOT a oneway -- should there be a Y-junction?");
-  /* suggestAlternative: "split ways to have roundabout flares or add traffic_calming=island to a node using imagery" */
-}
-
-way[highway][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout.is_traffic_calming_island {
-  group: tr("kaart");
-  throwWarning: tr("The node where a roundabout and a way connect should NOT be a traffic_calming=island (the island should be on the approach, not in the roundabout)");
-}
-
-
-/* Check for roundabouts with MORE than 1 road entering at the same location */
-
-way[junction=roundabout][name] > node {set .is_in_named_roundabout}
-
-/* TODO remove the one with parent_tags as soon as parent_osm_ids is in josm-tested */
-
-node.is_in_roundabout!.is_in_named_roundabout[count(parent_tags("name")) - count(parent_tags("landuse")) > 1]:in-downloaded-area,
-node.is_in_roundabout.is_in_named_roundabout[count(parent_tags("name")) - count(parent_tags("landuse")) > 2]:in-downloaded-area {
-  group: tr("kaart");
-  throwWarning: tr("Roundabouts should not have more than two additional ways at any node");
-}
-node.is_in_roundabout[count(parent_osm_ids("highway")) - count(parent_osm_ids("junction")) > 1] {
-  group: tr("kaart");
-  throwError: tr("Roundabouts should not have more than two additional ways at any node");
-}
-
-
-/* Ways entering the roundabout should start/end there */
-way[name][highway][!junction] > node.is_in_roundabout!.end_of_way!.start_of_way { set .roundabout_way_ends }
-node.roundabout_way_ends {
-  group: tr("kaart");
-  throwWarning: tr("Way {0} does not end at roundabout", parent_tags("name"));
-}
-
-/* Derek Bevan */
-@supports (min-josm-version: 15353) {
- /* Check that roundabout names are different from the names of incoming ways */
- way[highway][name][!junction] >[index=1] node, way[highway][name][!junction] >[index=-1] node {set .named_way_end_node}
-
- node.is_in_named_roundabout.named_way_end_node[count(uniq_list(parent_tags("name"))) == 1] {
-   group: tr("kaart");
-   throwWarning: tr("Name of roundabout and incoming way are the same");
- }
-}
-
-way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
-  group: tr("kaart");
-  throwWarning: tr("Possible roundabout or circular junction");
-}
-
-/* Check mini-roundabouts for the correct direction */
-node[highway=mini_roundabout][direction!=clockwise][JOSM_search("-inview")]!:righthandtraffic:in-downloaded-area,
-node|z-20[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:in-downloaded-area {
-  group: tr("kaart");
-  throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
-}
-
-node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:in-downloaded-area {
-  group: tr("kaart");
-  throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
-  /*fixAdd: "direction=clockwise";*/
-}
-
-node[highway=mini_roundabout][direction!=anticlockwise][JOSM_search("-inview")]:righthandtraffic:in-downloaded-area,
-node|z-20[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:in-downloaded-area {
-  group: tr("kaart");
-  throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
-}
-
-node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:in-downloaded-area {
-  group: tr("kaart");
-  throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
-  /*fixAdd: "direction=anticlockwise";*/
-}

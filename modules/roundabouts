@@ -1,0 +1,85 @@
+/*****************
+ * Roundabouts ***
+ *****************/
+/* Checks for roundabouts */
+
+way[junction=roundabout]:in-downloaded-area > node {set .is_in_roundabout}
+node[traffic_calming=island]:in-downloaded-area { set .is_traffic_calming_island}
+
+/* Taylor Smock, Derek Bevan */
+way[highway][highway!~/^(pedestrian|footway|cycleway)$/][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout!.is_traffic_calming_island {
+  group: tr("kaart");
+  throwWarning: tr("Highway connecting to roundabout is NOT a oneway -- should there be a Y-junction?");
+  /* suggestAlternative: "split ways to have roundabout flares or add traffic_calming=island to a node using imagery" */
+}
+
+way[highway][oneway!=yes][junction!=roundabout]:in-downloaded-area > node.is_in_roundabout.is_traffic_calming_island {
+  group: tr("kaart");
+  throwWarning: tr("The node where a roundabout and a way connect should NOT be a traffic_calming=island (the island should be on the approach, not in the roundabout)");
+}
+
+
+/* Check for roundabouts with MORE than 1 road entering at the same location */
+
+way[junction=roundabout][name] > node {set .is_in_named_roundabout}
+
+/* TODO remove the one with parent_tags as soon as parent_osm_ids is in josm-tested */
+
+node.is_in_roundabout!.is_in_named_roundabout[count(parent_tags("name")) - count(parent_tags("landuse")) > 1]:in-downloaded-area,
+node.is_in_roundabout.is_in_named_roundabout[count(parent_tags("name")) - count(parent_tags("landuse")) > 2]:in-downloaded-area {
+  group: tr("kaart");
+  throwWarning: tr("Roundabouts should not have more than two additional ways at any node");
+}
+node.is_in_roundabout[count(parent_osm_ids("highway")) - count(parent_osm_ids("junction")) > 1] {
+  group: tr("kaart");
+  throwError: tr("Roundabouts should not have more than two additional ways at any node");
+}
+
+
+/* Ways entering the roundabout should start/end there */
+way[name][highway][!junction] > node.is_in_roundabout!.end_of_way!.start_of_way { set .roundabout_way_ends }
+node.roundabout_way_ends {
+  group: tr("kaart");
+  throwWarning: tr("Way {0} does not end at roundabout", parent_tags("name"));
+}
+
+/* Derek Bevan */
+@supports (min-josm-version: 15353) {
+ /* Check that roundabout names are different from the names of incoming ways */
+ way[highway][name][!junction] >[index=1] node, way[highway][name][!junction] >[index=-1] node {set .named_way_end_node}
+
+ node.is_in_named_roundabout.named_way_end_node[count(uniq_list(parent_tags("name"))) == 1] {
+   group: tr("kaart");
+   throwWarning: tr("Name of roundabout and incoming way are the same");
+ }
+}
+
+way[highway=~/(motorway|trunk|primary|secondary|tertiary|unclassified|residential|.*_link)$/][junction!=circular][junction!=roundabout]:closed {
+  group: tr("kaart");
+  throwWarning: tr("Possible roundabout or circular junction");
+}
+
+/* Check mini-roundabouts for the correct direction */
+node[highway=mini_roundabout][direction!=clockwise][JOSM_search("-inview")]!:righthandtraffic:in-downloaded-area,
+node|z-20[highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:in-downloaded-area {
+  group: tr("kaart");
+  throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
+}
+
+node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=clockwise]!:righthandtraffic:in-downloaded-area {
+  group: tr("kaart");
+  throwWarning: tr("Mini-roundabouts should have a clockwise direction in this country");
+  /*fixAdd: "direction=clockwise";*/
+}
+
+node[highway=mini_roundabout][direction!=anticlockwise][JOSM_search("-inview")]:righthandtraffic:in-downloaded-area,
+node|z-20[highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:in-downloaded-area {
+  group: tr("kaart");
+  throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
+}
+
+node|z21-[JOSM_search("inview")][highway=mini_roundabout][direction!=anticlockwise]:righthandtraffic:in-downloaded-area {
+  group: tr("kaart");
+  throwWarning: tr("Mini-roundabouts should have a anticlockwise direction in this country");
+  /*fixAdd: "direction=anticlockwise";*/
+}

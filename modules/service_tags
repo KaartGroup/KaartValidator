@@ -1,0 +1,11 @@
+/**************
+*** Service ***
+***************/
+
+/* Look for highway=* that is not service but has service=* */
+*[highway][highway!=service][service] {
+  group: tr("kaart");
+  throwError: tr("Non-service roads should not have a service tag in most cases");
+  suggestAlternative: tr("{0} or remove the {1} tag", "highway=service", "service");
+}
+

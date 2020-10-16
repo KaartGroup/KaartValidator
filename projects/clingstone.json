@@ -8,6 +8,9 @@
 	"modules": [
 		"clingstone",
 		"roads",
+		"roundabouts",
+		"layers",
+		"service_tags",
 		"countryspecific",
 		"misc",
 		"golf",
