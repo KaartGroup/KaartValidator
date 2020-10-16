@@ -10,7 +10,7 @@ import re
 PROJECT_DIRECTORY = "projects"
 MODULE_DIRECTORY = "modules"
 
-GROUP_PATTERN = re.compile(r"group\(.*\);")
+GROUP_PATTERN = re.compile(r"^\s*group:\s*tr\(.*\);\s*")
 
 
 def projectData(project):
@@ -62,7 +62,7 @@ def writeTests(filename, module, group: str = None):
     with open(filename, "a") as f, open(module, "r") as m:
         for line in m:
             if GROUP_PATTERN.match(line) and group:
-                line = "  group(tr({0}));".format(group)
+                line = "  group: tr(\"{0}\");\n".format(group)
             f.write(line)
 
 
