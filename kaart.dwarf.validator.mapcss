@@ -3,7 +3,7 @@ meta
   author: "Taylor Smock (vorpalblade77-kaart), Andrew Piechota(G_Fyyar), RD Clare(mr_et), Lucas Bingham(Traaker_L), Ryan Fleming(rytheking), Farris Billy(FarieBerrie)";
   description: "Validator tool for the Kaart Brazil Project";
   title: "Validation rules for Kaart Group--Dwarf Team";
-  version: "26_2020-10-16";
+  version: "27_2020-10-16";
 }
 /* Creates list of Current/Past Project Users */
 /* Taylor Smock. Edited by Andrew Piechota for BP */
@@ -15,7 +15,7 @@ meta
 /* Andrew Piechota, RD Clare, Lucas Bingham */
 way[highway][note][note !~ /(?i)(Check)(.*)(Classification)/] {
   throwWarning: tr("Check if note was added to object by Kaart user");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   fixRemove: "note";
 }
 
@@ -23,7 +23,7 @@ way[highway][note][note !~ /(?i)(Check)(.*)(Classification)/] {
 /* RD Clare, Lucas Bingham, Farris Billy */
 way[highway][note][note =~ /(?i)(Check)(.*)(Classification)/] {
   throwWarning: tr("Check Classification");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   fixRemove: "note";
 }
 
@@ -37,7 +37,7 @@ way[highway][/^(name|alt_name)$/ =~ /^(Luíz|Preféito)$/] {
 /* Andrew Piechota */
 way[highway][name = *alt_name] {
   throwWarning: tr("Name and alt_name are equivalent");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   fixRemove: "alt_name";
 }
 
@@ -45,21 +45,21 @@ way[highway][name = *alt_name] {
 /* Taylor Smock. Edited by RD Clare and Andrew Piechota for BP */
 way[highway][name][/^(name|alt_name)$/ =~ /^.* (D(o|a)s|D(o|a)|E|Em|De|Ou|Que|O|Eu|Tu|El(e|a)|El(a|e)s|Nos|Para|Sobre) .*$/][inside("BR")] {
   throwWarning: tr("Check for capitalization issues");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 
 /* Flags Perimetral (Perimeter) and Municipal in name/alt_name */
 /* Andrew Piechota */
 way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(?i)(perimetral|municipal)/] {
   throwWarning: tr("Perimetral/Municipal in name/alt_name");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 
 /* Checks if links have oneway tag */
 /* Taylor Smock */
 way[highway=~/^.*_link$/][!oneway] {
   throwOther: tr("_links are usually {0}", "{1.key}");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   fixAdd: "oneway=yes";
 }
 
@@ -67,7 +67,7 @@ way[highway=~/^.*_link$/][!oneway] {
 /* Andrew Piechota */
 way[highway][/^(name|alt_name)$/ =~ /,/] {
   throwError: tr("Name/alt_name with comma");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 
 /* Checks if links have name/noname tag */
@@ -75,7 +75,7 @@ way[highway][/^(name|alt_name)$/ =~ /,/] {
 way[highway=~/^.*_link$/][name][!note],
 way[highway=~/^.*_link$/][noname][!note] {
   throwWarning: tr("Links shouldn''t have name/noname tags");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   suggestAlternative: "a note";
   fixAdd: "note=Check Classification";
   fixRemove: "noname";
@@ -85,14 +85,14 @@ way[highway=~/^.*_link$/][noname][!note] {
 /* Andrew Piechota, Farris Billy */
 way[highway][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /((Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servid(a|ã)o|Acesso|Beco|Pra(c|ç)a|Caminho|Ponte |Viaduto).*){2,}$/][/^(name|alt_name)$/!~/;/] {
   throwWarning: tr("Check for duplicated prefixes in name/alt_name");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 
 /* Checks for noname tag. Will flag if Kaart user is last author and tag exists */
 /* RD Clare */
 way[highway][noname].kaart_user {
   throwWarning: tr("Check noname tag added by Kaart user");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   fixRemove: "noname";
 }
 
@@ -102,21 +102,21 @@ way[highway][highway !~ /residential|living_street|service|pedestrian|track|esca
 way[highway][highway !~ /residential|living_street|service|pedestrian|track|escape|raceway|footway|bridleway|steps|path|cycleway|proposed|construction/][/^(name|alt_name)$/ =~ /(Rodovia|Estrada|Travessa|Rua|Avenida|Alameda|Viela|Servid(a|ã)o|Acesso|Beco|Pra(c|ç)a|Caminho|Ponte|Viaduto) ([a-zA-Z]{2,3}-?[0-9]{2,4})/],
 way[highway][highway !~ /residential|living_street|service|pedestrian|track|escape|raceway|footway|bridleway|steps|path|cycleway|proposed|construction/][/^(name|alt_name)$/ =~ /([a-zA-Z]{2,3}-?[0-9]{2,4})/] {
   throwWarning: tr("Name/Alt_name may contain ref");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 
 /* Abbreviated words in name/alt_name in ways */
 /* Andrew Piechota */
 way[highway][/^(name|alt_name)$/ =~ /(?i)(^|.* )(Cel|Cmte|Cond|Conj|Dª|Dr|Eng|Gov|Hab|Jd|Jr|Marg|Mun|p\/|Pde|Pe|Pq|Pst|Pref|Profa|Profª|Prof|Res|s\/|Sr(a|ª)?|Sta|Sto|Ver)\.? .*/] {
   throwWarning: tr("Abbreviated word in name/alt_name");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 
 /* Checks for Antiga (old) in name/alt_name */
 /* Andrew Piechota */
 way[highway][/^(name|alt_name)$/=~/(?i)antiga/] {
   throwWarning: tr("Antiga (old) in the name/alt_name");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   assertMatch: "way name=\"antiga testing\"";
   assertNoMatch: "way name=\"Something else\"";
 }
@@ -125,7 +125,7 @@ way[highway][/^(name|alt_name)$/=~/(?i)antiga/] {
 /* Andrew Piechota */
 way[highway][/^(name|alt_name)$/=~/(?i)(projetada|projeta)/] {
   throwWarning: tr("Projetada (project) in the name/alt_name");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   assertMatch: "way name=\"projetada testing\"";
   assertNoMatch: "way name=\"Something else\"";
 }
@@ -136,7 +136,7 @@ way[highway][/^(name|alt_name)$/=~/(?i)n(a|ã)o deno/],
 way[highway][/^(name|alt_name)$/=~/SD/],
 way[highway][/^(name|alt_name)$/=~/(?i)(?u)((sem (denomina(ç|c)(ã|a)o|nome|sa(i|í)da))|desconhecido|n(ã|a)o conhecido)/] {
   throwWarning: tr("Sem Nome (no name) in the name/alt_name");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   fixRemove: "name";
   assertMatch: "way name=\"sem nome testing\"";
   assertMatch: "way name=\"SD\"";
@@ -149,14 +149,14 @@ way[highway][/^(name|alt_name)$/=~/(?i)(?u)((sem (denomina(ç|c)(ã|a)o|nome|sa(
 /* Andrew Piechota */
 way[/^(tunnel|bridge)$/][/^(tunnel|bridge)$/!~/^no$/][!layer] {
   throwWarning: tr("Bridge/tunnel missing layer tag");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 
 /* Checks for ou (or) in name/alt_name */
 /* Andrew Piechota */
 *[/^(name|alt_name)$/ =~ / ou /] {
   throwWarning: tr("ou implies two names");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   suggestAlternative: "an alt_name";
 }
 
@@ -164,7 +164,7 @@ way[/^(tunnel|bridge)$/][/^(tunnel|bridge)$/!~/^no$/][!layer] {
 /* RD Clare */
 way[highway =~ /^.*_link$/][junction = roundabout] {
   throwWarning: tr("roundabouts are usually not links");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   suggestAlternative: "non _link or add note";
   fixAdd: "note=Check Classification";
 }
@@ -183,20 +183,20 @@ way[highway][name][alt_name][name =~ /(^|\s)VIII(\s|$)/][alt_name !~ /(^|\s|;)(O
 way[highway][name][alt_name][name =~ /(^|\s)IX(\s|$)/][alt_name !~ /(^|\s|;)(Non(o|a|os|as))(\s|$|;)/],
 way[highway][name][alt_name][name =~ /(^|\s)X(\s|$)/][alt_name !~ /(^|\s|;)(Décim(o|a|os|as))(\s|$|;)/]{
     throwWarning: tr("Roman Numeral in name");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 /* First of month check, will add second when confirmed that it is the same */
 /* RD Clare */
 way[highway][name][name =~ /(^|\s)(Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro)($|\s)/][name =~ /(^|\s)Primeiro($|\s)/][alt_name !~ /(^|\s)(1o)($|\s)/]{
   throwWarning: tr("1st of a Month");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 
 /* Check for way added by editor without highway/waterway tag */
 /* Lucas Bingham */
 way[!highway][!waterway]:new {
   throwWarning: tr("Way added without highway/waterway tag");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 
 /* Check ways for proper road prefixes */
@@ -207,7 +207,7 @@ way[highway][highway!~/^(track|path|footway)$/][/^(name|alt_name)$/][/^(name|alt
 way[highway][highway!~/^(track|path|footway)$/][/^(name|alt_name)$/][/^(name|alt_name)$/ =~ /(^|.* )(rodovia|estrada|travessa|rua|avenida|alameda|viela|servid(a|ã)o|beco|pra(c|ç)a|caminho|ponte|viaduto|passagem|quadra) \.? .*/],
 way[highway][highway =~/^(track|path|footway)$/][/^(name|alt_name)$/][/^(name|alt_name)$/ !~ /(Trilha)/] {
   throwWarning: tr("Possible incorrect/abbreviated road prefix");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   assertMatch: "way highway=residential alt_name=\"Travessa Fluminense\" name=\"Canal Agua Cristal\"";
   assertMatch: "way highway=residential name=\"Travessa Fluminense\" alt_name=\"Canal Agua Cristal\"";
   assertNoMatch: "way highway=residential name=\"Travessa Fluminense\"";
@@ -421,7 +421,7 @@ way[highway][/((^(name))|(^.*_name))$/][alt_name][/^((?!.*?(?:(alt_name)|(source
 way[highway][/((^(name))|(^.*_name))$/][alt_name][/^((?!.*?(?:(alt_name)|(source:)|(official_name)))(name|^.*_name|name:.*))$/ =~ /Noventa e Nove/][alt_name !~ /99/],
 way[highway][/((^(name))|(^.*_name))$/][alt_name][/^((?!.*?(?:(alt_name)|(source:)|(official_name)))(name|^.*_name|name:.*))$/ =~ /(\s|^)Cem(\s|$)/][/^((?!.*?(?:(alt_name)|(source:)|(official_name)))(name|^.*_name|name:.*))$/ !~ /(\s|^)(Um|Dois|Tr(e|ê)s|Quatro|Cinco|Seis|Sete|Oito|Nove)(\s|$)/][alt_name !~ /100/]{
   throwWarning: tr("Missing number in alt_name");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 /* Checks alt_names for additional numerical alt_names. Will send same warning as name check, thus will flag twice if both errors are present */
 /* RD Clare, Taylor Smock */
@@ -626,7 +626,7 @@ way[highway][/((^(name))|(^.*_name))$/][alt_name][alt_name =~ /(\s|^|;)Noventa e
 way[highway][/((^(name))|(^.*_name))$/][alt_name][alt_name =~ /(\s|^|;)Noventa e Nove(\s|$|;)/][alt_name !~ /99/][/^((?!.*?(?:(alt_name)|(source:)|(official_name)))(name|^.*_name|name:.*))$/ !~ /99/],
 way[highway][/((^(name))|(^.*_name))$/][alt_name][alt_name =~ /(\s|^|;)Cem(\s|$|;)/][alt_name !~ /(\s|^)(Um|Dois|Tr(e|ê)s|Quatro|Cinco|Seis|Sete|Oito|Nove)(\s|$|;)/][/^((?!.*?(?:(alt_name)|(source:)|(official_name)))(name|^.*_name|name:.*))$/ !~ /(\s|^)(Um|Dois|Tr(e|ê)s|Quatro|Cinco|Seis|Sete|Oito|Nove)(\s|$|;)/][alt_name !~ /100/][/^((?!.*?(?:(alt_name)|(source:)|(official_name)))(name|^.*_name|name:.*))$/ !~ /100/]{
   throwWarning: tr("Missing number in alt_name");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
 }
 
 /* Check for duplicated words in names */
@@ -635,7 +635,7 @@ way[highway][name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(
 way[highway][name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("name"), "(?i)")]
 way[highway][alt_name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("alt_name"), "(?i)")] {
   throwWarning: tr("Possible duplicated words in {0}", "{0.key}");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   assertMatch: "way highway=residential name=\"Duplicate Duplicate\"";
   assertNoMatch: "way highway=residential name=\"Nothing to see here\"";
 }
@@ -645,7 +645,7 @@ way[highway][alt_name][regexp_test("\\b(\\p{L}+)\\b(?:\\s+\\1\\b)+", tag("alt_na
 way[highway][/^(name|alt_name)$/=~/(\s)(servid(a|ã)o|jos(e|é)|ant(o|ô)nio|pra(c|ç)a|gon(c|ç)alves|jo(a|ã)o|s(a|ã)o|tr(e|ê)s|tom(e|é)|lu(i|í)s|maranh(a|ã)o|capit(a|ã)o|gra(c|ç)a|mar(c|ç)o|(a|à)gua|le(a|ã)o|galv(a|ã)o|esp(i|í)rito|assun(ca|çã|ça|cã)o|in(e|ê)s|lul(u|ú)|cristov(a|ã)o|j(u|ú)lio|c(e|é)sar|bel(e|é)m|nazar(e|é)|l(u|ú)cio|orqu(i|í)deas|ing(a|á)|macap(a|á)|caj(u|ú)|cupua(c|ç)u|l(a|á)zaro|sebasti(a|ã)o|concei(ca|çã|ça|cã)o|ipacara(i|í)|jerusal(e|é)m|m(a|á)rio|falc(a|ã)o|f(e|é)|pe(c|ç)anha|expedicion(a|á)rio|para(i|í)so|f(a|á)tima|d(e|é)cimo|d(e|é)cima|jer(o|ô)nimo|mendon(c|ç)a|(a|â)ngelo|cambar(a|á)|corn(e|é)lio|piau(i|í)|paran(a|á)|goi(a|á)s|(a|á)guias|gavi(a|ã)o|(a|á)reas|cl(a|á)udio|ot(a|á)vio|maranh(a|ã)es|feij(o|ó)|say(a|ã)o|cora(ca|ça|cã|çã)o)(\s|$|;)/],
 way[highway][/^(name|alt_name)$/=~/(^|\s)(Servidao|Jose|Antonio|Praca|Goncalves|Joao|Sao|Tres|Tome|Luis|Maranhao|Capitao|Graca|Marco|Agua|Leao|Galvao|Espirito|Assun(ca|ça|cã)o|Ines|Lulu|Cristovao|Julio|Cesar|Belem|Nazare|Lucio|Orquideas|Inga|Macapa|Caju|Cupuacu|Lazaro|Sebastiao|Concei(ca|ça|cã)o|Ipacarai|Jerusalem|Mario|Falcao|Fe|Pecanha|Expedicionario|Paraiso|Fatima|Decimo|Decima|Jeronimo|Mendonca|Angelo|Cambara|Cornelio|Piaui|Parana|Goias|Aguias|Gaviao|Areas|Claudio|Otavio|Maranhaes|Feijo|Sayao|Cora(ca|ça|cã)o)(\s|$|;)/] {
   throwWarning: tr("Accent, click ''fix''");
-  group: tr("kaart");
+  group: tr("kaart_dwarf");
   fixAdd: concat("name=",
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
   replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
