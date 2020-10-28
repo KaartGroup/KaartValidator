@@ -1079,11 +1079,20 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     );
 }
 
-/* Check for intersections with multiple layers */
-/* Derek Bevan */
-node!.bridge_end_node!.tunnel_end_node[JOSM_search("type:node ((child((highway|railway) layer=1) child(highway -layer=1)) OR (child((highway|railway) layer=2) child(highway -layer=2)) OR (child((highway|railway) layer=-1) child(highway -layer=-1)))")] {
+/***************
+**** Layers ****
+****************/
+/* Check layer tagging */
+
+way[highway][bridge][!layer] {
   group: tr("kaart_Sanitas");
-  throwWarning: tr("Intersections with multiple layers");
+  throwWarning: tr("Bridges should have a layer");
+}
+
+way|z21-[JOSM_search("inview")][highway][bridge][!layer] {
+  group: tr("kaart_Sanitas");
+  throwWarning: tr("Bridges should have a layer");
+  fixAdd: "layer=1";
 }
 
 /* Derek Bevan */
@@ -1097,9 +1106,35 @@ node.bridge_end_node.non_bridge_node!.highway_end_node, node[JOSM_search("type:n
   throwWarning: tr("Bridges should not end in intersections (False positives may be caused by landuse, borders, buildings, etc.)");
 }
 
+
+/* Check tunnels */
+/* Derek Bevan */
+way[highway][tunnel] >[index=1] node, way[highway][tunnel] >[index=-1] node {set .tunnel_end_node}
+way[highway][!tunnel] >[index=1] node, way[highway][!tunnel] >[index=-1] node {set .non_tunnel_end_node}
+way[highway][!tunnel] > node {set .non_tunnel_node}
+
+node.tunnel_end_node.non_tunnel_node!.non_tunnel_end_node, node[JOSM_search("type:node child(highway tunnel) child(highway -tunnel) ways:3-")] {
+  group: tr("kaart_Sanitas");
+  throwWarning: tr("Tunnels should not end in intersections");
+}
+
+
+/* Check for intersections with multiple layers */
+/* Derek Bevan */
+node!.bridge_end_node!.tunnel_end_node[JOSM_search("type:node ((child((highway|railway) -layer) child(highway layer -layer=0)) OR (child((highway|railway) layer=1) child(highway -layer=1)) OR (child((highway|railway) layer=2) child(highway -layer=2)) OR (child((highway|railway) layer=-1) child(highway -layer=-1)))")] {
+  group: tr("kaart_Sanitas");
+  throwWarning: tr("Intersections with multiple layers");
+}
+
+
+/**************
+*** Service ***
+***************/
+
 /* Look for highway=* that is not service but has service=* */
 *[highway][highway!=service][service] {
   group: tr("kaart_Sanitas");
   throwError: tr("Non-service roads should not have a service tag in most cases");
   suggestAlternative: tr("{0} or remove the {1} tag", "highway=service", "service");
 }
+
