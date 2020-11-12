@@ -1,5 +1,5 @@
 /* Creates list of current/past Project Users  */
-*[JOSM_search("user:LSkalayo or user:Soccersweeper or user:ArleneC or user:3agleOne or user:\"Unicorn Ostrich\" or user:Goose6thAB or user:\"Chilly Chinchillas\" or user:Cinderblock or user:Dalekokarta or user:BlueRanger or user:MTG5093 or user:MappnMatt or user:MMantlo or user:rallynukab or user:jedimasterflint or user:RobinNoodles or user:Mel_1 or user:Sherbare or user:Smoothdog or user:ImjusBuddy or user:DreadPirateRoberts or user:EthanK or user:Yagni or user:G_Fyyar or user:mr_et or user:FarieBerrie or user:rileywhite97 or user:ikohl or user:spititout or user:nickmettauer or user:The_Intern or user:Meowshane or user:RouteRob or user:Kyleta8 or user:\"El Pescador\" or user:rytheking or user:Ajaie or user:BobGod or user:csjupiter1 or user:GhostEye or user:ArleneC or user:leedlelee or user:\"Leonardo DeMAPrio\" or user:logans127 or user:mapcraft or user:Plutocrats or user:chuck97! or user:Senzubeandealer or user:swells5 or user:notmee-uh or user:Traaker_L or user:yodacodyone1 or user:Dillon9 or user:jacob_kubeczko or user:LSkalayo or user:Traaker_L or user:MTG5093 or user:Zebulonium or user:staysavy")]{
+*[JOSM_search("user:LSkalayo or user:3agleOne or user:127logs or user:acrague or user:Ajaie or user:AlwaysSunnyInMapadelphia or user:ArleneC or user:BobGod or user:CaseyIvanW or user:Cinderblock or user:Dalekokarta or user:Ikohl or user:Inigo_Maptoya or user:jedimasterflint or user:Mel_1 or user:MMantlo or user:MTG5093 or user:natureandchill or user:rallynukab or user:RobinNoodles or user:sierrae-kaart or user:Smoothdog or user:Soccersweeper or user:staysavy or user:BlueRanger or user:The_Intern")]{
   set .kaart_user
 }
 
@@ -7,20 +7,33 @@
 /* Double prefix check */
 /* Rd Clare */
 way[highway][name =~ /(^(?i)(Ampliación)\s)((?i)(Ampliación))(\s)/],
-way[highway][name =~ /(^(?i)(Calle)\s)((?i)(Calle))(\s)/],
-way[highway][name =~ /(^(?i)(Cerrada)\s)((?i)(Cerrada))(\s)/],
-way[highway][name =~ /(^(?i)(Privada)\s)((?i)(Privada))(\s)/],
-way[highway][name =~ /(^(?i)(Callejón)\s)((?i)(Callejón))(\s)/],
-way[highway][name =~ /(^(?i)(Prolongación)\s)((?i)(Prolongación))(\s)/],
-way[highway][name =~ /(^(?i)(Avenida)\s)((?i)(Avenida))(\s)/],
-way[highway][name =~ /(^(?i)(Retorno)\s)((?i)(Retorno))(\s)/],
-way[highway][name =~ /(^(?i)(Calzada)\s)((?i)(Calzada))(\s)/],
-way[highway][name =~ /(^(?i)(Circuito)\s)((?i)(Circuito))(\s)/],
-way[highway][name =~ /(^(?i)(Bulevar)\s)((?i)(Bulevar))(\s)/],
 way[highway][name =~ /(^(?i)(Andador)\s)((?i)(Andador))(\s)/],
+way[highway][name =~ /(^(?i)(Autopista)\s)((?i)(Autopista))(\s)/],
+way[highway][name =~ /(^(?i)(Avenida)\s)((?i)(Avenida))(\s)/],
 way[highway][name =~ /(^(?i)(Boulevard)\s)((?i)(Boulevard))(\s)/],
+way[highway][name =~ /(^(?i)(Bulevar)\s)((?i)(Bulevar))(\s)/],
+way[highway][name =~ /(^(?i)(Calle)\s)((?i)(Calle))(\s)/],
+way[highway][name =~ /(^(?i)(Callejón)\s)((?i)(Callejón))(\s)/],
+way[highway][name =~ /(^(?i)(Calzada)\s)((?i)(Calzada))(\s)/],
 way[highway][name =~ /(^(?i)(Camino)\s)((?i)(Camino))(\s)/],
-way[highway][name =~ /(^(?i)(Carretera)\s)((?i)(Carretera))(\s)/]{
+way[highway][name =~ /(^(?i)(Carrera)\s)((?i)(Carrera))(\s)/],
+way[highway][name =~ /(^(?i)(Carreteable)\s)((?i)(Carreteable))(\s)/],
+way[highway][name =~ /(^(?i)(Carretera)\s)((?i)(Carretera))(\s)/],
+way[highway][name =~ /(^(?i)(Cerrada)\s)((?i)(Cerrada))(\s)/],
+way[highway][name =~ /(^(?i)(Circuito)\s)((?i)(Circuito))(\s)/],
+way[highway][name =~ /(^(?i)(Círculo)\s)((?i)(Círculo))(\s)/],
+way[highway][name =~ /(^(?i)(Entrada)\s)((?i)(Entrada))(\s)/],
+way[highway][name =~ /(^(?i)(Entronque)\s)((?i)(Entronque))(\s)/],
+way[highway][name =~ /(^(?i)(Escaleras)\s)((?i)(Escaleras))(\s)/],
+way[highway][name =~ /(^(?i)(Escalinata)\s)((?i)(Escalinata))(\s)/],
+way[highway][name =~ /(^(?i)(Pasaje)\s)((?i)(Pasaje))(\s)/],
+way[highway][name =~ /(^(?i)(Peatonal)\s)((?i)(Peatonal))(\s)/],
+way[highway][name =~ /(^(?i)(Privada)\s)((?i)(Privada))(\s)/],
+way[highway][name =~ /(^(?i)(Prolongación)\s)((?i)(Prolongación))(\s)/],
+way[highway][name =~ /(^(?i)(Retorno)\s)((?i)(Retorno))(\s)/],
+way[highway][name =~ /(^(?i)(Vereda)\s)((?i)(Vereda))(\s)/],
+way[highway][name =~ /(^(?i)(Vía)\s)((?i)(Vía))(\s)/],
+way[highway][name =~ /(^(?i)(Vía\sa)\s)((?i)(Vía\sa))(\s)/]{
   throwError: tr("2 or more prefixes found");
   group: tr(kaart_Sanitas);
 }
@@ -41,7 +54,7 @@ group: tr(kaart_Sanitas);
 
 /* abbreviation check */
 /* Farris Billy */
-way[highway][/^(name|alt_name)$/ =~ /(?i)(^|\s+)(And|Arq|Av|Ave|Blvd|Blvrd|Blv|Blv|C|Calz|Cd|Cda|Cjon|Comp|Cto|Diag|Dr|Edo|Esq|Gral|Hda|Ing|Lic|Lit|Mz|Nte|Occ|Ote|Pbro|Pdte|Pre|Priv|Profa|Prof|Prol|Pte|Ret|Rtno|Sn|Sta|Tte)(\s+|\.|$)/]{
+way[highway][/^(name|alt_name)$/ =~ /(?i)(^|\s+)(And|Arq|Av|Ave|Blvd|Blvrd|Blv|Blv|C|Calz|Cd|Cda|Cjon|Comp|Cto|Diag|Dr|Edo|Esq|Est|Gral|Hda|Ing|Lic|Lit|Mz|Nte|Occ|Ote|Pbro|Pdte|Pre|Priv|Profa|Prof|Prol|Pte|Ret|Rtno|Sn|Sta|Tte)(\s+|\.|$)/]{
   group: tr(kaart_Sanitas);
   throwError: tr("Abbreviation in Name or Alt_name");
 }
@@ -770,8 +783,8 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Jeronimo|Jerusalen|Jesus|Jimenez|Joaqu
     "Ortíz", "Ortiz")
     );
 }
-way[highway][/^(name|alt_name)$/=~/(^|\s)(pac(i|í)fico|pante(o|ó)n|para(i|í)so|pe(n|ñ)aloza|peñ(o|ó)n|perif(e|é)rico|p(i|í)pila|pital(u|ú)a|prof|prolongaci(o|ó)n|quetzalc(o|ó)atl|rafa(e|é)l|ray(o|ó)n|rep(u|ú)blica|r(i|í)o|rodr(i|í)guez|rom(a|á)n|revoluci(ó|o)n|romer(i|í)a|ru(i|í)z|s(e|é)ptima|serd(a|á)n|s(i|í)mbolos|s(i|í)mbolo|ter(a|á)n|tom(a|á)s|tonantz(i|í)n|top(o|ó)grafos|tr(e|é)bol|tulip(a|á)n|v(a|á)squez|tenochitl(a|à)n|vel(a|á)squez|vel(a|á)zquez|v(i|í)a|v(i|í)ctor|vig(e|é)sima|v(i|í)rgenes|vizca(i|í)nas|volc(a|á)n|yucat(a|á)n|x(o|ó)chitl)(\s|$|;)/],
-way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñon|Periferico|Pipila|Pitalua|Prof|Quetzalcoatl|Rafael|Revolucion|Rayon|Republica|Rio|Rodriguez|Roman|Romeria|Ruíz|Septima|Serdan|Simbolo|Simbolos|Teran|Tomas|Tonantzin|Topografos|Trebol|Tulipan|Vasquez|Velasquez|Velazquez|Via|Victor|Vigesima|Virgenes|Vizcainas|Volcan|Yucatan|Xochitl|Tenochitlan)(\s|$|;)/]{
+way[highway][/^(name|alt_name)$/=~/(^|\s)(pac(i|í)fico|pante(o|ó)n|para(i|í)so|passaje|pe(n|ñ)aloza|peñ(o|ó)n|perif(e|é)rico|p(i|í)pila|pital(u|ú)a|prof|prolongaci(o|ó)n|quetzalc(o|ó)atl|rafa(e|é)l|ray(o|ó)n|rep(u|ú)blica|r(i|í)o|rodr(i|í)guez|rom(a|á)n|revoluci(ó|o)n|romer(i|í)a|ru(i|í)z|s(e|é)ptima|serd(a|á)n|s(i|í)mbolos|s(i|í)mbolo|ter(a|á)n|tom(a|á)s|tonantz(i|í)n|top(o|ó)grafos|tr(e|é)bol|tulip(a|á)n|v(a|á)squez|tenochitl(a|à)n|vel(a|á)squez|vel(a|á)zquez|v(i|í)a|v(i|í)ctor|vig(e|é)sima|v(i|í)rgenes|vizca(i|í)nas|volc(a|á)n|yucat(a|á)n|x(o|ó)chitl)(\s|$|;)/],
+way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Passaje|Penaloza|Peñon|Periferico|Pipila|Pitalua|Prof|Quetzalcoatl|Rafael|Revolucion|Rayon|Republica|Rio|Rodriguez|Roman|Romeria|Ruíz|Septima|Serdan|Simbolo|Simbolos|Teran|Tomas|Tonantzin|Topografos|Trebol|Tulipan|Vasquez|Velasquez|Velazquez|Via|Victor|Vigesima|Virgenes|Vizcainas|Volcan|Yucatan|Xochitl|Tenochitlan)(\s|$|;)/]{
     throwWarning: tr("Misspelled word or accent missing, try ''fix''");
     group: tr(kaart_Sanitas);
     fixAdd: concat("name=",
@@ -786,7 +799,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-    replace(
+    replace(replace(replace(
     tag("name"),
     "pacifico", "Pacífico"),
     "pacífico", "Pacífico"),
@@ -797,6 +810,8 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     "paraiso", "Paraíso"),
     "paraíso", "Paraíso"),
     "Paraiso", "Paraíso"),
+    "passaje", "Pasaje"),
+    "Passaje", "Pasaje"),
     "penaloza", "Peñaloza"),
     "peñaloza", "Peñaloza"),
     "Penaloza", "Peñaloza"),
@@ -934,7 +949,7 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
     replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
-    replace(
+    replace(replace(replace(
     tag("alt_name"),
     "pacifico", "Pacífico"),
     "pacífico", "Pacífico"),
@@ -945,6 +960,8 @@ way[highway][/^(name|alt_name)$/=~/(^|\s)(Pacifico|Panteon|Paraiso|Penaloza|Peñ
     "paraiso", "Paraíso"),
     "paraíso", "Paraíso"),
     "Paraiso", "Paraíso"),
+    "passaje", "Pasaje"),
+    "Passaje", "Pasaje"),
     "penaloza", "Peñaloza"),
     "peñaloza", "Peñaloza"),
     "Penaloza", "Peñaloza"),
