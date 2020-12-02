@@ -4,7 +4,7 @@ meta
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock";
   min-josm-version: "8087";
-  version: "42_2020-10-16";
+  version: "43_2020-12-02";
 }
 /****************
  ** Kaart Users *
@@ -1240,11 +1240,13 @@ relation[type=connectivity][count_roles("via") < 1 || count_roles("from") != 1 |
 
 /* Toll booths, entrances, and lift_gates default to access=yes */
 /* Taylor Smock, Derek Bevan */
+/*
 way[highway] > node[barrier][barrier =~ /^(gate)$/][!access] {
   group: tr("kaart");
   throwWarning: tr("Gates missing access tags");
-  /* suggestAlternative: "access"; */
+  *//* suggestAlternative: "access"; *//*
 }
+*/
 
 /* Check for missing arabic characters */
 *[name][name:ar][name!=*"name:ar"][name=~/شارع/][name:ar!~/شارع/][inside("JO")],

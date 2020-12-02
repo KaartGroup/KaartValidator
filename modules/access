@@ -13,8 +13,10 @@
 
 /* Toll booths, entrances, and lift_gates default to access=yes */
 /* Taylor Smock, Derek Bevan */
+/*
 way[highway] > node[barrier][barrier =~ /^(gate)$/][!access] {
   group: tr("kaart");
   throwWarning: tr("Gates missing access tags");
-  /* suggestAlternative: "access"; */
+  *//* suggestAlternative: "access"; *//*
 }
+*/
