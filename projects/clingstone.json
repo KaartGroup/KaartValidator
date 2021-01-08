@@ -2,7 +2,7 @@
 	"meta": {
 		"title": "Validation rules for Kaart Group",
 		"description": "Various checks that are useful to Kaart",
-		"author": "Taylor Smock",
+		"author": "Taylor Smock, Derek Bevan",
 		"min-josm-version": 8087
 	},
 	"modules": [

@@ -11,11 +11,13 @@
 }
 
 /* Check for ways that should have a building tag */
+/*
 way[/^(addr.*)$/][!building]:closed,
 way[amenity][amenity=~/fuel/][!building]:closed {
   group: tr("kaart");
   throwWarning: tr("Area may be a building");
 }
+*/
 
 /* Check for pedestrian ways */
 node[crossing] { set .crossing_node }
@@ -58,11 +60,13 @@ node[highway=traffic_signals][direction].onewaynode {
   fixRemove: "{1.key}";
 }
 
+/*
 node[highway=traffic_signals][!direction][!traffic_signals:direction][count(parent_tags("name")) <= 1 && count(parent_tags("ref")) <= 1 && count(parent_tags("highway")) <= 1][!crossing]!.onewaynode:in-downloaded-area {
   group: tr("kaart");
   throwWarning: tr("{0} should have a direction when not on a oneway or an intersection", "{0.value}");
   suggestAlternative: "traffic_signals:direction";
 }
+*/
 /*
 node[highway=traffic_signals][direction=~/^(forward|backward)$/] {
   group: tr("kaart");

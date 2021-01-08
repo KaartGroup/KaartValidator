@@ -3,6 +3,7 @@
  ***********/
 /* Gas stations */
 /* Mark gas stations without a brand but with a common brand name */
+/*
 *[amenity=fuel][name=~/(BP|Caltex|Engen|Sasol|Shell|Total)$/][!brand] {
   group: tr("kaart");
   throwWarning: tr("Gas station has a name but no brand");
@@ -12,22 +13,29 @@
   throwWarning: tr("Gas station has a name but no brand");
   fixAdd: concat("brand=", tag("name"));
 }
+*/
 
+/*
 node[amenity=fuel]:modified {
   group: tr("kaart");
   throwWarning: tr("Gas stations should be an area, not a node");
 }
+*/
 
 /* Mark gas stations without a brand */
+/*
 *[amenity=fuel][name][!brand] {
   group: tr("kaart");
   throwWarning: tr("Gas station has a name but no brand");
 }
+*/
 
+/*
 node[amenity=fuel][!name][!brand][fixme!=name] {
   group: tr("kaart");
   throwWarning: tr("Gas station should have either a brand or a name");
 }
+*/
 
 /* Check for names on POI's */
 *[amenity=~/^(bank|clinic|college|courthouse|dentist|doctors|fire_station|fuel|hospital|kindergarten|pharmacy|place_of_worship|police|school|university)$/][!name][fixme!=name]:modified,
@@ -37,12 +45,14 @@ node[amenity=fuel][!name][!brand][fixme!=name] {
   throwWarning: tr("There should be a name or a fixme=name");
 }
 /* Ensure modified poi's have an addr:street */
+/*
 *[tourism=~/^(hotel)$/][!addr:street][!addr:place]:modified,
 *[office=~/^(government)$/][!addr:street][!addr:place]:modified,
 *[amenity=~/^(bank|clinic|college|courthouse|dentist|doctors|fire_station|fuel|hospital|kindergarten|pharmacy|place_of_worship|police|school|university)$/][!addr:street][!addr:place]:modified {
   group: tr("kaart");
   throwError: tr("Try to add {0} or {1} to new or modified POI's", "addr:street", "addr:place");
 }
+*/
 
 *[fixme=~/^.*[ A-Z]+.*$/]:modified,
 *[fixme][fixme!~/^[a-z:]*$/]:modified {

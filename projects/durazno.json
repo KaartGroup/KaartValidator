@@ -2,7 +2,7 @@
    "meta" : {
       "title" : "Validation rules for Kaart Group--Dwarf Team",
       "description" : "Validation tool for the Kaart Mexico Project",
-      "author" : "Rd Clare(mr_et) Taylor Smock(vorpalblade77-kaart) Farris Billy(FarieBerrie)"
+      "author" : "Rd Clare(mr_et) Taylor Smock(vorpalblade77-kaart) Farris Billy(FarieBerrie) Derek Bevan(DerekBev)"
    },
    "modules" : [
       "durazno",
