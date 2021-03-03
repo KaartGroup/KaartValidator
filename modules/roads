@@ -374,8 +374,9 @@ way|z21-[JOSM_search("inview")][highway][maxheight=~/^\d+'\s\d+"$/] {
 } */
 
 
-/* Check for motor_vehicle=no tag -- it may not be necessary */
+/* Check for motor_vehicle=no tag -- the tag may not be necessary */
 /* Derek Bevan */
+/*
 way[highway =~ /^(service|residential|unclassified|tertiary|secondary|primary|trunk|motorway)(_link)?$/][motor_vehicle=no] {
   group: tr("kaart");
   throwWarning: tr("Highway contains motor_vehicle=no tag. Remove tag, reclassify way, or add access tag?");
@@ -385,6 +386,7 @@ way[highway =~ /^(service|residential|unclassified|tertiary|secondary|primary|tr
   assertNoMatch: "way highway=steps";
   assertNoMatch: "way highway=pedestrian";
 }
+*/
 
 relation[type=restriction][!/^restriction/] {
   group: tr("kaart");

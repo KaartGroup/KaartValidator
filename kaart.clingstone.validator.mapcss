@@ -4,7 +4,7 @@ meta
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock, Derek Bevan";
   min-josm-version: "8087";
-  version: "44_2021-01-08";
+  version: "45_2021-01-13";
 }
 /****************
  ** Kaart Users *
@@ -393,8 +393,9 @@ way|z21-[JOSM_search("inview")][highway][maxheight=~/^\d+'\s\d+"$/] {
 } */
 
 
-/* Check for motor_vehicle=no tag -- it may not be necessary */
+/* Check for motor_vehicle=no tag -- the tag may not be necessary */
 /* Derek Bevan */
+/*
 way[highway =~ /^(service|residential|unclassified|tertiary|secondary|primary|trunk|motorway)(_link)?$/][motor_vehicle=no] {
   group: tr("kaart");
   throwWarning: tr("Highway contains motor_vehicle=no tag. Remove tag, reclassify way, or add access tag?");
@@ -404,6 +405,7 @@ way[highway =~ /^(service|residential|unclassified|tertiary|secondary|primary|tr
   assertNoMatch: "way highway=steps";
   assertNoMatch: "way highway=pedestrian";
 }
+*/
 
 relation[type=restriction][!/^restriction/] {
   group: tr("kaart");
@@ -698,12 +700,14 @@ way[highway=~/^(cycleway|footway|pedestrian)$/][footway=crossing] > node { set .
 way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible_divided_highway }
 
 @supports (min-josm-version: 14802) {
+    /*
   way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing,
   way[!highway][waylength() < 30][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing {
   group: tr("kaart");
     throwWarning: tr("Possible divided-highway pedestrian crossing. Should there be a footway?");
-    /* suggestAlternative: tr("highway=footway, footway=crossing"); */
+    /* suggestAlternative: tr("highway=footway, footway=crossing"); *//*
   }
+  */
 /*
   node[!inside("GR")][gpx_distance() < 30 || gpx_distance() >= 50000000].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
   group: tr("kaart");
@@ -784,11 +788,13 @@ relation[type=associatedStreet][name] >[role=house] *[building][!addr:street] {
   fixAdd: concat("{1.key}", "=", parent_tag("name"));
 }
 
+/*
 relation[type=associatedStreet][name] {
   group: tr("kaart");
   throwWarning: tr("Try to remove the {0} relation by copying the {1} tag to the {1}/{2} tags on the members (should be in error section above) and then deleting the relation", "associatedStreet", "name", "addr:street");
   fixDeleteObject: this;
 }
+*/
 
 way[addr:interpolation][addr:street][!building] {
   group: tr("kaart");

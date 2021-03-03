@@ -25,12 +25,14 @@ way[highway=~/^(cycleway|footway|pedestrian)$/][footway=crossing] > node { set .
 way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible_divided_highway }
 
 @supports (min-josm-version: 14802) {
+    /*
   way[highway!~/^(motorway|trunk|primary|secondary|tertiary|residential)$/][waylength() < 35][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing,
   way[!highway][waylength() < 30][gpx_distance() < 30 || gpx_distance() >= 50000000] > node.crossing_node.possible_divided_highway!.footway_crossing {
     group: tr("kaart");
     throwWarning: tr("Possible divided-highway pedestrian crossing. Should there be a footway?");
-    /* suggestAlternative: tr("highway=footway, footway=crossing"); */
+    /* suggestAlternative: tr("highway=footway, footway=crossing"); *//*
   }
+  */
 /*
   node[!inside("GR")][gpx_distance() < 30 || gpx_distance() >= 50000000].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
     group: tr("kaart");
@@ -111,11 +113,13 @@ relation[type=associatedStreet][name] >[role=house] *[building][!addr:street] {
   fixAdd: concat("{1.key}", "=", parent_tag("name"));
 }
 
+/*
 relation[type=associatedStreet][name] {
   group: tr("kaart");
   throwWarning: tr("Try to remove the {0} relation by copying the {1} tag to the {1}/{2} tags on the members (should be in error section above) and then deleting the relation", "associatedStreet", "name", "addr:street");
   fixDeleteObject: this;
 }
+*/
 
 way[addr:interpolation][addr:street][!building] {
   group: tr("kaart");
