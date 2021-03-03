@@ -4,7 +4,7 @@ meta
   description: "Various checks that are useful to Kaart";
   author: "Taylor Smock, Derek Bevan";
   min-josm-version: "8087";
-  version: "45_2021-01-13";
+  version: "46_2021-03-03";
 }
 /****************
  ** Kaart Users *
@@ -395,17 +395,16 @@ way|z21-[JOSM_search("inview")][highway][maxheight=~/^\d+'\s\d+"$/] {
 
 /* Check for motor_vehicle=no tag -- the tag may not be necessary */
 /* Derek Bevan */
-/*
-way[highway =~ /^(service|residential|unclassified|tertiary|secondary|primary|trunk|motorway)(_link)?$/][motor_vehicle=no] {
+way[highway =~ /^(tertiary|secondary|primary|trunk|motorway)(_link)?$/][motor_vehicle=no] {
   group: tr("kaart");
-  throwWarning: tr("Highway contains motor_vehicle=no tag. Remove tag, reclassify way, or add access tag?");
+  throwWarning: tr("High-priority road contains motor_vehicle=no tag. Remove tag, reclassify way, or add access tag?");
 
-  assertMatch: "way highway=residential motor_vehicle=no";
+  assertMatch: "way highway=tertiary motor_vehicle=no";
+  assertNoMatch: "way highway=residential motor_vehicle=no";
   assertNoMatch: "way highway=footway";
   assertNoMatch: "way highway=steps";
   assertNoMatch: "way highway=pedestrian";
 }
-*/
 
 relation[type=restriction][!/^restriction/] {
   group: tr("kaart");
