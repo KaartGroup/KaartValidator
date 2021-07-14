@@ -684,6 +684,12 @@ node!.bridge_end_node!.tunnel_end_node[JOSM_search("type:node ((child((highway|r
   assertNoMatch: "node name=\"Nothing to see here\"";
 }
 
+/* Checks if roads have alt_name, but no name  */
+/* Logan Barnes */
+way[highway][alt_name][!name] {
+  throwWarning: tr("Road has alt_name, but no name");
+}
+
 /* Check for ways that should have a building tag */
 /*
 way[/^(addr.*)$/][!building]:closed,
