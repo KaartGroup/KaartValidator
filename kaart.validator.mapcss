@@ -10,7 +10,7 @@ meta
  ** Kaart Users *
  ****************/
 
-relation[JOSM_search("user:JAAS or user:DowntownAbby or user:sbburg or user:RConnorsCarte19 or user:ProfessorLupin or user:ReedtheRiver or user:GhostEye or user:Buddy-the-Elf or user:Corban8 or user:tomincolorado or user:hairyhaggis or user:AnonJason or user:CoolGuyJake or user:\"Whimsical Otter\" or user:theArchDruid or user:Baconcrisp or user:DRM150 or user:birdeatscake or user:Kaarti_B or user:DerekBev or user:nutchayahongvilai or user:InnerPace")]{ set .kaart_user }
+relation[JOSM_search("user:JAAS or user:RConnorsCarte19 or user:Buddy-the-Elf or user:Corban8 or user:tomincolorado or user:Pegasus21 or user:hairyhaggis or user:AnonJason or user:CoolGuyJake or user:Toddtodd or user:Baconcrisp or user:InnerPace or user:Dalekokarta or user:RadMapper or user:hayduke1275 or user:CostelloMellow")]{ set .kaart_user }
 
 relation[type=route].kaart_user {
   group: tr("kaart");
